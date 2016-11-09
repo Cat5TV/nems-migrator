@@ -31,4 +31,8 @@ else
 
  echo "Done. You'll find the backup at /var/www/html/backup/backup.nems"
 
+ echo ""
+ echo You can access the file from your computer by navigating to http://NEMSIP/backup/
+ echo ""
+
 fi
