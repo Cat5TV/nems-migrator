@@ -28,5 +28,7 @@ else
  fi
  
  mv /tmp/backup.tar.gz /var/www/html/backup/current.tar.gz
-  
+
+ echo Done. You'll find the backup at /var/www/html/backup/current.tar.gz
+
 fi
