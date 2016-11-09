@@ -5,15 +5,15 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 else
 
- if [ -d /root/backup ]
+ if [ -d /var/www/html/backup ]
    then
-   echo Saving to existing backup set at /root/backup
+   echo Saving to existing backup set at /var/www/html/backup
    else
-   mkdir /root/backup
-   echo Created backup folder at /root/backup
+   mkdir /var/www/html/backup
+   echo Created backup folder at /var/www/html/backup
  fi
 
- tar czvf /tmp/backup.tar.gz \
+ tar czf /tmp/backup.tar.gz \
   /var/www/html/inc/ver.txt \
   /etc/nagvis/etc/maps/ \
   /etc/nagios3/resource.cfg \
