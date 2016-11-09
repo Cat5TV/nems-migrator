@@ -22,11 +22,11 @@ else
   /etc/nagios3/Default_collector/ \
   /etc/nagios3/global/
 
- if [ -e /root/backup/current.tar.gz ]
+ if [ -e /var/www/html/backup/current.tar.gz ]
    then
-   mv /root/backup/current.tar.gz /root/backup/previous.tar.gz
+   mv /var/www/html/backup/current.tar.gz /var/www/html/backup/previous.tar.gz
  fi
  
- mv /tmp/backup.tar.gz /root/backup/current.tar.gz
+ mv /tmp/backup.tar.gz /var/www/html/backup/current.tar.gz
   
 fi
