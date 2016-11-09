@@ -22,13 +22,13 @@ else
   /etc/nagios3/Default_collector/ \
   /etc/nagios3/global/
 
- if [ -e /var/www/html/backup/current.tar.gz ]
+ if [ -e /var/www/html/backup/backup.nems ]
    then
-   mv /var/www/html/backup/current.tar.gz /var/www/html/backup/previous.tar.gz
+   rm /var/www/html/backup/backup.nems
  fi
  
- mv /tmp/backup.tar.gz /var/www/html/backup/current.tar.gz
+ mv /tmp/backup.tar.gz /var/www/html/backup/backup.nems
 
- echo "Done. You'll find the backup at /var/www/html/backup/current.tar.gz"
+ echo "Done. You'll find the backup at /var/www/html/backup/backup.nems"
 
 fi
