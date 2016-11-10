@@ -5,6 +5,12 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 else
 
+# DO NOT run a backup as we're running in freeze mode (only used by Robbie for creating the image)
+ if [ -e /tmp/nems.freeze ]
+   then
+   exit
+ fi
+ 
  if [ -d /var/www/html/backup ]
    then
    echo Saving to existing backup set at /var/www/html/backup
