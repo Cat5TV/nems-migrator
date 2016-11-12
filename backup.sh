@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Don't allow the script to run if it's already running. May occur if your logs or config take longer than 5 minutes to backup.
+if pidof -o %PPID -x "`basename "$0"`">/dev/null; then
+    echo "Process already running"
+    exit
+fi
+
+
 if [[ $EUID -ne 0 ]]; then
   echo "ERROR: You must be a root" 2>&1
   exit 1
