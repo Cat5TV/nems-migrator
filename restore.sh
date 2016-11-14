@@ -23,8 +23,14 @@ else
 		echo Let me be VERY clear here...
 		echo This will WIPE OUT the configuration on this NEMS deployment.
 		echo The configuration will be replaced with the one stored in your NEMS backup.
+		echo ""
+		echo Please do this on a fresh deployment of NEMS to prevent data loss.
+		echo I am not responsible for this script breaking everything you have done :)
+		echo Backup, backup, backup.
+		
+		echo ""
 	 
-		read -r -p "Are you sure? [y/N] " response
+		read -r -p "Are you sure you want to attempt restore? [y/N] " response
 		if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 
 				mkdir -p /tmp/nems_migrator_restore
@@ -35,7 +41,20 @@ else
 				 ver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt") 
 
 				 if [[ $ver = "1.0" ]] || [[ $ver = "1.1" ]]; then
-				   echo Looks good.
+				   echo Backup file is from NEMS $ver. Proceeding.
+				   service nagios3 stop
+				   
+				   rm -rf /etc/nagios3/Default_collector
+				   rm -rf /etc/nagios3/global
+				   rm resource.cfg
+				   cp -R /tmp/nems_migrator_restore/etc/nagios3/ /etc/nagios3/
+				   
+				   service nagios3 start
+				   echo ""
+				   echo I hope everything worked okay for you. Please let me know if you had any trouble.
+				   echo ""
+				 else
+				   echo Your backup file is either invalid, or an unsupported version. Aborted.
 				 fi
 
 				 end=`date +%s`
