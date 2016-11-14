@@ -53,6 +53,16 @@ else
 				   rm /etc/nagios3/resource.cfg
 				   cp /tmp/nems_migrator_restore/etc/nagios3/resource.cfg /etc/nagios3/
 				   
+				   rm -rf /etc/nagvis/etc/maps
+				   cp -R /tmp/nems_migrator_restore/etc/nagvis/etc/maps /etc/nagvis/etc/
+				   
+				   rm -rf /var/www/nconf/output/
+				   cp -R /tmp/nems_migrator_restore/etc/nagvis/etc/maps /var/www/nconf/
+				   
+				   # This may cause errors, but at least it gives them the old logs.
+				   cp -R /tmp/nems_migrator_restore/var/log/* /var/log
+				   
+				   
 				   service nagios3 start
 				   echo ""
 				   echo I hope everything worked okay for you. Please let me know if you had any trouble.
