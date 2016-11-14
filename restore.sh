@@ -46,25 +46,25 @@ else
 				   
 				   # I know I warned you, but I love you too much to let you risk it.
 				   ./backup.sh > /dev/null 2>&1
-				   cp /var/www/html/backup/backup.nems /root/
+				   cp -p /var/www/html/backup/backup.nems /root/
 				   
 				   rm -rf /etc/nagios3/Default_collector
-				   cp -R /tmp/nems_migrator_restore/etc/nagios3/Default_collector /etc/nagios3/
+				   cp -Rp /tmp/nems_migrator_restore/etc/nagios3/Default_collector /etc/nagios3/
 				   
 				   rm -rf /etc/nagios3/global
-				   cp -R /tmp/nems_migrator_restore/etc/nagios3/global /etc/nagios3/
+				   cp -Rp /tmp/nems_migrator_restore/etc/nagios3/global /etc/nagios3/
 				   
 				   rm /etc/nagios3/resource.cfg
-				   cp /tmp/nems_migrator_restore/etc/nagios3/resource.cfg /etc/nagios3/
+				   cp -p /tmp/nems_migrator_restore/etc/nagios3/resource.cfg /etc/nagios3/
 				   
 				   rm -rf /etc/nagvis/etc/maps
-				   cp -R /tmp/nems_migrator_restore/etc/nagvis/etc/maps /etc/nagvis/etc/
+				   cp -Rp /tmp/nems_migrator_restore/etc/nagvis/etc/maps /etc/nagvis/etc/
 				   
 				   rm -rf /var/www/nconf/output/
-				   cp -R /tmp/nems_migrator_restore/etc/nagvis/etc/maps /var/www/nconf/
+				   cp -Rp /tmp/nems_migrator_restore/etc/nagvis/etc/maps /var/www/nconf/
 				   
 				   # This may cause errors, but at least it gives them the old logs.
-				   cp -R /tmp/nems_migrator_restore/var/log/* /var/log
+				   cp -Rp /tmp/nems_migrator_restore/var/log/* /var/log
 				   
 				   service nagios3 start
 				   echo ""
