@@ -57,8 +57,8 @@ else
 				   rm /etc/nagios3/resource.cfg
 				   cp -p /tmp/nems_migrator_restore/etc/nagios3/resource.cfg /etc/nagios3/
 				   
-				   rm -rf /etc/nagvis/etc/maps
-				   cp -Rp /tmp/nems_migrator_restore/etc/nagvis/etc/maps /etc/nagvis/etc/
+				   rm -rf /var/www/nagvis/etc/maps
+				   cp -Rp /tmp/nems_migrator_restore/var/www/nagvis/etc/maps /var/www/nagvis/etc/
 				   
 				   rm -rf /var/www/nconf/output/
 				   cp -Rp /tmp/nems_migrator_restore/etc/nagvis/etc/maps /var/www/nconf/
