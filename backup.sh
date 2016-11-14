@@ -28,6 +28,8 @@ else
    echo Created backup folder at /var/www/html/backup
  fi
 
+ service nagios3 stop
+ 
  tar czf /tmp/backup.tar.gz \
   /var/www/html/inc/ver.txt \
   /etc/nagvis/etc/maps/ \
@@ -35,8 +37,11 @@ else
   /var/log/ \
   /var/www/nconf/output/ \
   /etc/nagios3/Default_collector/ \
-  /etc/nagios3/global/
+  /etc/nagios3/global/ \
+  /var/lib/mysql/
 
+ service nagios3 start
+ 
  if [ -e /var/www/html/backup/backup.nems ]
    then
    rm /var/www/html/backup/backup.nems

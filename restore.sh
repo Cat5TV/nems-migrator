@@ -43,11 +43,20 @@ else
 				 if [[ $ver = "1.0" ]] || [[ $ver = "1.1" ]]; then
 				   echo Backup file is from NEMS $ver. Proceeding.
 				   service nagios3 stop
+				   service mysql stop
 				   
 				   # I know I warned you, but I love you too much to let you risk it.
 				   ./backup.sh > /dev/null 2>&1
 				   cp -p /var/www/html/backup/backup.nems /root/
 				   
+				   if [[ -d "/tmp/nems_migrator_restore/var/lib/mysql" ]]; then
+							 rm -rf /var/lib/mysql
+							 cp -Rp /tmp/nems_migrator_restore/var/lib/mysql /var/lib/
+						 else 
+							 echo "MySQL Database Missing. This is a critical error."
+							 exit
+					 fi
+					 
 				   if [[ -d "/tmp/nems_migrator_restore/etc/nagios3/Default_collector" ]]; then
 							 rm -rf /etc/nagios3/Default_collector
 							 cp -Rp /tmp/nems_migrator_restore/etc/nagios3/Default_collector /etc/nagios3/
@@ -91,7 +100,9 @@ else
 				   # This may cause errors, but at least it gives them the old logs.
 				   cp -Rp /tmp/nems_migrator_restore/var/log/* /var/log
 				   
+				   service mysql start
 				   service nagios3 start
+				   
 				   echo ""
 				   echo I hope everything worked okay for you.
 				   echo Please let me know if you had any trouble.
