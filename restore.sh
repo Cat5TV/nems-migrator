@@ -32,6 +32,12 @@ else
 
 				 tar -zxf $1
 
+				 ver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt") 
+
+				 if [[ $ver = "1.0" OR $ver = "1.1" ]]; then
+				   echo Looks good.
+				 fi
+
 				 end=`date +%s`
 
 				 runtime=$((end-start))
