@@ -61,7 +61,7 @@ else
 				   cp -Rp /tmp/nems_migrator_restore/var/www/nagvis/etc/maps /var/www/nagvis/etc/
 				   
 				   rm -rf /var/www/nconf/output/
-				   cp -Rp /tmp/nems_migrator_restore/etc/nagvis/etc/maps /var/www/nconf/
+				   cp -Rp /tmp/nems_migrator_restore/var/www/nconf/output /var/www/nconf/
 				   
 				   # This may cause errors, but at least it gives them the old logs.
 				   cp -Rp /tmp/nems_migrator_restore/var/log/* /var/log
