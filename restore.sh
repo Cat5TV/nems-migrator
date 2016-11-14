@@ -84,13 +84,13 @@ else
 				   
 					 # NagVis maps are stored differently in NEMS 1.0
 					 if [[ $ver == "1.0" ]]; then
-							nagvis="/etc/nagvis/maps/"
+							nagvis="maps/"
 						 else
-							nagvis="/etc/nagvis/etc/maps/"
+							nagvis="etc/maps/"
 					 fi
-				   if [[ -d "/tmp/nems_migrator_restore$nagvis" ]]; then
+				   if [[ -d "/tmp/nems_migrator_restore/etc/nagvis/$nagvis" ]]; then
 						 rm -rf /etc/nagvis/etc/maps
-						 cp -Rp /tmp/nems_migrator_restore$nagvis /etc/nagvis/etc/
+						 cp -Rp /tmp/nems_migrator_restore/etc/nagvis/$nagvis /etc/nagvis/etc/
 				   else 
 							 echo "NagVis failed. Your NagVis data is corrupt."
 					 fi

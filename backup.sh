@@ -32,9 +32,9 @@ else
  
  # NagVis maps are stored differently in NEMS 1.0
  if [[ $ver == "1.0" ]]; then
-		nagvis="/etc/nagvis/maps/"
+		nagvis="maps/"
    else
-		nagvis="/etc/nagvis/etc/maps/"
+		nagvis="etc/maps/"
  fi
 
 
@@ -42,7 +42,7 @@ else
  
  tar czf /tmp/backup.tar.gz \
   /var/www/html/inc/ver.txt \
-  $nagvis \
+  /etc/nagvis/$nagvis \
   /etc/nagios3/resource.cfg \
   /var/log/ \
   /var/www/nconf/output/ \
