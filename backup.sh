@@ -1,5 +1,7 @@
 #!/bin/bash
 
+start=`date +%s`
+
 # Don't allow the script to run if it's already running. May occur if your logs or config take longer than 5 minutes to backup.
 if pidof -o %PPID -x "`basename "$0"`">/dev/null; then
     echo "Process already running"
@@ -48,4 +50,17 @@ else
  echo You can access the file from your computer by navigating to http://NEMSIP/backup/
  echo ""
 
+ end=`date +%s`
+
+ runtime=$((end-start))
+
+
+ if [ -d /var/log/nems ]
+   then
+     echo $runtime > /var/log/nems/migrator-backup-runtime.log
+   else
+     mkdir /var/log/nems
+     echo $runtime > /var/log/nems/migrator-backup-runtime.log
+ fi
+ 
 fi
