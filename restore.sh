@@ -26,8 +26,9 @@ else
 	 
 		read -r -p "Are you sure? [y/N] " response
 		if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-			 
-				cd /tmp
+
+				mkdir -p /tmp/nems_migrator_restore
+				cd /tmp/nems_migrator_restore
 
 				 tar -zxf $1
 
@@ -35,6 +36,7 @@ else
 
 				 runtime=$((end-start))
 
+#				rm -rf /tmp/nems_migrator_restore
 
 				 if [ -d /var/log/nems ]
 					 then
