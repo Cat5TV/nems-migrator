@@ -48,20 +48,45 @@ else
 				   ./backup.sh > /dev/null 2>&1
 				   cp -p /var/www/html/backup/backup.nems /root/
 				   
-				   rm -rf /etc/nagios3/Default_collector
-				   cp -Rp /tmp/nems_migrator_restore/etc/nagios3/Default_collector /etc/nagios3/
+				   if [[ -d "/tmp/nems_migrator_restore/etc/nagios3/Default_collector" ]]; then
+							 rm -rf /etc/nagios3/Default_collector
+							 cp -Rp /tmp/nems_migrator_restore/etc/nagios3/Default_collector /etc/nagios3/
+						 else 
+							 echo "Nagios Configuration Missing. This is a critical error."
+							 exit
+					 fi
+					 
+					 if [[ -d "/tmp/nems_migrator_restore/etc/nagios3/global" ]]; then
+					     rm -rf /etc/nagios3/global
+							 cp -Rp /tmp/nems_migrator_restore/etc/nagios3/global /etc/nagios3/
+				   else 
+							 echo "Nagios Configuration Missing. This is a critical error."
+							 exit
+					 fi
+					 
+					 if [[ -e "/tmp/nems_migrator_restore/etc/nagios3/resource.cfg" ]]; then
+						 rm /etc/nagios3/resource.cfg
+						 cp -p /tmp/nems_migrator_restore/etc/nagios3/resource.cfg /etc/nagios3/
+				   else 
+							 echo "Nagios Configuration Missing. This is a critical error."
+							 exit
+					 fi
 				   
-				   rm -rf /etc/nagios3/global
-				   cp -Rp /tmp/nems_migrator_restore/etc/nagios3/global /etc/nagios3/
-				   
-				   rm /etc/nagios3/resource.cfg
-				   cp -p /tmp/nems_migrator_restore/etc/nagios3/resource.cfg /etc/nagios3/
-				   
-				   rm -rf /var/www/nagvis/etc/maps
-				   cp -Rp /tmp/nems_migrator_restore/var/www/nagvis/etc/maps /var/www/nagvis/etc/
-				   
-				   rm -rf /var/www/nconf/output/
-				   cp -Rp /tmp/nems_migrator_restore/var/www/nconf/output /var/www/nconf/
+				   if [[ -d "/tmp/nems_migrator_restore/etc/nagvis/etc/maps" ]]; then
+						 rm -rf /etc/nagvis/etc/maps
+						 cp -Rp /tmp/nems_migrator_restore/etc/nagvis/etc/maps /etc/nagvis/etc/
+				   else 
+							 echo "NagVis failed. Your NagVis data is corrupt."
+					 fi
+					 
+					 if [[ -d "/tmp/nems_migrator_restore/var/www/nconf/output" ]]; then
+						 rm -rf /var/www/nconf/output/
+						 cp -Rp /tmp/nems_migrator_restore/var/www/nconf/output /var/www/nconf/
+				   else 
+							 echo "NConf failed. Your NConf data is corrupt."
+							 echo "You should be able to re-create it."
+					 fi
+					
 				   
 				   # This may cause errors, but at least it gives them the old logs.
 				   cp -Rp /tmp/nems_migrator_restore/var/log/* /var/log
