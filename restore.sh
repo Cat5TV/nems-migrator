@@ -25,7 +25,7 @@ else
 		echo The configuration will be replaced with the one stored in your NEMS backup.
 		echo ""
 		echo Please do this on a fresh deployment of NEMS to prevent data loss.
-		echo I am not responsible for this script breaking everything you have done :)
+		echo "I am not responsible for this script breaking everything you have done :)"
 		echo Backup, backup, backup.
 		
 		echo ""
