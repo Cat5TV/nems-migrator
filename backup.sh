@@ -27,12 +27,22 @@ else
    mkdir /var/www/html/backup
    echo Created backup folder at /var/www/html/backup
  fi
+ 
+ ver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt")
+ 
+ # NagVis maps are stored differently in NEMS 1.0
+ if [[ $ver == "1.0" ]]; then
+		nagvis="/etc/nagvis/maps/"
+   else
+		nagvis="/etc/nagvis/etc/maps/"
+ fi
+
 
  service nagios3 stop
  
  tar czf /tmp/backup.tar.gz \
   /var/www/html/inc/ver.txt \
-  /etc/nagvis/etc/maps/ \
+  $nagvis \
   /etc/nagios3/resource.cfg \
   /var/log/ \
   /var/www/nconf/output/ \
