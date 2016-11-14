@@ -44,6 +44,10 @@ else
 				   echo Backup file is from NEMS $ver. Proceeding.
 				   service nagios3 stop
 				   
+				   # I know I warned you, but I love you too much to let you risk it.
+				   ./backup.sh > /dev/null 2>&1
+				   cp /var/www/html/backup/backup.nems /root/
+				   
 				   rm -rf /etc/nagios3/Default_collector
 				   cp -R /tmp/nems_migrator_restore/etc/nagios3/Default_collector /etc/nagios3/
 				   
@@ -62,20 +66,23 @@ else
 				   # This may cause errors, but at least it gives them the old logs.
 				   cp -R /tmp/nems_migrator_restore/var/log/* /var/log
 				   
-				   
 				   service nagios3 start
 				   echo ""
-				   echo I hope everything worked okay for you. Please let me know if you had any trouble.
+				   echo I hope everything worked okay for you.
+				   echo Please let me know if you had any trouble.
 				   echo ""
+				   echo PS - I saved a backup for you of the old config. /root/backup.nems
+				   echo      ... just in case
+				   echo ""
+				   
 				 else
 				   echo Your backup file is either invalid, or an unsupported version. Aborted.
 				 fi
 
+				 rm -rf /tmp/nems_migrator_restore
+				 
 				 end=`date +%s`
-
 				 runtime=$((end-start))
-
-#				rm -rf /tmp/nems_migrator_restore
 
 				 if [ -d /var/log/nems ]
 					 then
