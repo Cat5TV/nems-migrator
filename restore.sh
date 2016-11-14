@@ -45,9 +45,13 @@ else
 				   service nagios3 stop
 				   
 				   rm -rf /etc/nagios3/Default_collector
+				   cp -R /tmp/nems_migrator_restore/etc/nagios3/Default_collector /etc/nagios3/
+				   
 				   rm -rf /etc/nagios3/global
-				   rm resource.cfg
-				   cp -R /tmp/nems_migrator_restore/etc/nagios3/ /etc/nagios3/
+				   cp -R /tmp/nems_migrator_restore/etc/nagios3/global /etc/nagios3/
+				   
+				   rm /etc/nagios3/resource.cfg
+				   cp /tmp/nems_migrator_restore/etc/nagios3/resource.cfg /etc/nagios3/
 				   
 				   service nagios3 start
 				   echo ""
