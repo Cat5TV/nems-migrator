@@ -38,10 +38,11 @@ else
 
 				 tar -zxf $1
 
-				 ver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt") 
-
-				 if [[ $ver = "1.0" ]] || [[ $ver = "1.1" ]]; then
-				   echo Backup file is from NEMS $ver. Proceeding.
+				 backupver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt") 
+				 ver=$(cat "/var/www/html/inc/ver.txt") 
+				 
+				 if [[ $backupver = "1.0" ]] || [[ $backupver = "1.1" ]]; then
+				   echo Backup file is from NEMS $backupver. Proceeding.
 				   service nagios3 stop
 				   service mysql stop
 				   
@@ -83,14 +84,19 @@ else
 				   
 				   
 					 # NagVis maps are stored differently in NEMS 1.0
-					 if [[ $ver == "1.0" ]]; then
-							nagvis="maps/"
+					 if [[ $backupver == "1.0" ]]; then
+							nagvissrc="maps/"
 						 else
-							nagvis="etc/maps/"
+							nagvissrc="etc/maps/"
 					 fi
-				   if [[ -d "/tmp/nems_migrator_restore/etc/nagvis/$nagvis" ]]; then
-						 rm -rf /etc/nagvis/etc/maps
-						 cp -Rp /tmp/nems_migrator_restore/etc/nagvis/$nagvis /etc/nagvis/etc/
+					 if [[ $ver == "1.0" ]]; then
+							nagvisdest=""
+						 else
+							nagvisdest="etc/"
+					 fi
+				   if [[ -d "/tmp/nems_migrator_restore/etc/nagvis/$nagvissrc" ]]; then
+						 rm -rf /etc/nagvis/$nagvisdest\maps
+						 cp -Rp /tmp/nems_migrator_restore/etc/nagvis/$nagvissrc /etc/nagvis/$nagvisdest
 				   else 
 							 echo "NagVis failed. Your NagVis data is corrupt."
 					 fi
