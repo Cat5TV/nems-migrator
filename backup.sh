@@ -28,10 +28,16 @@ else
    echo Created backup folder at /var/www/html/backup
  fi
  
- ver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt")
+ ver=$(cat "/var/www/html/inc/ver.txt")
  
  # NagVis maps are stored differently in NEMS 1.0
- if [[ $ver == "1.0" ]]; then
+ if [[ $ver = "" ]]; then
+   echo NEMS Version data is corrupt. Did you remove files from /var/www?
+   echo This can be fixed. Contact me for help in restoring your version data.
+   echo Aborted.
+   exit
+ fi
+ if [[ $ver = "1.0" ]]; then
 		nagvis="maps/"
    else
 		nagvis="etc/maps/"
