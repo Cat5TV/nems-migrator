@@ -43,6 +43,12 @@ else
 		nagvis="etc/maps/"
  fi
 
+ if [[ $ver = "1.2" ]]; then
+   # Additional items to backup if version matches
+   add="/etc/rpimonitor \
+     /etc/webmin \
+   "
+ fi
 
  service nagios3 stop
  
@@ -50,11 +56,13 @@ else
   /var/www/html/inc/ver.txt \
   /etc/nagvis/$nagvis \
   /etc/nagios3/resource.cfg \
+  /etc/nagios3/htpasswd.users \
   /var/log/ \
   /var/www/nconf/output/ \
   /etc/nagios3/Default_collector/ \
   /etc/nagios3/global/ \
-  /var/lib/mysql/
+  /var/lib/mysql/ \
+  $add
 
  service nagios3 start
  
@@ -62,7 +70,7 @@ else
    then
    rm /var/www/html/backup/backup.nems
  fi
- 
+
  mv /tmp/backup.tar.gz /var/www/html/backup/backup.nems
 
  echo "Done. You'll find the backup at /var/www/html/backup/backup.nems"
