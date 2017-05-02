@@ -1,5 +1,5 @@
 #!/bin/bash
-# This tool exports your NagiosPi configuration so it may be imported to NEMS 1.2+.
+# This tool exports your nagiospi configuration so it may be imported to NEMS 1.2+.
 # If you encounter any problems, please let me know. http://baldnerd.com/nems/
 
 if [[ $EUID -ne 0 ]]; then
@@ -7,9 +7,9 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 else
 
-  echo Preparing NagiosPi for NEMS-Migrator Backup...
+  echo Preparing nagiospi for NEMS-Migrator Backup...
 
-  # This line creates the directory tree and file that tells nems-migrator that this is NEMS 1.0, which was based on NagiosPi
+  # This line creates the directory tree and file that tells nems-migrator that this is NEMS 1.0, which was based on nagiospi
   test -d "/var/www/html/inc" || mkdir -p "/var/www/html/inc" && echo "1.0" > /var/www/html/inc/ver.txt
 
   # Create NEMS log folder so we don't get errors
