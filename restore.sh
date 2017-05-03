@@ -75,11 +75,10 @@ else
 					 fi
 					 
 					 if [[ $backupver == "1.0" ]]; then
-					 	echo "Upgrading to newer version of NEMS: Please edit /etc/nagios3/resource.cfg to configure your mail settings."
+					 	echo "Upgrading to newer version of NEMS: Please edit /etc/nagios3/resource.cfg to configure your settings."
 					 else
 						 if [[ -e "/tmp/nems_migrator_restore/etc/nagios3/resource.cfg" ]]; then
-							 rm /etc/nagios3/resource.cfg
-							 cp -p /tmp/nems_migrator_restore/etc/nagios3/resource.cfg /etc/nagios3/
+							 /usr/bin/php /root/nems/nems-migrator/resource-upgrade.php
 						  else 
 							 echo "Nagios Configuration Missing. This is a critical error."
 							 exit
