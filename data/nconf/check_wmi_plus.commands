@@ -1,0 +1,170 @@
+# ------------------------- windows checks by check_wmi_plus ------------------------------
+
+# a generic use check_wmi_plus command
+define command{
+command_name	check_wmi_plus
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m $ARG1$ -u $USER3$ -p $USER4$ -s $ARG2$ $ARG3$ $ARG4$ $ARG5$ $ARG6$ $ARG7$ $ARG8$ $ARG9$
+}
+
+define command{
+command_name	check_win_io
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkio -u $USER3$ -p $USER4$ -s $ARG1$ -a "$ARG2$" $ARG3$ $ARG4$
+}
+
+define command{
+command_name	check_win_filesize
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkfilesize -u $USER3$ -p $USER4$ -a $ARG1$ -w $ARG2$ -c $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_fileage
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkfileage -u $USER3$ -p $USER4$ -a '$ARG1$' -w $ARG2$ -c $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_disk
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkdrivesize -u $USER3$ -p $USER4$ -a $ARG1$ -w $ARG2$ -c $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_volume
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkvolsize -u $USER3$ -p $USER4$ -a $ARG1$ -w $ARG2$ -c $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_cpuq
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkcpuq -u $USER3$ -p $USER4$ -w $ARG1$ -c $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_cpu
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkcpu -u $USER3$ -p $USER4$ -w $ARG1$ -c $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_cpudetail
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkeachcpu -u $USER3$ -p $USER4$ -w $ARG1$ -c $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_network
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checknetwork -u $USER3$ -p $USER4$ -a '$ARG1$' $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_service
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkservice -u $USER3$ -p $USER4$ -a '$ARG1$' -o '$ARG2$' $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_smart
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checksmart -t 60 -u $USER3$ -p $USER4$ $ARG1$ $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_time
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checktime -u $USER3$ -p $USER4$ -w $ARG1$ -c $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_uptime
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkuptime -u $USER3$ -p $USER4$ -w $ARG1$ -c $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_mem
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkmem -u $USER3$ -p $USER4$ -w $ARG1$ -c $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_page
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkpage -u $USER3$ -p $USER4$ $ARG1$ $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_process
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkprocess -u $USER3$ -p $USER4$ -a "$ARG1$" -3 '$ARG2$' -w "$ARG3$" -c $ARG4$ $ARG5$ $ARG6$
+}
+
+define command{
+command_name	check_win_eventlog
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkeventlog -u $USER3$ -p $USER4$ -a $ARG1$ -o $ARG2$ -3 $ARG3$ -w $ARG4$ -c $ARG5$ $ARG6$ $ARG7$
+}
+
+define command{
+command_name	check_ts
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkts -u $USER3$ -p $USER4$ -s $ARG1$ $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_iis
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkiis -u $USER3$ -p $USER4$ -s $ARG1$ -a $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_exchange
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkexchange -u $USER3$ -p $USER4$ -s $ARG1$ -a $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_sql
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checksql -u $USER3$ -p $USER4$ -s $ARG1$ -a $ARG2$ $ARG3$ $ARG4$ $ARG5$
+}
+
+define command{
+command_name	check_win_proc
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkproc -s $ARG1$ -u $USER3$ -p $USER4$ -a $ARG2$ $ARG3$ $ARG4$ $ARG5$ $ARG6$
+}
+
+define command{
+command_name	check_win_dns
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkdns -s $ARG1$ -u $USER3$ -p $USER4$ $ARG2$ $ARG3$ $ARG4$ $ARG5$ $ARG6$
+}
+
+define command{
+command_name	check_win_dhcp
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkdhcp -s $ARG1$ -u $USER3$ -p $USER4$ $ARG2$ $ARG3$ $ARG4$ $ARG5$ $ARG6$
+}
+
+define command{
+command_name	check_win_dhcpv6
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkdhcpv6 -s $ARG1$ -u $USER3$ -p $USER4$ $ARG2$ $ARG3$ $ARG4$ $ARG5$ $ARG6$
+}
+
+define command{
+command_name	check_win_print
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkprint -s $ARG1$ -u $USER3$ -p $USER4$ $ARG2$ $ARG3$ $ARG4$ $ARG5$ $ARG6$
+}
+
+define command{
+command_name	check_win_users
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkusers -s $ARG1$ -u $USER3$ -p $USER4$ $ARG2$ $ARG3$ $ARG4$ $ARG5$ $ARG6$
+}
+
+define command{
+command_name	check_win_power
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkpower -s $ARG1$ -u $USER3$ -p $USER4$ $ARG2$ $ARG3$ $ARG4$ $ARG5$ $ARG6$
+}
+
+define command{
+command_name	check_ad
+command_line	$USER1$/check_wmi_plus.pl -H $HOSTADDRESS$ -m checkad -s $ARG1$ -u $USER3$ -p $USER4$ $ARG2$ $ARG3$ $ARG4$ $ARG5$ $ARG6$
+}
+
+# Event Handler to restart Windows services
+define command {
+command_name event_restart_win_service
+command_line /usr/bin/sudo $USER1$/event_generic.pl -c "/usr/bin/net rpc service stop $ARG1$ -U $USER3$%$USER4$ -I $HOSTADDRESS$" -c "/usr/bin/net rpc service start $ARG1$ -U $USER3$%$USER4$ -I $HOSTADDRESS$" --usefirststatelist "$ARG2$" "$ARG3$" "$ARG4$" "$ARG5$" "$ARG6$" "$ARG7$" "$ARG8$" "$ARG9$"
+}
+
+# Event Handler to reboot a Windows machine
+# You have to be brave doing this! You'd better make sure your Nagios check only ever goes to HARD State when you expect
+# Probably best to add the -r option and reboot only if the text of the service output matches a certain string
+# If you do need to add the -r option you can just add it in the service defintion as the first argument
+# eg Only reboot if the service output does not contain the word timeout like this event_reboot_win!-r '^(?!.*?timeout).*'
+define command {
+command_name event_reboot_win
+command_line /usr/bin/sudo $USER1$/event_generic.pl -c "/usr/bin/net rpc shutdown -t 300 -f -r -C 'This computer is being rebooted by Nagios' -U $USER3$%$USER4$ -I $HOSTADDRESS$" $ARG1$ $ARG2$ $ARG3$ $ARG4$ $ARG5$ $ARG6$
+}
+
+# ------------------------- end windows checks by check_wmi_plus ------------------------------
