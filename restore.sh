@@ -53,6 +53,16 @@ else
 				   if [[ -d "/tmp/nems_migrator_restore/var/lib/mysql" ]]; then
 							 rm -rf /var/lib/mysql
 							 cp -Rp /tmp/nems_migrator_restore/var/lib/mysql /var/lib/
+							 
+							 # nConf
+							   # Import Commands
+							     /var/www/nconf/bin/add_items_from_nagios.pl -c checkcommand -f /root/nems/nems-migrator/data/nconf/check_wmi_plus.commands -x 1
+
+							   # Import Hosts (Uncomment if you want the sample data added)
+							     /var/www/nconf/bin/add_items_from_nagios.pl -c host -f /root/nems/nems-migrator/data/nconf/check_wmi_plus.hosts -x 1
+
+							   # Import Services
+							     /var/www/nconf/bin/add_items_from_nagios.pl -c service -f /root/nems/nems-migrator/data/nconf/check_wmi_plus.services -x 1
 						 else 
 							 echo "MySQL Database Missing. This is a critical error."
 							 exit
