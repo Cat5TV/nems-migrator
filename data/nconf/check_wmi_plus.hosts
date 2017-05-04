@@ -1,0 +1,57 @@
+###########################################################################
+#
+# Host Group configuration file
+#
+###############################################################################
+
+define hostgroup {
+hostgroup_name primary_windows
+alias Windows Primary Group
+}
+
+define hostgroup {
+hostgroup_name secondary_windows
+alias Windows Secondary Group
+}
+
+###############################################################################
+#
+# Host configuration file
+#
+###############################################################################
+
+define host {
+name windows_host
+max_check_attempts 3
+check_command check-host-alive ; ====== you'll have to define this one
+passive_checks_enabled 1
+check_period 24x7
+obsess_over_host 1
+check_freshness 0
+event_handler_enabled 1
+flap_detection_enabled 1
+process_perf_data 0
+retain_status_information 1
+retain_nonstatus_information 1
+contact_groups windows_admin ; ====== you'll have to define this one
+notification_interval 1440
+notification_period 24x7
+notification_options d,r,f
+notifications_enabled 1
+register 0
+}
+
+define host {
+use windows_host
+host_name test1
+alias test1
+address 192.168.1.100
+}
+
+define host {
+use windows_host
+host_name test2
+alias test2
+address 192.168.1.101
+hostgroups secondary_windows,primary_windows
+}

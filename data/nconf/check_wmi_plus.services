@@ -1,0 +1,469 @@
+#--------------- SERVICE TEMPLATES -------------------
+define service {
+name windows_service
+hostgroup_name primary_windows
+is_volatile 0
+max_check_attempts 3
+normal_check_interval 5
+retry_check_interval 1
+active_checks_enabled 1
+passive_checks_enabled 1
+check_period 24x7
+parallelize_check 1
+obsess_over_service 1
+check_freshness 0
+event_handler_enabled 1
+flap_detection_enabled 1
+retain_status_information 1
+retain_nonstatus_information 1
+contact_groups windows_admin
+notification_interval 1440
+notification_period 24x7
+notification_options w,u,c,r,f
+notifications_enabled 1
+action_url /pnp4nagios/graph?host=$HOSTNAME$&srv=$SERVICEDESC$
+process_perf_data 1
+register 0 ; DONT REGISTER THIS DEFINITION - ITS NOT A REAL SERVICE, JUST A TEMPLATE!
+}
+
+#--------------- SERVICE TEMPLATES -------------------
+
+define service {
+use windows_service
+service_description PING
+check_command check_ping!100.0,20%!200.0,60%
+}
+
+# --------------------- services using WMI directly
+
+# example Windows service check with an event handler to restart the service
+define service {
+use windows_service
+service_description Services - Print Spooler
+check_command check_win_service!spooler!!-c _NumGood=1:1
+event_handler event_restart_win_service!spooler
+}
+
+define service {
+use windows_service
+service_description Process - Quote Tracker
+check_command check_win_process!stocks.exe!!1:1!1:1
+}
+
+define service {
+use windows_service
+service_description Process - HP ToolBox
+check_command check_win_process!hptlbxfx.exe!!1:1!1:1
+}
+
+define service {
+use windows_service
+service_description Process - svchost
+check_command check_win_process!svchost.exe!!1:10!1:20
+}
+
+define service {
+use windows_service
+service_description IO C:
+check_command check_win_io!logical!C:
+}
+
+define service {
+use windows_service
+service_description Disk Space - All
+check_command check_win_disk!.!80!90!-o 1 -3 1
+}
+
+define service {
+use windows_service
+service_description Event Log Application Warnings
+check_command check_win_eventlog!application!2!1!50!100
+}
+
+define service {
+use windows_service
+service_description Event Log System Warnings
+check_command check_win_eventlog!system!2!1!50!100
+}
+
+define service {
+use windows_service
+service_description Time Check
+check_command check_win_time!-10:10!-30:30
+}
+
+define service {
+use windows_service
+service_description Uptime
+check_command check_win_uptime!5min:!15min:
+}
+
+define service {
+use windows_service
+service_description RAM Utilisation
+check_command check_win_mem!90!95
+}
+
+define service {
+use windows_service
+service_description Page File Utilisation
+check_command check_win_page!-a auto
+}
+
+define service {
+use windows_service
+service_description Network Interface LAN2
+check_command check_win_network!LAN2
+}
+
+#define service {
+# use windows_service
+# service_description Network Interface LAN0
+# check_command check_win_network!LAN0
+# }
+
+define service {
+use windows_service
+service_description Print Spooler Totals
+check_command check_win_print!spooler!-a _Total
+}
+
+define service {
+use windows_service
+service_description CPU Utilisation
+check_command check_win_cpu!80!90
+}
+
+define service {
+use windows_service
+service_description CPU Utilisation Detail
+check_command check_win_cpudetail!80!90
+}
+
+define service {
+use windows_service
+service_description CPU Queue Length
+check_command check_win_cpuq!10!20!-a 20 -y 0
+}
+
+define service {
+use windows_service
+service_description Services - All
+check_command check_win_service!Auto!!-w 0 -c 1
+# add a restart of the wmi service if it contains the text that says a restart should fix it
+event_handler event_restart_win_service!winmgmt!-r!Restarting the WMI service can fix it
+}
+
+define service {
+use windows_service
+service_description Services - DHCP Client
+check_command check_win_service!dhcp client!!-c _NumGood=1:1
+}
+
+define service {
+use windows_service
+service_description File Size - Page File
+check_command check_win_filesize!c:/pagefile.sys!1500m!2g
+}
+
+define service {
+use windows_service
+service_description File Age - All Users ntuser.dat
+check_command check_win_fileage!c:/documents and settings/all users/ntuser.dat!1wk:!2wk:
+}
+
+define service {
+use windows_service
+service_description File Age - Page File
+check_command check_win_fileage!c:/pagefile.sys!10min:!30min:
+}
+
+define service {
+use windows_service
+service_description TS Sessions 2003
+check_command check_ts!sessions2003
+}
+
+define service {
+use windows_service
+service_description TS Console Session Info
+check_command check_ts!sessioninfo!-a console
+}
+
+define service {
+use windows_service
+service_description Process Memory SVCHOST
+check_command check_win_proc!memorytotals!svchost%
+}
+
+define service {
+use windows_service
+service_description Process Count
+check_command check_win_proc!count!%
+}
+
+define service {
+use windows_service
+service_description Process High CPU
+check_command check_win_proc!cpuabove!%!-w 25!-exc _AvgCPU=@0:2!--nodataexit 0!--nodatastring "No processes with high CPU found"
+}
+
+define service {
+use windows_service
+service_description Process CPU Firefox
+check_command check_win_proc!cpu!firefox!--nodatamode
+}
+
+define service {
+use windows_service
+service_description Info - Net
+check_command check_wmi_plus!info!net
+process_perf_data 0
+action_url
+}
+
+define service {
+use windows_service
+service_description Info - OS Version
+check_command check_wmi_plus!info!os
+}
+
+define service {
+use windows_service
+service_description Test 1
+check_command check_wmi_plus!test!1
+}
+
+define service {
+use windows_service
+service_description Test 2
+check_command check_wmi_plus!test!2
+}
+
+#==================================================================================
+#==================================================================================
+#================== OTHER CHECKS THAT ARE MORE APPLICATION SPECIFIC ==================
+#==================================================================================
+#==================================================================================
+
+#--------------- SERVICE TEMPLATES -------------------
+define service {
+name windows_extra_service
+use windows_service
+hostgroup_name secondary_windows
+max_check_attempts 10
+normal_check_interval 1
+retry_check_interval 1
+register 0 ; DONT REGISTER THIS DEFINITION - ITS NOT A REAL SERVICE, JUST A TEMPLATE!
+}
+#--------------- SERVICE TEMPLATES -------------------
+
+define service {
+use windows_extra_service
+service_description SMART Status
+check_command check_win_smart!-c 1
+}
+
+define service {
+use windows_extra_service
+service_description Volume Space - All
+check_command check_win_volume!.!80!90!-o 1 -3 1
+}
+
+define service {
+use windows_extra_service
+service_description Power Supplies
+check_command check_win_power!state!-a "%"
+}
+
+define service {
+use windows_extra_service
+service_description File Age - winhelp
+check_command check_win_fileage!c:/windows/winhelp.exe!4wk!8wk
+}
+
+define service {
+use windows_extra_service
+service_description Network Interface
+check_command check_win_network!Intel[R] PRO_1000 MT Network Connection
+}
+
+define service {
+use windows_extra_service
+service_description IIS Users
+check_command check_iis!users!_Total
+}
+
+define service {
+use windows_extra_service
+service_description IIS Requests
+check_command check_iis!requests!_Total
+}
+
+define service {
+use windows_extra_service
+service_description IIS Errors
+check_command check_iis!errors!_Total
+}
+
+define service {
+use windows_extra_service
+service_description IIS Transfers
+check_command check_iis!transfers!_Total
+}
+
+define service {
+use windows_extra_service
+service_description IIS Connections
+check_command check_iis!connections!_Total
+}
+
+define service {
+use windows_extra_service
+service_description DNS Stats
+check_command check_win_dns!stats
+}
+
+define service {
+use windows_extra_service
+service_description DNS A Records
+check_command check_win_dns!arecords!--nodatamode
+}
+
+define service {
+use windows_extra_service
+service_description DNS CNAME Records
+check_command check_win_dns!cnamerecords!--nodatamode
+}
+
+define service {
+use windows_extra_service
+service_description DNS PTR Records
+check_command check_win_dns!ptrrecords!--nodatamode
+}
+
+define service {
+use windows_extra_service
+service_description DHCP Stats
+check_command check_win_dhcp!stats
+}
+
+define service {
+use windows_extra_service
+service_description DHCPv6 Stats
+check_command check_win_dhcpv6!stats
+}
+
+define service {
+use windows_extra_service
+service_description TS Sessions
+check_command check_ts!sessions
+}
+
+define service {
+use windows_extra_service
+service_description Exchange listDBInstances
+check_command check_exchange!listDBInstances
+}
+
+define service {
+use windows_extra_service
+service_description Exchange listSmtpSendTransports
+check_command check_exchange!listSmtpSendTransports
+}
+
+define service {
+use windows_extra_service
+service_description Exchange listSmtpReceiveTransports
+check_command check_exchange!listSmtpReceiveTransports
+}
+
+define service {
+use windows_extra_service
+service_description Exchange HubTransportServer
+check_command check_exchange!HubTransportServer
+}
+
+define service {
+use windows_extra_service
+service_description Exchange TransportQueues
+check_command check_exchange!TransportQueues
+}
+
+define service {
+use windows_extra_service
+service_description Exchange DB Instance _Total
+check_command check_exchange!DBInstances!"%_Total"
+}
+
+define service {
+use windows_extra_service
+service_description Exchange SmtpReceive
+check_command check_exchange!SmtpReceive!_Total
+}
+
+define service {
+use windows_extra_service
+service_description Exchange SmtpSend
+check_command check_exchange!SmtpSend!_Total
+}
+
+define service {
+use windows_extra_service
+service_description SQL Express Buffer Manager
+check_command check_sql!buffermanager!MSSQLSQLEXPRESS_MSSQLSQLEXPRESS
+}
+
+define service {
+use windows_extra_service
+service_description SQL Express General Stats
+check_command check_sql!general!MSSQLSQLEXPRESS_MSSQLSQLEXPRESS
+}
+
+define service {
+use windows_extra_service
+service_description SQL Express Latch Stats
+check_command check_sql!latches!MSSQLSQLEXPRESS_MSSQLSQLEXPRESS
+}
+
+define service {
+use windows_extra_service
+service_description SQL Express Total Lock Stats
+check_command check_sql!locks!MSSQLSQLEXPRESS_MSSQLSQLEXPRESS!default
+}
+
+define service {
+use windows_extra_service
+service_description SQL Express SQL Stats
+check_command check_sql!sqlstats!MSSQLSQLEXPRESS_MSSQLSQLEXPRESS
+}
+
+define service {
+use windows_extra_service
+service_description SQL Express Wait Stats
+check_command check_sql!waits!MSSQLSQLEXPRESS_MSSQLSQLEXPRESS
+}
+
+define service {
+use windows_extra_service
+service_description SQL Express Memory Stats
+check_command check_sql!memory!MSSQLSQLEXPRESS_MSSQLSQLEXPRESS
+}
+
+define service {
+use windows_extra_service
+service_description SQL Express Total Cache Stats
+check_command check_sql!cache!MSSQLSQLEXPRESS_MSSQLSQLEXPRESS!default
+}
+
+define service {
+use windows_extra_service
+service_description Total User Count
+check_command check_win_users!count!-a "status like '%'"
+}
+
+define service {
+use windows_extra_service
+service_description AD Replication
+check_command check_ad!replication!-w 0!--nodatamode
+}
