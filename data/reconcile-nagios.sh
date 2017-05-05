@@ -16,6 +16,8 @@
     array('file'=>'global/service_templates.cfg','unique'=>'name'),
   );
 
+  echo 'Reconciling ' . count($files) . ' files...' . PHP_EOL;
+
   foreach ($files as $file) {
     $backup = '/tmp/nems_migrator_restore/etc/nagios3/' . $file['file'];
     $default = '/root/nems/nems-migrator/data/nagios/' . $file['file'];
@@ -44,8 +46,8 @@
         }
         $newfile .= PHP_EOL;
       }
-echo $newfile;
-//      file_put_contents($dest,$data->dest);
+      // clobber the original file
+      file_put_contents($dest,$newfile);
     }
 
   }
