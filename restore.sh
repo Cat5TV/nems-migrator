@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "Sorry - NEMS Migrator restore option is unavailable until the release of NEMS 1.2"
+exit
 
 start=`date +%s`
 
