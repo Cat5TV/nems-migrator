@@ -1,6 +1,10 @@
 #!/bin/bash
-echo "Sorry - NEMS Migrator restore option is unavailable until the release of NEMS 1.2"
-exit
+# Remove restore functionality from legacy versions of NEMS
+ver=$(cat "/var/www/html/inc/ver.txt") 
+if [[ $ver != "1.3" ]]; then
+   echo "nems-restore requires NEMS 1.2"
+   exit
+fi
 
 start=`date +%s`
 
@@ -11,7 +15,8 @@ if pidof -o %PPID -x "`basename "$0"`">/dev/null; then
 fi
 
 if [[ $1 = "" ]]; then
-  echo "Usage: sudo ./restore.sh /location/of/backup.nems"
+  echo "Usage: sudo nems-restore /location/of/backup.nems"
+  echo "Note: You must use the full path to your backup.nems, even if it is in the current folder"
   exit
 fi
 
@@ -49,7 +54,7 @@ else
 				   service mysql stop
 				   
 				   # I know I warned you, but I love you too much to let you risk it.
-				   ./backup.sh > /dev/null 2>&1
+				   /root/nems/nems-migrator/backup.sh > /dev/null 2>&1
 				   cp -p /var/www/html/backup/backup.nems /root/
 				   
 				   if [[ -d "/tmp/nems_migrator_restore/var/lib/mysql" ]]; then
