@@ -92,7 +92,7 @@ else
 					 	echo "Upgrading to newer version of NEMS: Please edit /etc/nagios3/resource.cfg to configure your settings."
 					 else
 						 if [[ -e "/tmp/nems_migrator_restore/etc/nagios3/resource.cfg" ]]; then
-							 /usr/bin/php /root/nems/nems-migrator/data/resource-upgrade.php
+							 /root/nems/nems-migrator/data/reconcile-resource.sh
 						  else 
 							 echo "Nagios Configuration Missing. This is a critical error."
 							 exit
