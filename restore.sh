@@ -52,9 +52,11 @@ else
 				   
 				   if [[ -d "/tmp/nems_migrator_restore/var/lib/mysql" ]]; then
 							 rm -rf /var/lib/mysql
-							 cp -Rp /tmp/nems_migrator_restore/var/lib/mysql /var/lib/
+							 # Replacing database directly with NEMS backup deprecated in NEMS 1.2 - now we instead import the configs to a fresh DB
+							 # cp -Rp /tmp/nems_migrator_restore/var/lib/mysql /var/lib/
+							 cp -Rp /root/nems/nems-migrator/data/mysql /var/lib/
 							 
-							 # nConf
+							 # Import nConf Configs
 							   # Import Commands
 							     /var/www/nconf/bin/add_items_from_nagios.pl -c checkcommand -f /root/nems/nems-migrator/data/nconf/check_wmi_plus.commands -x 1
 
