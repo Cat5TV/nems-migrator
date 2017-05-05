@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
   # This script is used to consolidate settings in config files.
   # For example, as NEMS evolves, config settings in the resource.cfg file may be added.
