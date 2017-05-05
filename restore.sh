@@ -57,31 +57,27 @@ else
 				   /root/nems/nems-migrator/backup.sh > /dev/null 2>&1
 				   cp -p /var/www/html/backup/backup.nems /root/
 				   
-				   if [[ -d "/tmp/nems_migrator_restore/var/lib/mysql" ]]; then
-							 rm -rf /var/lib/mysql
-							 # Replacing database directly with NEMS backup deprecated in NEMS 1.2 - now we instead import the configs to a fresh DB
-							 # cp -Rp /tmp/nems_migrator_restore/var/lib/mysql /var/lib/
-							 cp -Rp /root/nems/nems-migrator/data/mysql /var/lib/
-							 
-							 # Import nConf Configs
-							   # Import Commands
-							     /var/www/nconf/bin/add_items_from_nagios.pl -c checkcommand -f /root/nems/nems-migrator/data/nconf/check_wmi_plus.commands -x 1
+				   if [[ -d "/tmp/nems_migrator_restore/etc/nagios3" ]]; then
+                                         # Clear the MySQL Database
+                                         rm -rf /var/lib/mysql
+                                         cp -Rp /root/nems/nems-migrator/data/mysql /var/lib/
 
-							   # Import Hosts (Uncomment if you want the sample data added)
-							     /var/www/nconf/bin/add_items_from_nagios.pl -c host -f /root/nems/nems-migrator/data/nconf/check_wmi_plus.hosts -x 1
-
-							   # Import Services
-							     /var/www/nconf/bin/add_items_from_nagios.pl -c service -f /root/nems/nems-migrator/data/nconf/check_wmi_plus.services -x 1
-						 else 
-							 echo "MySQL Database Missing. This is a critical error."
-							 exit
-					 fi
-					 
-                                         # Reconcile the Nagios config files and clobber the existing ones
+                                         # Clobber the existing configs which will not be consolidated
                                          rm /etc/nagios3/global/timeperiods.cfg && cp /tmp/nems_migrator_restore/etc/nagios3/global/timeperiods.cfg /etc/nagios3/global/
+
+                                         # Reconcile and clobber all other config files
                                          /root/nems/nems-migrator/data/reconcile-nagios.sh
 
-					 
+                                         # Import those configs into NConf's MySQL Database
+
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c checkcommand -f /etc/nagios3/global/checkcommands.cfg -x 1
+
+                                   else 
+                                         echo "Nagios Configuration Missing. This is a critical error."
+                                         exit
+                                   fi
+
+
 					 if [[ $backupver == "1.0" ]]; then
 					 	echo "Upgrading to newer version of NEMS: Please edit /etc/nagios3/resource.cfg to configure your settings."
 					 else
