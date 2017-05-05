@@ -1,0 +1,15 @@
+###########################################################################
+#
+# Host Group configuration file
+#
+###############################################################################
+
+define hostgroup {
+hostgroup_name primary_windows
+alias Windows Primary Group
+}
+
+define hostgroup {
+hostgroup_name secondary_windows
+alias Windows Secondary Group
+}
