@@ -72,21 +72,10 @@ else
 							 exit
 					 fi
 					 
-				   if [[ -d "/tmp/nems_migrator_restore/etc/nagios3/Default_collector" ]]; then
-							 rm -rf /etc/nagios3/Default_collector
-							 cp -Rp /tmp/nems_migrator_restore/etc/nagios3/Default_collector /etc/nagios3/
-						 else 
-							 echo "Nagios Configuration Missing. This is a critical error."
-							 exit
-					 fi
-					 
-					 if [[ -d "/tmp/nems_migrator_restore/etc/nagios3/global" ]]; then
-					     rm -rf /etc/nagios3/global
-							 cp -Rp /tmp/nems_migrator_restore/etc/nagios3/global /etc/nagios3/
-				   else 
-							 echo "Nagios Configuration Missing. This is a critical error."
-							 exit
-					 fi
+                                         # Reconcile the Nagios config files and clobber the existing ones
+                                         rm /etc/nagios3/global/timeperiods.cfg && cp /tmp/nems_migrator_restore/etc/nagios3/global/timeperiods.cfg /etc/nagios3/global/
+                                         /root/nems/nems-migrator/data/reconcile-nagios.sh
+
 					 
 					 if [[ $backupver == "1.0" ]]; then
 					 	echo "Upgrading to newer version of NEMS: Please edit /etc/nagios3/resource.cfg to configure your settings."
