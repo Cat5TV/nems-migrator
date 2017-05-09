@@ -155,7 +155,7 @@ else
 				   echo Your backup file is either invalid, or an unsupported version. Aborted.
 				 fi
 
-				 rm -rf /tmp/nems_migrator_restore
+				 #rm -rf /tmp/nems_migrator_restore
 				 
 				 end=`date +%s`
 				 runtime=$((end-start))
