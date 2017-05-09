@@ -58,9 +58,11 @@ else
 				   cp -p /var/www/html/backup/backup.nems /root/
 				   
 				   if [[ -d "/tmp/nems_migrator_restore/etc/nagios3" ]]; then
-                                         # Clear the MySQL Database
+                                         # Clear the MySQL Database (replace with our blank DB from NEMS-Migrator)
                                          rm -rf /var/lib/mysql
                                          cp -Rp /root/nems/nems-migrator/data/mysql /var/lib/
+					 
+					 service mysql start
 
                                          # Clobber the existing configs which will not be consolidated
                                          rm /etc/nagios3/global/timeperiods.cfg && cp /tmp/nems_migrator_restore/etc/nagios3/global/timeperiods.cfg /etc/nagios3/global/
