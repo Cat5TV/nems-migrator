@@ -43,7 +43,6 @@ else
 	 
 		read -r -p "Are you sure you want to attempt restore? [y/N] " response
 		if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-			echo "Please standby..."
 
 				mkdir -p /tmp/nems_migrator_restore
 				cd /tmp/nems_migrator_restore
