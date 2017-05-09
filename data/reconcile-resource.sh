@@ -24,8 +24,11 @@
         $import->value = $tmp[3][1];
         foreach ($data->dest as $line=>$destdata) {
           if (substr($destdata,0,(2+strlen($import->variable))) == '$' . $import->variable . '$') {
-            // Replace the matching line in the destination
-            $data->dest[$line] = '$' . $import->variable . '$=' . $import->value . PHP_EOL;
+            // Only replace if it's not USER1/USER2 (NEMS system paths) to prevent a user setting breaking NEMS if paths are different
+            if ($import->variable != 'USER1' && $import->variable != 'USER2') {
+              // Replace the matching line in the destination
+              $data->dest[$line] = '$' . $import->variable . '$=' . $import->value . PHP_EOL;
+            }
           }
         }
       }
