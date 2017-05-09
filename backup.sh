@@ -54,6 +54,8 @@ else
  
  tar czf /tmp/backup.tar.gz \
   /var/www/html/inc/ver.txt \
+  /var/www/htpasswd \
+  /var/www/nconf/config \
   /etc/nagvis/$nagvis \
   /etc/nagios3/resource.cfg \
   /etc/nagios3/htpasswd.users \
