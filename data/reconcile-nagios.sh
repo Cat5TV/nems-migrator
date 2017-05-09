@@ -35,9 +35,9 @@
       }
       # Now overwrite defaults with NEMS-Migrator backup
       foreach ($data->backup as $definition) {
-        if ($file['file'] == 'Default_collector/services.cfg' && isset($definition['name'])) {
-          if (!isset($counter[$definition['name']])) $counter[$definition['name']] = 1; else $counter[$definition['name']] = $counter[$definition['name']]++;
-          $definition['name'] = $consolidation[$definition['name']] . ' - ' . $counter[$definition['name']];
+        if ($file['file'] == 'Default_collector/services.cfg' && isset($consolidation[$definition['name']])) {
+          if (!isset($counter[$definition['name']])) $counter[$definition['name']] = 2; else $counter[$definition['name']] = $counter[$definition['name']]++;
+          $definition['name'] = $definition['name'] . ' - ' . $counter[$definition['name']];
         }
         $consolidation[$definition['name']] = $definition['data'];
       }
