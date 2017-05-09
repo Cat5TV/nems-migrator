@@ -76,21 +76,21 @@ else
                                          /root/nems/nems-migrator/data/reconcile-nagios.sh
 
                                          # Import those configs into NConf's MySQL Database
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c timeperiod -f /etc/nagios3/global/timeperiods.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c misccommand -f /etc/nagios3/global/misccommands.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c checkcommand -f /etc/nagios3/global/checkcommands.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c contact -f /etc/nagios3/global/contacts.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c contactgroup -f /etc/nagios3/global/contactgroups.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c host-template -f /etc/nagios3/global/host_templates.cfg
-                                         #/var/www/nconf/bin/add_items_from_nagios.pl -c host -f /etc/nagios3/parent-hosts.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c host -f /etc/nagios3/Default_collector/hosts.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c hostgroup -f /etc/nagios3/Default_collector/hostgroups.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c host-dependency -f /etc/nagios3/Default_collector/host_dependencies.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c service-template -f /etc/nagios3/global/service_templates.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c service -f /etc/nagios3/Default_collector/services.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c advanced-service -f /etc/nagios3/Default_collector/advanced_services.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c servicegroup -f /etc/nagios3/Default_collector/servicegroups.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c service-dependency -f /etc/nagios3/Default_collector/service_dependencies.cfg
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c timeperiod -f /etc/nagios3/global/timeperiods.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c misccommand -f /etc/nagios3/global/misccommands.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c checkcommand -f /etc/nagios3/global/checkcommands.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c contact -f /etc/nagios3/global/contacts.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c contactgroup -f /etc/nagios3/global/contactgroups.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c host-template -f /etc/nagios3/global/host_templates.cfg | grep -E "ERROR"
+                                         #/var/www/nconf/bin/add_items_from_nagios.pl -c host -f /etc/nagios3/parent-hosts.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c host -f /etc/nagios3/Default_collector/hosts.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c hostgroup -f /etc/nagios3/Default_collector/hostgroups.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c host-dependency -f /etc/nagios3/Default_collector/host_dependencies.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c service-template -f /etc/nagios3/global/service_templates.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c service -f /etc/nagios3/Default_collector/services.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c advanced-service -f /etc/nagios3/Default_collector/advanced_services.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c servicegroup -f /etc/nagios3/Default_collector/servicegroups.cfg | grep -E "ERROR"
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c service-dependency -f /etc/nagios3/Default_collector/service_dependencies.cfg | grep -E "ERROR"
 
                                    else 
                                          echo "Nagios Configuration Missing. This is a critical error."
