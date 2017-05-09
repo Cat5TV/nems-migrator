@@ -88,7 +88,7 @@ else
                                          /var/www/nconf/bin/add_items_from_nagios.pl -c host-dependency -f /etc/nagios3/Default_collector/host_dependencies.cfg
                                          /var/www/nconf/bin/add_items_from_nagios.pl -c service-template -f /etc/nagios3/global/service_templates.cfg
                                          /var/www/nconf/bin/add_items_from_nagios.pl -c service -f /etc/nagios3/Default_collector/services.cfg
-                                         /var/www/nconf/bin/add_items_from_nagios.pl -c advanced-service -f /etc/nagios3/Default_collector/advanced-services.cfg
+                                         /var/www/nconf/bin/add_items_from_nagios.pl -c advanced-service -f /etc/nagios3/Default_collector/advanced_services.cfg
                                          /var/www/nconf/bin/add_items_from_nagios.pl -c servicegroup -f /etc/nagios3/Default_collector/servicegroups.cfg
                                          /var/www/nconf/bin/add_items_from_nagios.pl -c service-dependency -f /etc/nagios3/Default_collector/service_dependencies.cfg
 
