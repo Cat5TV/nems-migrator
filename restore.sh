@@ -65,7 +65,8 @@ else
                                          # Clear the MySQL Database (replace with our blank DB from NEMS-Migrator)
                                          rm -rf /var/lib/mysql
                                          cp -Rp /root/nems/nems-migrator/data/mysql /var/lib/
-					 
+					 chown -R mysql:mysql /var/lib/mysql
+
 					 service mysql start
 
                                          # Clobber the existing configs which will not be consolidated
