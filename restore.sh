@@ -5,6 +5,10 @@ if [[ $ver != "1.2" ]]; then
    echo "ERROR: nems-restore requires NEMS 1.2"
    exit
 fi
+if [ ! -f /var/www/htpasswd ]; then
+   echo "ERROR: NEMS has not been initialized yet. Run: sudo nems-init"
+   exit
+fi
 
 start=`date +%s`
 
