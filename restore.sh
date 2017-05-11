@@ -55,19 +55,12 @@ else
 				 if [[ $backupver = "1.0" ]] || [[ $backupver = "1.1" ]]; then
 				   echo Backup file is from NEMS $backupver. Proceeding.
 				   service nagios3 stop
-				   service mysql stop
 				   
 				   # I know I warned you, but I love you too much to let you risk it.
 				   /root/nems/nems-migrator/backup.sh > /dev/null 2>&1
 				   cp -p /var/www/html/backup/backup.nems /root/
 				   
 				   if [[ -d "/tmp/nems_migrator_restore/etc/nagios3" ]]; then
-                                         # Clear the MySQL Database (replace with our blank DB from NEMS-Migrator)
-                                         rm -rf /var/lib/mysql
-                                         cp -Rp /root/nems/nems-migrator/data/mysql /var/lib/
-					 chown -R mysql:mysql /var/lib/mysql
-
-					 service mysql start
 
                                          # Clobber the existing configs which will not be consolidated
                                          rm /etc/nagios3/global/timeperiods.cfg && cp /tmp/nems_migrator_restore/etc/nagios3/global/timeperiods.cfg /etc/nagios3/global/
@@ -75,7 +68,7 @@ else
                                          # Reconcile and clobber all other config files
                                          /root/nems/nems-migrator/data/reconcile-nagios.sh
 					 
-					 # Import new consolidated configs into NConf
+					 # Clear MySQL database and import new consolidated configs into NConf
 					 /root/nems/nems-migrator/data/nconf-import.sh
 
                                    else 
