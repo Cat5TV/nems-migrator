@@ -52,7 +52,7 @@ else
 				 backupver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt") 
 				 ver=$(cat "/var/www/html/inc/ver.txt") 
 				 
-				 if [[ $backupver = "1.0" ]] || [[ $backupver = "1.1" ]]; then
+				 if [[ $backupver = "1.0" ]] || [[ $backupver = "1.1" ]] || [[ $backupver = "1.2" ]] || [[ $backupver = "1.2.1" ]]; then
 				   echo Backup file is from NEMS $backupver. Proceeding.
 				   service nagios3 stop
 				   
