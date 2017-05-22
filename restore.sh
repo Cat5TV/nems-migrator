@@ -71,6 +71,9 @@ else
 					 # Clear MySQL database and import new consolidated configs into NConf
 					 /root/nems/nems-migrator/data/nconf-import.sh
 
+                                         # Activate default nagios monitor on all hosts
+                                         /root/nems/nems-migrator/data/nconf-activate.sh
+
                                    else 
                                          echo "Nagios Configuration Missing. This is a critical error."
                                          exit
