@@ -2,12 +2,13 @@
 
   # Clear the MySQL Database (replace with our blank DB from NEMS-Migrator)
   printf "Removing all NEMS NConf configuration... "
-  service mysql stop
-  # Clear the MySQL Database (replace with our blank DB from NEMS-Migrator)
+  systemctl stop mysql
+  # Clear the MySQL Database (replace with our Clean DB from NEMS-Migrator)
   rm -rf /var/lib/mysql
-  cp -Rp /root/nems/nems-migrator/data/mysql /var/lib/
-  chown -R mysql:mysql /var/lib/mysql
-  service mysql start
+  cp -Rp /root/nems/nems-migrator/data/mysql/NEMS-Clean /var/lib/
+  chown -R mysql:mysql /var/lib/NEMS-Clean
+  mv /var/lib/NEMS-Clean /var/lib/mysql
+  systemctl start mysql
   echo "Done."
 
   echo "Importing Nagios3 Configs to NEMS NConf..."
