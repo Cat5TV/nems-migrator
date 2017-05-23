@@ -63,7 +63,7 @@ else
 				   if [[ -d "/tmp/nems_migrator_restore/etc/nagios3" ]]; then
 
                                          # Clobber the existing configs which will not be consolidated
-                                         rm /etc/nagios3/global/timeperiods.cfg && cp /tmp/nems_migrator_restore/etc/nagios3/global/timeperiods.cfg /etc/nagios3/global/
+                                         rm /etc/nagios3/global/timeperiods.cfg && cp /tmp/nems_migrator_restore/etc/nagios3/global/timeperiods.cfg /etc/nagios3/global/ && chown www-data:www-data /etc/nagios3/global/timeperiods.cfg
 
                                          # Reconcile and clobber all other config files
                                          /root/nems/nems-migrator/data/reconcile-nagios.sh
