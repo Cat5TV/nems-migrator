@@ -39,4 +39,12 @@
     }
   }
 
+  # Activate Host Presets
+  $query  = "INSERT INTO ItemLinks (`fk_id_item`,`fk_item_linked2`,`fk_id_attr`,`cust_order`) VALUES (5231,5286,81,0)";
+  $query .= "INSERT INTO ItemLinks (`fk_id_item`,`fk_item_linked2`,`fk_id_attr`,`cust_order`) VALUES (5258,5286,81,0)";
+  $query .= "INSERT INTO ItemLinks (`fk_id_item`,`fk_item_linked2`,`fk_id_attr`,`cust_order`) VALUES (5259,5286,81,0)";
+  $query .= "INSERT INTO ItemLinks (`fk_id_item`,`fk_item_linked2`,`fk_id_attr`,`cust_order`) VALUES (5276,5286,81,0)";
+  $result = @mysqli_query($GLOBALS["___mysqli_ston"], $query);
+
+
 ?>
