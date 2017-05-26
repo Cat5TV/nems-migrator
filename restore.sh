@@ -64,6 +64,7 @@ else
 
                                          # Clobber the existing configs which will not be consolidated
                                          rm /etc/nagios3/global/timeperiods.cfg && cp /tmp/nems_migrator_restore/etc/nagios3/global/timeperiods.cfg /etc/nagios3/global/ && chown www-data:www-data /etc/nagios3/global/timeperiods.cfg
+                                         rm /etc/nagios3/parent_hosts.cfg && cp /tmp/nems_migrator_restore/etc/nagios3/parent_hosts.cfg /etc/nagios3/ && chown www-data:www-data /etc/nagios3/parent_hosts.cfg
 
                                          # Reconcile and clobber all other config files
                                          /root/nems/nems-migrator/data/reconcile-nagios.sh
