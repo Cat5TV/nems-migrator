@@ -19,7 +19,7 @@
   echo "  Importing: contact" && /var/www/nconf/bin/add_items_from_nagios.pl -c contact -f /etc/nagios3/global/contacts.cfg 2>&1 | grep -E "ERROR"
   echo "  Importing: contactgroup" && /var/www/nconf/bin/add_items_from_nagios.pl -c contactgroup -f /etc/nagios3/global/contactgroups.cfg 2>&1 | grep -E "ERROR"
   echo "  Importing: host-template" && /var/www/nconf/bin/add_items_from_nagios.pl -c host-template -f /etc/nagios3/global/host_templates.cfg 2>&1 | grep -E "ERROR"
-  #echo "  Importing: parent-host" && /var/www/nconf/bin/add_items_from_nagios.pl -c host -f /etc/nagios3/parent-hosts.cfg 2>&1 | grep -E "ERROR"
+  echo "  Importing: parent-host" && /var/www/nconf/bin/add_items_from_nagios.pl -c host -f /etc/nagios3/parent-hosts.cfg 2>&1 | grep -E "ERROR"
   echo "  Importing: host" && /var/www/nconf/bin/add_items_from_nagios.pl -c host -f /etc/nagios3/Default_collector/hosts.cfg 2>&1 | grep -E "ERROR"
   echo "  Importing: hostgroup" && /var/www/nconf/bin/add_items_from_nagios.pl -c hostgroup -f /etc/nagios3/Default_collector/hostgroups.cfg 2>&1 | grep -E "ERROR"
   echo "  Importing: host-dependency" && /var/www/nconf/bin/add_items_from_nagios.pl -c host-dependency -f /etc/nagios3/Default_collector/host_dependencies.cfg 2>&1 | grep -E "ERROR"
