@@ -58,6 +58,7 @@ else
   /var/www/nconf/config \
   /etc/nagvis/$nagvis \
   /etc/nagios3/resource.cfg \
+  /etc/nagios3/cgi.cfg \
   /etc/nagios3/htpasswd.users \
   /var/log/ \
   /var/www/nconf/output/ \
