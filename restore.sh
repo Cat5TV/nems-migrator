@@ -1,8 +1,8 @@
 #!/bin/bash
 # Remove restore functionality from legacy versions of NEMS
 ver=$(cat "/var/www/html/inc/ver.txt") 
-if [[ $ver != "1.2.1" ]]; then
-   echo "ERROR: nems-restore requires NEMS 1.2.1"
+if [[ $ver != "1.2.1" ]] && [[ $ver != "1.2.2" ]]; then
+   echo "ERROR: nems-restore requires NEMS 1.2.1 or higher"
    exit
 fi
 if [ ! -f /var/www/htpasswd ]; then
