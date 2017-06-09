@@ -8,6 +8,7 @@
   $db_name = $db ;
   $db_user = $user ;
   $db_pass = $pass ;
+  $hosts = array();
 
 	$conn = @($GLOBALS["___mysqli_ston"] = mysqli_connect($db_host,  $db_user,  $db_pass));
 	if($conn){
@@ -29,7 +30,7 @@
       }
   }
 
-  if (is_array($hosts)) {
+  if (count($hosts) > 0) {
     foreach ($hosts as $id=>$name) {
       printf("Connecting default monitor to $name...");
       $query = "INSERT INTO ItemLinks (`fk_id_item`,`fk_item_linked2`,`fk_id_attr`,`cust_order`) VALUES ($id,1,26,0)"; // insert an association with default nagios monitor
@@ -37,6 +38,8 @@
       if ($result) { echo ' Done.'; } else { echo ' Error.'; }
       echo PHP_EOL;
     }
+  } else {
+    echo 'I could not find any hosts. This may be an error (unless you actually have none).' . PHP_EOL;
   }
 
   # Activate Host Presets
