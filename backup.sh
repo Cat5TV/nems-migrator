@@ -43,10 +43,16 @@ else
 		nagvis="etc/maps/"
  fi
 
- if [[ $ver = "1.2" ]]; then
+ if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.2'")}') )); then
    # Additional items to backup if version matches
    add="/etc/rpimonitor \
      /etc/webmin \
+   "
+ fi
+
+ if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.3'")}') )); then
+   # Additional items to backup if version matches
+   add="/var/www/certs \
    "
  fi
 
