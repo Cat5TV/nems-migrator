@@ -49,19 +49,23 @@ else
 
 				 tar -zxf $1
 				 
-				 # Legacy compatibility
-				 if [[ -f "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt" ]]; then
-				   backupver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt") 
-				 
+				# Legacy compatibility
+				if [[ -f "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt" ]]; then
+				 backupver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt")
+
 				 # Current nems.conf version storage
 				 else if [[ -f "/tmp/nems_migrator_restore/home/pi/nems.conf" ]]; then
 				   backupver=$(cat /tmp/nems_migrator_restore/home/pi/nems.conf | grep version |  printf '%s' $(cut -n -d '=' -f 2))
 
-				 # We don't really know the true version, but we know this is from NEMS, so set 1.2
-				 else if [[ -d "/var/log/nems/" ]]; then
-				   backupver=1.2
-				 
+					 # We don't really know the true version, but we know this is from NEMS, so set 1.2
+					 else if [[ -d "/var/log/nems/" ]]; then
+					   backupver=1.2
+					   
+				   fi
+				   
 				 fi
+
+				fi
 				 
 				 ver=$(/home/pi/nems-scripts/info.sh nemsver) 
 				 
