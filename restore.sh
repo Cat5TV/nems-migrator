@@ -1,7 +1,7 @@
 #!/bin/bash
 # Remove restore functionality from legacy versions of NEMS
-ver=$(cat "/var/www/html/inc/ver.txt") 
-if [[ $ver != "1.2.1" ]] && [[ $ver != "1.2.2" ]]; then
+ver=$(/home/pi/nems-scripts/info.sh nemsver) 
+if (( ! $(awk 'BEGIN {print ("'$ver'" >= "'1.2.1'")}') )); then
    echo "ERROR: nems-restore requires NEMS 1.2.1 or higher"
    exit
 fi
@@ -48,11 +48,26 @@ else
 				cd /tmp/nems_migrator_restore
 
 				 tar -zxf $1
-
-				 backupver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt") 
-				 ver=$(cat "/var/www/html/inc/ver.txt") 
 				 
-				 if [[ $backupver = "1.0" ]] || [[ $backupver = "1.1" ]] || [[ $backupver = "1.2" ]] || [[ $backupver = "1.2.1" ]]; then
+				 # Legacy compatibility
+				 if [[ -f "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt" ]]; then
+				   backupver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt") 
+				 
+				 # Current nems.conf version storage
+				 else if [[ -f "/tmp/nems_migrator_restore/home/pi/nems.conf" ]]; then
+				   backupver=$(cat /tmp/nems_migrator_restore/home/pi/nems.conf | grep version |  printf '%s' $(cut -n -d '=' -f 2))
+				 fi
+
+				 # We don't really know the true version, but we know this is from NEMS, so set 1.2
+				 else if [[ -d "/var/log/nems/" ]]; then
+				   backupver=1.2
+				 fi
+				 
+				 fi
+				 
+				 ver=$(/home/pi/nems-scripts/info.sh nemsver) 
+				 
+				 if (( ! $(awk 'BEGIN {print ("'$backupver'" >= "'1.0'")}') )); then
 				   echo Backup file is from NEMS $backupver. Proceeding.
 				   service nagios3 stop
 				   
