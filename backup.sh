@@ -59,7 +59,7 @@ else
  service nagios3 stop
  
  tar czf /tmp/backup.tar.gz \
-  /var/www/html/inc/ver.txt \
+  /home/pi/nems.conf \
   /var/www/htpasswd \
   /var/www/nconf/config \
   /etc/nagvis/$nagvis \
