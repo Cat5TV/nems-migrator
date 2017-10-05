@@ -20,15 +20,16 @@ else
    exit
  fi
  
- if [ -d /var/www/html/backup ]
+ if [ -d /var/www/html/backup/snapshot ]
    then
-   echo Saving to existing backup set at /var/www/html/backup
+   echo Saving to existing backup set at /var/www/html/backup/snapshot
    else
-   mkdir /var/www/html/backup
-   echo Created backup folder at /var/www/html/backup
+   # Legacy Support for NEMS 1.0 to 1.2.x (will not be in RAM)
+   mkdir -p /var/www/html/backup/snapshot
+   echo Created backup folder at /var/www/html/backup/snapshot
  fi
  
- ver=$(cat "/var/www/html/inc/ver.txt")
+ ver=$(/usr/bin/nems-info nemsver)
  
  # NagVis maps are stored differently in NEMS 1.0
  if [[ $ver = "" ]]; then
@@ -75,14 +76,14 @@ else
 
  service nagios3 start
  
- if [ -e /var/www/html/backup/backup.nems ]
+ if [ -e /var/www/html/backup/snapshot/backup.nems ]
    then
-   rm /var/www/html/backup/backup.nems
+   rm /var/www/html/backup/snapshot/backup.nems
  fi
 
- mv /tmp/backup.tar.gz /var/www/html/backup/backup.nems
+ mv /tmp/backup.tar.gz /var/www/html/backup/snapshot/backup.nems
 
- echo "Done. You'll find the backup at /var/www/html/backup/backup.nems"
+ echo "Done. You'll find the backup at /var/www/html/backup/snapshot/backup.nems"
 
  echo ""
  echo You can access the file from your computer by navigating to http://NEMSIP/backup/
