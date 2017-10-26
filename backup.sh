@@ -29,7 +29,7 @@ else
    echo Created backup folder at /var/www/html/backup/snapshot
  fi
  
- ver=$(/usr/bin/nems-info nemsver)
+ ver=$(/usr/local/bin/nems-info nemsver)
  
  # NagVis maps are stored differently in NEMS 1.0
  if [[ $ver = "" ]]; then
