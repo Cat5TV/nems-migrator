@@ -1,6 +1,6 @@
 #!/bin/bash
 # Remove restore functionality from legacy versions of NEMS
-ver=$(/home/pi/nems-scripts/info.sh nemsver) 
+ver=$(/usr/local/bin/nems-info nemsver) 
 if (( ! $(awk 'BEGIN {print ("'$ver'" >= "'1.2.1'")}') )); then
    echo "ERROR: nems-restore requires NEMS 1.2.1 or higher"
    exit
@@ -54,6 +54,10 @@ else
 				 backupver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt")
 
 				 # Current nems.conf version storage
+				 else if [[ -f "/tmp/nems_migrator_restore/usr/local/share/nems/nems.conf" ]]; then
+				   backupver=$(cat /tmp/nems_migrator_restore/usr/local/share/nems/nems.conf | grep version |  printf '%s' $(cut -n -d '=' -f 2))
+
+                                 # NEMS 1.2.x old storage location (moved with fixes.sh)
 				 else if [[ -f "/tmp/nems_migrator_restore/home/pi/nems.conf" ]]; then
 				   backupver=$(cat /tmp/nems_migrator_restore/home/pi/nems.conf | grep version |  printf '%s' $(cut -n -d '=' -f 2))
 
@@ -67,7 +71,7 @@ else
 
 				fi
 				 
-				 ver=$(/home/pi/nems-scripts/info.sh nemsver) 
+				 ver=$(/usr/local/bin/nems-info nemsver) 
 				 
 				 if (( ! $(awk 'BEGIN {print ("'$backupver'" >= "'1.0'")}') )); then
 				   echo Backup file is from NEMS $backupver. Proceeding.
