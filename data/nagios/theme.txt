@@ -1,0 +1,1 @@
+/usr/share/nagios3/htdocs -> /var/www/html/share/nagios3/
