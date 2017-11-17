@@ -1,0 +1,41 @@
+# m h  dom mon dow   command
+
+# Determine the latest version of NEMS
+0 0 * * * /usr/local/share/nems/nems-scripts/quickfix.sh > /dev/null 2>&1
+@reboot /usr/local/share/nems/nems-scripts/quickfix.sh > /dev/null 2>&1
+
+# Backup the configuration and logs for easy migration
+*/5 * * * * /root/nems/nems-migrator/backup.sh > /dev/null 2>&1
+
+# Load the nagios-api
+@reboot /usr/local/share/nems/nems-scripts/services.sh > /dev/null 2>&1
+
+# Generate Monitorix graphics (which are stored in RAM via tmpfs)
+@reboot /usr/local/share/nems/nems-scripts/monitorix.sh all
+*/15 * * * * /usr/local/share/nems/nems-scripts/monitorix.sh day
+0 * * * * /usr/local/share/nems/nems-scripts/monitorix.sh week
+0 */6 * * * /usr/local/share/nems/nems-scripts/monitorix.sh month
+0 0 * * 1 /usr/local/share/nems/nems-scripts/monitorix.sh year
+
+# Run a weekly system benchmark of the NEMS server to assist with troubleshooting NEMS0001
+0 3 * * 0 /usr/local/share/nems/nems-scripts/benchmark.sh > /var/log/nems/benchmark.log
+
+# NEMS Anonymous Stats NEMS0002
+@reboot /usr/local/share/nems/nems-scripts/stats.sh
+0 0 * * * /usr/local/share/nems/nems-scripts/stats.sh
+
+# Load Average Over One Week Logger NEMS0003
+*/15 * * * * /usr/local/share/nems/nems-scripts/loadlogger.sh cron
+
+# Detect Hardware Model NEMS0004
+@reboot /usr/local/share/nems/nems-scripts/hw_model.sh
+
+# Log Package Version Info NEMS0005
+0 5 * * 0 /usr/local/share/nems/nems-scripts/versions.sh > /var/log/nems/package-versions.log
+
+# Load monit
+@reboot sleep 15 && /usr/bin/monit && sleep 10 && /usr/bin/monit reload
+15 8 * * 2 /etc/webmin/package-updates/update.pl
+
+# Log CPU Temperature NEMS0006
+*/15 * * * * /usr/local/share/nems/nems-scripts/thermallogger.sh cron
