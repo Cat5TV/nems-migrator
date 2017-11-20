@@ -62,7 +62,14 @@
   echo PHP_EOL;
 
     function parsefile($filename,$file) {
-      if (file_exists($filename)) $data = file($filename);
+      echo "Scanning " . $filename . "... ";
+      if (!file_exists($filename)) {
+        echo "File not found. Cannot load." . PHP_EOL;
+      } else {
+        echo "File found. Loading...";
+	$data = file($filename);
+        if (is_array($data) && count($data) > 0) {
+          echo 'Found ' . count($data) . ' lines... Importing.';
       $inside = 0;
       $index = 0;
 
@@ -87,6 +94,10 @@
           $index++;
         }
 
+      }
+      } else {
+        echo "Couldn't find any data. Aborting.";
+      }
       }
       return $definitions;
     }
