@@ -16,6 +16,7 @@ if {![string match -nocase "/home*" $var(path)] && ![string match -nocase "/usr/
 #set nemsver [exec -- /bin/cat /var/www/html/inc/ver.txt]
 #set nemsveravail [exec -- /bin/cat /var/www/html/inc/ver-available.txt]
 # NEMS 1.2
+set nemsplatform [exec -- /usr/local/bin/nems-info platform-name]
 set nemsver [exec -- /usr/local/bin/nems-info nemsver]
 set nemsveravail [exec -- /usr/local/bin/nems-info nemsveravail]
 
@@ -103,6 +104,7 @@ set creator {
 # * Print Output
 puts "\033\[01;32m$head\033\[0m"
 puts "\033\[01;90m$creator\033\[0m"
+puts "  \033\[35mNEMS Platform....:\033\[0m \033\[36m$nemsplatform\033\[0m"
 puts "  \033\[35mNEMS Version.....:\033\[0m \033\[36m$nemsver\033\[0m \033\[33m\(Current Version is $nemsveravail\)\033\[0m"
 puts "  \033\[35mNEMS IP Address..:\033\[0m \033\[36m$nemsip\033\[0m"
 puts "  \033\[35mLast Login.......:\033\[0m \033\[36m$ll(1) $ll(2) $ll(3) $ll(4) from\033\[0m \033\[33m$ll(5)\033\[0m"
