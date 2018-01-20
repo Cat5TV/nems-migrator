@@ -11,11 +11,11 @@
 @reboot /usr/local/share/nems/nems-scripts/services.sh > /dev/null 2>&1
 
 # Generate Monitorix graphics (which are stored in RAM via tmpfs)
-@reboot /usr/local/share/nems/nems-scripts/monitorix.sh all
-*/15 * * * * /usr/local/share/nems/nems-scripts/monitorix.sh day
-0 * * * * /usr/local/share/nems/nems-scripts/monitorix.sh week
-0 */6 * * * /usr/local/share/nems/nems-scripts/monitorix.sh month
-0 0 * * 1 /usr/local/share/nems/nems-scripts/monitorix.sh year
+@reboot /usr/local/share/nems/nems-scripts/monitorix.sh all > /dev/null 2>&1
+*/15 * * * * /usr/local/share/nems/nems-scripts/monitorix.sh day > /dev/null 2>&1
+0 * * * * /usr/local/share/nems/nems-scripts/monitorix.sh week > /dev/null 2>&1
+0 */6 * * * /usr/local/share/nems/nems-scripts/monitorix.sh month > /dev/null 2>&1
+0 0 * * 1 /usr/local/share/nems/nems-scripts/monitorix.sh year > /dev/null 2>&1
 
 # Run a weekly system benchmark of the NEMS server to assist with troubleshooting NEMS0001
 0 3 * * 0 /usr/local/share/nems/nems-scripts/benchmark.sh > /var/log/nems/benchmark.log
