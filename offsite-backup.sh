@@ -14,11 +14,26 @@ if [[ $osbpass == '' ]] || [[ $osbkey == '' ]]; then
   exit
 fi;
 
-# Should wrap this bit in a check to the API to see if this user is authorized. No point in uploading if not.
+if [[ $1 == 'restore' ]] && [[ $2 != '' ]]; then
+  printf "Checking NEMS Migrator Off-Site Backup Server for backup # $2..."
+  if [ -f /tmp/backup.nems.gpg ]; then
+    rm /tmp/backup.nems.gpg
+  fi;
+  curl -F "hwid=$hwid" -F "osbkey=$osbkey" https://nemslinux.com/api/offsite-backup/restore.php -o /tmp/backup.nems.gpg
+  gpg --yes --batch --passphrase="::$osbpass::$osbkey::" --decrypt /tmp/backup.nems.gpg > /tmp/backup.nems
+  if ! tar -tf /tmp/backup.nems &> /dev/null; then
+    echo Error with backup.
+    exit
+  else
+    nems-restore /tmp/backup.nems
+  fi
+else
+  # Should wrap this bit in a check to the API to see if this user is authorized. No point in uploading if not.
 
-# Encrypt the file
-# Combine the user's passphrase with the OSB Key to further strenghten the entropy of the passphrase
-gpg --yes --batch --passphrase="::$osbpass::$osbkey::" -c /var/www/html/backup/snapshot/backup.nems
+  # Encrypt the file
+  # Combine the user's passphrase with the OSB Key to further strenghten the entropy of the passphrase
+  gpg --yes --batch --passphrase="::$osbpass::$osbkey::" -c /var/www/html/backup/snapshot/backup.nems
 
-# Upload the file
-curl -F "hwid=$hwid" -F "osbkey=$osbkey" -F "backup=@/var/www/html/backup/snapshot/backup.nems.gpg" https://nemslinux.com/api/offsite-backup/
+  # Upload the file
+  curl -F "hwid=$hwid" -F "osbkey=$osbkey" -F "backup=@/var/www/html/backup/snapshot/backup.nems.gpg" https://nemslinux.com/api/offsite-backup/
+fi;
