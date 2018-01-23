@@ -35,5 +35,20 @@ else
   gpg --yes --batch --passphrase="::$osbpass::$osbkey::" -c /var/www/html/backup/snapshot/backup.nems
 
   # Upload the file
-  curl -F "hwid=$hwid" -F "osbkey=$osbkey" -F "backup=@/var/www/html/backup/snapshot/backup.nems.gpg" https://nemslinux.com/api/offsite-backup/
+  response=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "backup=@/var/www/html/backup/snapshot/backup.nems.gpg" https://nemslinux.com/api/offsite-backup/)
+  if [[ $response == 1 ]]; then
+    echo "`date`::$response::Success::File was accepted" >> /var/log/nems/nems-osb.log
+  elif [[ $response == 0 ]]; then
+    echo "`date`::$response::Failed::Upload failed" >> /var/log/nems/nems-osb.log
+  elif [[ $response == 2 ]]; then
+    echo "`date`::$response::Failed::File permissions issue on receiving server" >> /var/log/nems/nems-osb.log
+  elif [[ $response == 3 ]]; then
+    echo "`date`::$response::Failed::Could not access authentication service" >> /var/log/nems/nems-osb.log
+  elif [[ $response == 4 ]]; then
+    echo "`date`::$response::Failed::Invalid credentials" >> /var/log/nems/nems-osb.log
+  elif [[ $response == 5 ]]; then
+    echo "`date`::$response::Failed::Bad query" >> /var/log/nems/nems-osb.log
+  else
+    echo "`date`::-::Failed::Unknown error" >> /var/log/nems/nems-osb.log # Replace response with -- as it may be anything
+  fi;
 fi;
