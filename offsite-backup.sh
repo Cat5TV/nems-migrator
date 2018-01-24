@@ -35,9 +35,18 @@ else
   gpg --yes --batch --passphrase="::$osbpass::$osbkey::" -c /var/www/html/backup/snapshot/backup.nems
 
   # Upload the file
-  response=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "backup=@/var/www/html/backup/snapshot/backup.nems.gpg" https://nemslinux.com/api/offsite-backup/)
+  data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "backup=@/var/www/html/backup/snapshot/backup.nems.gpg" https://nemslinux.com/api/offsite-backup/)
+
+  # Parse the response
+  datarr=($data)
+  response="${datarr[0]}"
+  date="${datarr[1]}"
+  size="${datarr[2]}"
+  usage="${datarr[3]}"
+  retained="${datarr[4]}"
+
   if [[ $response == 1 ]]; then
-    echo "`date`::$response::Success::File was accepted" >> /var/log/nems/nems-osb.log
+    echo "`date`::$response::Success::File was accepted::$date::$size::$usage::$retained" >> /var/log/nems/nems-osb.log
   elif [[ $response == 0 ]]; then
     echo "`date`::$response::Failed::Upload failed" >> /var/log/nems/nems-osb.log
   elif [[ $response == 2 ]]; then
