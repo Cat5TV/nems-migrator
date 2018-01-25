@@ -8,6 +8,7 @@
 hwid=`/usr/local/bin/nems-info hwid`
 osbpass=$(cat /usr/local/share/nems/nems.conf | grep osbpass | printf '%s' $(cut -n -d '=' -f 2))
 osbkey=$(cat /usr/local/share/nems/nems.conf | grep osbkey | printf '%s' $(cut -n -d '=' -f 2))
+timestamp=$(/bin/date +%s)
 
 if [[ $osbpass == '' ]] || [[ $osbkey == '' ]]; then
   echo NEMS Migrator Offsite Backup is not currently enabled.
@@ -35,7 +36,7 @@ else
   gpg --yes --batch --passphrase="::$osbpass::$osbkey::" -c /var/www/html/backup/snapshot/backup.nems
 
   # Upload the file
-  data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "backup=@/var/www/html/backup/snapshot/backup.nems.gpg" https://nemslinux.com/api/offsite-backup/)
+  data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "timestamp=$timestamp" -F "backup=@/var/www/html/backup/snapshot/backup.nems.gpg" https://nemslinux.com/api/offsite-backup/)
 
   # Parse the response
   datarr=($data)
