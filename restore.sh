@@ -19,8 +19,15 @@ if pidof -o %PPID -x "`basename "$0"`">/dev/null; then
 fi
 
 if [[ $1 = "" ]]; then
-  echo "Usage: sudo nems-restore /location/of/backup.nems"
-  echo "Note: You must use the full path to your backup.nems, even if it is in the current folder"
+  echo ""
+  echo "NEMS Migrator Restore - By Robbie Ferguson"
+  echo ""
+  echo "Local Usage: sudo nems-restore /location/of/backup.nems"
+  echo "Off-Site Backup Usage: sudo nems-restore osb"
+  echo ""
+  echo "For local usage, you must use the full path to your backup.nems,"
+  echo "even if it is in the current folder."
+  echo ""
   exit
 fi
 
@@ -28,6 +35,17 @@ if [[ $EUID -ne 0 ]]; then
   echo "ERROR: You must be a root" 2>&1
   exit 1
 else
+
+  # Let's grab it from Off-Site Backup instead
+   if [[ ${1,,} == 'osb' ]]; then
+     /root/nems/nems-migrator/restore-offsite.sh
+     if [[ -f /tmp/osb.backup.nems ]]; then
+       set -- "/tmp/osb.backup.nems"
+     else
+       echo Aborting. There is no backup downloaded.
+       exit
+     fi
+   fi
 
 	if [[ -e $1 ]]; then
 

@@ -14,6 +14,9 @@ if [[ $osbpass == '' ]] || [[ $osbkey == '' ]]; then
   exit
 fi;
 
+if [[ -f /tmp/osb.backup.nems ]]; then
+  rm /tmp/osb.backup.nems
+fi
 # Load Account Data
   data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" https://nemslinux.com/api-backend/offsite-backup-checkin.php)
   set -f
@@ -65,22 +68,21 @@ fi
       filelocaldate="${datarr[2]}"
       echo "Downloading NEMS Migrator Off-Site Backup Server for backup from $filelocaldate..."
       echo ""
-      curl -F "hwid=$hwid" -F "osbkey=$osbkey" -F "date=$serverdate" https://nemslinux.com/api-backend/offsite-backup-restore.php -o /tmp/backup.nems.gpg
+      curl -F "hwid=$hwid" -F "osbkey=$osbkey" -F "date=$serverdate" https://nemslinux.com/api-backend/offsite-backup-restore.php -o /tmp/osb.backup.nems.gpg
       echo ""
       echo "Attempting decryption..."
       echo ""
-      gpg --yes --batch --passphrase="::$osbpass::$osbkey::" --decrypt /tmp/backup.nems.gpg > /tmp/backup.nems
-      if [ -f /tmp/backup.nems.gpg ]; then
-        rm /tmp/backup.nems.gpg
+      gpg --yes --batch --passphrase="::$osbpass::$osbkey::" --decrypt /tmp/osb.backup.nems.gpg > /tmp/osb.backup.nems
+      if [ -f /tmp/osb.backup.nems.gpg ]; then
+        rm /tmp/osb.backup.nems.gpg
       fi;
-      if ! tar -tf /tmp/backup.nems &> /dev/null; then
+      if ! tar -tf /tmp/osb.backup.nems &> /dev/null; then
         echo Error with backup.
         exit
       else
         echo ""
-        echo "Successfully decrypted. Running nems-restore..."
+        echo "Successfully decrypted."
         echo ""
-        nems-restore /tmp/backup.nems
       fi
     fi
   done
