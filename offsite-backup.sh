@@ -38,6 +38,9 @@ else
   # Upload the file
   data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "timestamp=$timestamp" -F "backup=@/var/www/html/backup/snapshot/backup.nems.gpg" https://nemslinux.com/api/offsite-backup/)
 
+  # Delete the local file
+  rm /var/www/html/backup/snapshot/backup.nems.gpg
+
   # Parse the response
   datarr=($data)
   response="${datarr[0]}"
