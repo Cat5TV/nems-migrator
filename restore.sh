@@ -94,15 +94,17 @@ else
       exit
     else
       echo ""
-      cd /tmp/nems_migrator_restore
-      tar -zxf /tmp/nems_migrator_restore/tmp/private.tar.gz
-      rm /tmp/nems_migrator_restore/tmp/private.tar.gz
       echo "Successfully decrypted."
       echo ""
     fi
 
 
   fi
+
+  cd /tmp/nems_migrator_restore
+  tar -zxf /tmp/nems_migrator_restore/tmp/private.tar.gz
+  rm /tmp/nems_migrator_restore/tmp/private.tar.gz
+
 				# Legacy compatibility
 				if [[ -f "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt" ]]; then
 				 backupver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt")
