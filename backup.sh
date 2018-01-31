@@ -115,6 +115,7 @@ else
 # fi
 
 # mv /tmp/backup.tar.gz /var/www/html/backup/snapshot/backup.nems
+mv /tmp/backup.nems /var/www/html/backup/snapshot/backup.nems
 
  echo "Done. You'll find the backup at /var/www/html/backup/snapshot/backup.nems"
 
