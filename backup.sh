@@ -44,49 +44,83 @@ else
 		nagvis="etc/maps/"
  fi
 
+ addpublic=''
+ addprivate=''
+
  if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.2'")}') )); then
    # Additional items to backup if version matches
-   add="/etc/rpimonitor \
+   addpublic="/etc/rpimonitor \
      /etc/webmin \
    "
  fi
 
  if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.3'")}') )); then
    # Additional items to backup if version matches
-   add="/var/www/certs \
+   addprivate="$addprivate \
+     /var/www/certs \
    "
  fi
 
  service nagios3 stop
- 
- tar czf /tmp/backup.tar.gz \
+
+# Create the archive containing sensitive information
+ privfile='/tmp/private.tar.gz'
+ tar czf $privfile \
   /usr/local/share/nems/nems.conf \
-  /var/www/htpasswd \
-  /var/www/nconf/config \
-  /etc/nagvis/$nagvis \
   /etc/nagios3/resource.cfg \
+  /var/www/nconf/config \
+  $addprivate
+
+# Encrypt the private file if the user has an OSB account
+  hwid=`/usr/local/bin/nems-info hwid`
+  osbpass=$(cat /usr/local/share/nems/nems.conf | grep osbpass | printf '%s' $(cut -n -d '=' -f 2))
+  osbkey=$(cat /usr/local/share/nems/nems.conf | grep osbkey | printf '%s' $(cut -n -d '=' -f 2))
+  timestamp=$(/bin/date +%s)
+
+  if [[ $osbpass != '' ]] && [[ $osbkey != '' ]]; then
+    printf "Checking NEMS OSB Account Status... "
+    # Load Account Data (output options are json, serial or blank = :: separated, one item per line
+    data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "query=status" https://nemslinux.com/api-backend/offsite-backup-checkin.php)
+    if [[ $data == '1' ]]; then # Don't override $data. If you do, you risk corrupting your backup set. An OSB account is _required_ as it is used to authenticate the restore process.
+      echo 'account is active. Encrypting private data.'
+      /usr/bin/gpg --yes --batch --passphrase="::$osbpass::$osbkey::" -c $privfile
+      rm $privfile
+      privfile="$privfile.gpg"
+    else
+      echo 'account is inactive. Encryption not available.'
+    fi;
+  fi;
+
+
+# Create the generic backup (not particularly sensitive)
+ tar -c \
+  $privfile \
+  /var/www/htpasswd \
+  /etc/nagvis/$nagvis \
   /etc/nagios3/cgi.cfg \
   /etc/nagios3/htpasswd.users \
   /var/log/ \
-  /var/www/nconf/output/ \
   /etc/nagios3/Default_collector/ \
   /etc/nagios3/global/ \
   /var/lib/mysql/ \
-  $add
+  $addpublic | gzip -n > /tmp/backup.nems
 
  service nagios3 start
- 
- if [ -e /var/www/html/backup/snapshot/backup.nems ]
-   then
-   rm /var/www/html/backup/snapshot/backup.nems
- fi
 
- mv /tmp/backup.tar.gz /var/www/html/backup/snapshot/backup.nems
+ rm $privfile
+ 
+# if [ -e /var/www/html/backup/snapshot/backup.nems ]
+#   then
+#   rm /var/www/html/backup/snapshot/backup.nems
+# fi
+
+# mv /tmp/backup.tar.gz /var/www/html/backup/snapshot/backup.nems
 
  echo "Done. You'll find the backup at /var/www/html/backup/snapshot/backup.nems"
 
  echo ""
- echo You can access the file from your computer by navigating to http://NEMSIP/backup/
+ echo You can access the file from your computer by navigating to
+ echo https://NEMS.local/backup/ -or- \\\\NEMS.local\\backup
  echo ""
 
  end=`date +%s`

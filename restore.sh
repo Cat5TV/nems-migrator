@@ -36,6 +36,11 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 else
 
+  if [[ -d /tmp/nems_migrator_restore ]]; then
+    rm -rf /tmp/nems_migrator_restore
+  fi
+  mkdir -p /tmp/nems_migrator_restore
+
   # Let's grab it from Off-Site Backup instead
    if [[ ${1,,} == 'osb' ]]; then
      /root/nems/nems-migrator/restore-offsite.sh
@@ -62,11 +67,42 @@ else
 		read -r -p "Are you sure you want to attempt restore? [y/N] " response
     if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 
-				mkdir -p /tmp/nems_migrator_restore
-				cd /tmp/nems_migrator_restore
+    cd /tmp/nems_migrator_restore
+    tar -zxf $1
 
-				 tar -zxf $1
+  # if this is an encrypted set, decrypt
+  if [[ -f /tmp/nems_migrator_restore/tmp/private.tar.gz.gpg ]]; then
+    printf "This backup is encrypted. Attempting to decrypt... "
+    # Load Config
+    hwid=`/usr/local/bin/nems-info hwid`
+    osbpass=$(cat /usr/local/share/nems/nems.conf | grep osbpass | printf '%s' $(cut -n -d '=' -f 2))
+    osbkey=$(cat /usr/local/share/nems/nems.conf | grep osbkey | printf '%s' $(cut -n -d '=' -f 2))
+    timestamp=$(/bin/date +%s)
 
+    if [[ $osbpass == '' ]] || [[ $osbkey == '' ]]; then
+      echo NEMS Migrator Offsite Backup is not currently enabled.
+      echo ""
+      exit
+    fi;
+
+    /usr/bin/gpg --yes --batch --passphrase="::$osbpass::$osbkey::" --decrypt /tmp/nems_migrator_restore/tmp/private.tar.gz.gpg > /tmp/nems_migrator_restore/tmp/private.tar.gz
+    rm /tmp/nems_migrator_restore/tmp/private.tar.gz.gpg
+
+    if ! tar -tf /tmp/nems_migrator_restore/tmp/private.tar.gz &> /dev/null; then
+      echo "Error with backup. Are you sure you're using the hardware and OSB Key that match this backup?"
+      echo ""
+      exit
+    else
+      echo ""
+      cd /tmp/nems_migrator_restore
+      tar -zxf /tmp/nems_migrator_restore/tmp/private.tar.gz
+      rm /tmp/nems_migrator_restore/tmp/private.tar.gz
+      echo "Successfully decrypted."
+      echo ""
+    fi
+
+
+  fi
 				# Legacy compatibility
 				if [[ -f "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt" ]]; then
 				 backupver=$(cat "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt")
