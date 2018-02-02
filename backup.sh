@@ -71,29 +71,21 @@ else
   /var/www/nconf/config \
   $addprivate
 
-# Encrypt the private file if the user has an OSB account
-  hwid=`/usr/local/bin/nems-info hwid`
+# Encrypt the private file if the user has specified a password in NEMS SST for encryption
   osbpass=$(cat /usr/local/share/nems/nems.conf | grep osbpass | printf '%s' $(cut -n -d '=' -f 2))
-  osbkey=$(cat /usr/local/share/nems/nems.conf | grep osbkey | printf '%s' $(cut -n -d '=' -f 2))
-  timestamp=$(/bin/date +%s)
 
-  if [[ $osbpass != '' ]] && [[ $osbkey != '' ]]; then
-    printf "Checking NEMS OSB Account Status... "
-    # Load Account Data (output options are json, serial or blank = :: separated, one item per line
-    data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "query=status" https://nemslinux.com/api-backend/offsite-backup-checkin.php)
-    if [[ $data == '1' ]]; then # Don't override $data. If you do, you risk corrupting your backup set. An OSB account is _required_ as it is used to authenticate the restore process.
-      echo 'account is active. Encrypting private data.'
-      /usr/bin/gpg --yes --batch --passphrase="::$osbpass::$osbkey::" -c $privfile
-      rm $privfile
-      privfile="$privfile.gpg"
-    else
-      echo 'account is inactive. Encryption not available.'
-    fi;
+  if [[ $osbpass != '' ]]; then
+    echo 'Encrypting private data with the password you entered in NEMS SST.'
+    /usr/bin/gpg --yes --batch --passphrase="::$osbpass::291ea559-471e-4bda-bb7d-774e782f84c1::" -c $privfile
+    rm $privfile
+    privfile="$privfile.gpg"
+  else
+    echo 'Leaving all data unencrypted (no password entered in NEMS SST).'
   fi;
 
 
 # Create the generic backup (not particularly sensitive)
- tar -c \
+ tar cf - \
   $privfile \
   /var/www/htpasswd \
   /etc/nagvis/$nagvis \
@@ -103,19 +95,13 @@ else
   /etc/nagios3/Default_collector/ \
   /etc/nagios3/global/ \
   /var/lib/mysql/ \
-  $addpublic | gzip -n > /tmp/backup.nems
+  $addpublic | /bin/gzip --no-name > /tmp/backup.nems
 
  service nagios3 start
 
  rm $privfile
- 
-# if [ -e /var/www/html/backup/snapshot/backup.nems ]
-#   then
-#   rm /var/www/html/backup/snapshot/backup.nems
-# fi
 
-# mv /tmp/backup.tar.gz /var/www/html/backup/snapshot/backup.nems
-mv /tmp/backup.nems /var/www/html/backup/snapshot/backup.nems
+ mv /tmp/backup.nems /var/www/html/backup/snapshot/backup.nems
 
  echo "Done. You'll find the backup at /var/www/html/backup/snapshot/backup.nems"
 

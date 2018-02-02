@@ -15,17 +15,19 @@ if [[ $osbpass == '' ]] || [[ $osbkey == '' ]]; then
   exit
 fi;
 
-  # Should wrap this bit in a check to the API to see if this user is authorized. No point in uploading if not.
+# Check account status
+data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "query=status" https://nemslinux.com/api-backend/offsite-backup-checkin.php)
+if [[ $data == '1' ]]; then # this account passes authentication
 
   # Encrypt the file
   # Combine the user's passphrase with the OSB Key to further strenghten the entropy of the passphrase
-#  gpg --yes --batch --passphrase="::$osbpass::$osbkey::" -c /var/www/html/backup/snapshot/backup.nems
+  gpg --yes --batch --passphrase="::$osbpass::$osbkey::" -c /var/www/html/backup/snapshot/backup.nems
 
   # Upload the file
-  data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "timestamp=$timestamp" -F "backup=@/var/www/html/backup/snapshot/backup.nems" https://nemslinux.com/api/offsite-backup/)
+  data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "timestamp=$timestamp" -F "backup=@/var/www/html/backup/snapshot/backup.nems.gpg" https://nemslinux.com/api/offsite-backup/)
 
   # Delete the local file
-#  rm /var/www/html/backup/snapshot/backup.nems.gpg
+  rm /var/www/html/backup/snapshot/backup.nems.gpg
 
   # Parse the response
   datarr=($data)
@@ -48,5 +50,9 @@ fi;
   elif [[ $response == 5 ]]; then
     echo "`date`::$response::Failed::Bad query" >> /var/log/nems/nems-osb.log
   else
-    echo "`date`::-::Failed::Unknown error" >> /var/log/nems/nems-osb.log # Replace response with -- as it may be anything
+    echo "`date`::-::Failed::Unknown error" >> /var/log/nems/nems-osb.log # Replace code with unknown error (as it could be anything)
   fi;
+
+else 
+    echo "`date`::-::Failed::Authentication Failed" >> /var/log/nems/nems-osb.log
+fi

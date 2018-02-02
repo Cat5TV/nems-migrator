@@ -1,6 +1,7 @@
 #!/bin/bash
 # Remove restore functionality from legacy versions of NEMS
 ver=$(/usr/local/bin/nems-info nemsver)
+
 if (( ! $(awk 'BEGIN {print ("'$ver'" >= "'1.2.1'")}') )); then
    echo "ERROR: nems-restore requires NEMS 1.2.1 or higher"
    exit
@@ -43,7 +44,7 @@ else
 
   # Let's grab it from Off-Site Backup instead
    if [[ ${1,,} == 'osb' ]]; then
-     /root/nems/nems-migrator/restore-offsite.sh
+     /root/nems/nems-migrator/restore-offsite.sh || exit 1
      if [[ -f /tmp/osb.backup.nems ]]; then
        set -- "/tmp/osb.backup.nems"
      else
@@ -74,18 +75,15 @@ else
   if [[ -f /tmp/nems_migrator_restore/tmp/private.tar.gz.gpg ]]; then
     printf "This backup is encrypted. Attempting to decrypt... "
     # Load Config
-    hwid=`/usr/local/bin/nems-info hwid`
     osbpass=$(cat /usr/local/share/nems/nems.conf | grep osbpass | printf '%s' $(cut -n -d '=' -f 2))
-    osbkey=$(cat /usr/local/share/nems/nems.conf | grep osbkey | printf '%s' $(cut -n -d '=' -f 2))
-    timestamp=$(/bin/date +%s)
 
-    if [[ $osbpass == '' ]] || [[ $osbkey == '' ]]; then
-      echo NEMS Migrator Offsite Backup is not currently enabled.
+    if [[ $osbpass == '' ]]; then
+      echo Decryption password not entered in NEMS SST. Aborting.
       echo ""
       exit
     fi;
 
-    /usr/bin/gpg --yes --batch --passphrase="::$osbpass::$osbkey::" --decrypt /tmp/nems_migrator_restore/tmp/private.tar.gz.gpg > /tmp/nems_migrator_restore/tmp/private.tar.gz
+    /usr/bin/gpg --yes --batch --passphrase="::$osbpass::291ea559-471e-4bda-bb7d-774e782f84c1::" --decrypt /tmp/nems_migrator_restore/tmp/private.tar.gz.gpg > /tmp/nems_migrator_restore/tmp/private.tar.gz
     rm /tmp/nems_migrator_restore/tmp/private.tar.gz.gpg
 
     if ! tar -tf /tmp/nems_migrator_restore/tmp/private.tar.gz &> /dev/null; then
