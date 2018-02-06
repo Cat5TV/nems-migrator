@@ -36,14 +36,15 @@ fi
 HEIGHT=25
 WIDTH=25
 CHOICE_HEIGHT=25
-BACKTITLE="NEMS Linux"
-TITLE="Off-Site Backup"
-MENU="Download Backup:"
+BACKTITLE="NEMS Linux Migrator Off-Site Backup"
+TITLE="Restore From OSB"
+MENU="Choose Date:"
 
 OPTIONS=($menu)
 
 CHOICE=$(dialog --clear \
-                --backtitle "$BACKTITLE" \
+                --colors \
+                --backtitle "\Zb\Z7$BACKTITLE\Zn" \
                 --title "$TITLE" \
                 --menu "$MENU" \
                 $HEIGHT $WIDTH $CHOICE_HEIGHT \
@@ -66,7 +67,7 @@ fi
       datarr=(${line//::/ })
       serverdate="${datarr[0]}"
       filelocaldate="${datarr[2]}"
-      echo "Downloading NEMS Migrator Off-Site Backup Server for backup from $filelocaldate..."
+      echo "Downloading OSB from $filelocaldate..."
       echo ""
       curl -F "hwid=$hwid" -F "osbkey=$osbkey" -F "date=$serverdate" https://nemslinux.com/api-backend/offsite-backup-restore.php -o /tmp/osb.backup.nems.gpg
       echo ""
