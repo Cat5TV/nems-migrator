@@ -95,6 +95,7 @@ else
   /etc/nagios3/Default_collector/ \
   /etc/nagios3/global/ \
   /var/lib/mysql/ \
+  /etc/rc.local \
   $addpublic | /bin/gzip --no-name > /tmp/backup.nems
 
  service nagios3 start
