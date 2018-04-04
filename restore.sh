@@ -88,6 +88,8 @@ else
 
     if ! tar -tf /tmp/nems_migrator_restore/tmp/private.tar.gz &> /dev/null; then
       echo "Error with backup. Are you sure you're using the hardware and OSB Key that match this backup?"
+      echo "Does the Encryption/Decryption password you entered in NEMS SST match what it was when the"
+      echo "backup was created?"
       echo ""
       exit
     else
