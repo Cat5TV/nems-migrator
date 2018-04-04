@@ -69,6 +69,7 @@ else
   /usr/local/share/nems/nems.conf \
   /etc/nagios3/resource.cfg \
   /var/www/nconf/config \
+  /var/www/nconf/output \
   $addprivate
 
 # Encrypt the private file if the user has specified a password in NEMS SST for encryption
