@@ -104,6 +104,7 @@ else
   cd /tmp/nems_migrator_restore
   tar -zxf /tmp/nems_migrator_restore/tmp/private.tar.gz
   rm /tmp/nems_migrator_restore/tmp/private.tar.gz
+  (cd /tmp/nems_migrator_restore/tmp/ && tar c .) | (cd /tmp/nems_migrator_restore/ && tar xf -)
 
 				# Legacy compatibility
 				if [[ -f "/tmp/nems_migrator_restore/var/www/html/inc/ver.txt" ]]; then
