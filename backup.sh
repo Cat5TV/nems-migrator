@@ -14,6 +14,9 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 else
 
+# Check for any emergency patches distributed with nems-migrator
+/root/nems/nems-migrator/patches.sh
+
 # DO NOT run a backup as we're running in freeze mode (only used by Robbie for creating the image)
  if [ -e /tmp/nems.freeze ]
    then
