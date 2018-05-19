@@ -7,9 +7,9 @@ body.login-pf {
 }
 
 #badge {
-    width: 80px;
+    width: 258px;
     height: 80px;
-    background-image: url("logo.png");
+    background-image: url("nems_logo.png");
     background-size: contain;
     background-repeat: no-repeat;
 }
