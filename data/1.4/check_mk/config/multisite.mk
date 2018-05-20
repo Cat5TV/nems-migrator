@@ -3,7 +3,7 @@
 # Users with unrestricted permissions. These users will always
 # have the permissions to edit users, roles and permissions,
 # even if configuration has been edited via WATO
-admin_users = [ "nagiosadmin" ]
+# admin_users = [ "nagiosadmin" ]
 
 # NagVis
 #
@@ -40,7 +40,6 @@ nagvis_base_url = '/nagvis'
 custom_links['guest'] = [
   ( "Classical Nagios GUI", "../nagios/", "link_home.gif" ),
   ( "Addons", True, [
-        ( "PNP4Nagios", "../pnp4nagios/",       "link_reporting.gif" ),
         ( "NagVis",     "../nagvis/",           "link_map.gif" ),
   ]),
 ]
