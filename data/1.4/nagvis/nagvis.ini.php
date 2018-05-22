@@ -400,7 +400,7 @@ backendtype="mklivestatus"
 ; The statushost needs to be given in the following format:
 ;   "<backend_id>:<hostname>" -> e.g. "live_2:nagios"
 ;statushost=""
-socket="unix:/var/lib/nagios3/rw/live.sock"
+socket="unix:/usr/local/nagios/var/rw/live.sock"
 
 ; Example definition for a MySQL backend
 ; in this example the ID of the Backend is "ndomy_1" you can define another ID.
