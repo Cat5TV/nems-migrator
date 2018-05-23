@@ -7,7 +7,7 @@
 # Backup the configuration and logs for easy migration
 */5 * * * * /root/nems/nems-migrator/backup.sh > /dev/null 2>&1
 
-# Load the nagios-api
+# Load or unload the services chosen via NEMS SST
 @reboot /usr/local/share/nems/nems-scripts/services.sh > /dev/null 2>&1
 
 # Generate Monitorix graphics (which are stored in RAM via tmpfs)
