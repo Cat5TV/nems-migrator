@@ -2,6 +2,11 @@
 # Remove restore functionality from legacy versions of NEMS
 ver=$(/usr/local/bin/nems-info nemsver)
 
+if (( $(echo "$ver >= 1.4" | bc -l) )); then
+  echo "This version of NEMS Linux is not yet supported."
+  exit
+fi
+
 if (( ! $(awk 'BEGIN {print ("'$ver'" >= "'1.2.1'")}') )); then
    echo "ERROR: nems-restore requires NEMS 1.2.1 or higher"
    exit
