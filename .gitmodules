@@ -1,3 +1,6 @@
 [submodule "data/1.4/nagios-plugins"]
 	path = data/1.4/nagios-plugins
 	url = https://github.com/barryo/nagios-plugins/
+[submodule "data/1.4/submodules/barryo/nagios-plugins"]
+	path = data/1.4/submodules/barryo/nagios-plugins
+	url = https://github.com/barryo/nagios-plugins/
