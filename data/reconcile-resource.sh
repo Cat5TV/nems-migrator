@@ -3,10 +3,13 @@
   # This script is used to consolidate settings in config files.
   # For example, as NEMS evolves, config settings in the resource.cfg file may be added.
   # Traditional "replacement" of the config file would result in those new settings missing.
-  # So this script consolidates the data between the source (backup.nems) and destination.
+  # So this script consolidates the data between the source (backup.nems) and destination (resource.cfg).
 
-  $source = '/tmp/nems_migrator_restore/etc/nagios3/resource.cfg';
-  $dest   = '/etc/nagios3/resource.cfg';
+  $resourcesrc = $argv[1];
+  $resourcedest = $argv[2];
+
+  $source = '/tmp/nems_migrator_restore' . $resourcesrc . '/resource.cfg';
+  $dest   = $resourcedest . '/resource.cfg';
 
   $data = new stdClass();
   if (file_exists($source)) $data->source = file($source);
@@ -36,7 +39,7 @@
     file_put_contents($dest,$data->dest);
     echo 'Consolidation complete.';
   } else {
-    echo 'No data source found. Leaving NEMS resource.cfg file as is.';
+    echo 'No data source found. Leaving NEMS-SST configuration as is.';
   }
   echo PHP_EOL;
 ?>

@@ -2,9 +2,25 @@
 # Remove restore functionality from legacy versions of NEMS
 ver=$(/usr/local/bin/nems-info nemsver)
 
+# Backward compatible
+if (( ! $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then
+  nagios=nagios
+  confdest=/etc/nems/conf
+  resourcedest=/usr/local/nagios/etc
+else
+  nagios=nagios3
+  confdest=/etc/nagios3
+  resourcedest=/etc/nagios3
+fi
+
 if (( $(echo "$ver >= 1.4" | bc -l) )); then
-  echo "This version of NEMS Linux is not yet supported."
-  exit
+  echo ""
+  echo "**********************************************************************"
+  echo "* NEMS Migrator on NEMS Linux 1.4 is quite young, so please be extra *"
+  echo "* cautious and keep a good backup at all times. There may be bugs.   *"
+  echo "**********************************************************************"
+  echo ""
+  nagios=nagios
 fi
 
 if (( ! $(awk 'BEGIN {print ("'$ver'" >= "'1.2.1'")}') )); then
@@ -95,6 +111,7 @@ else
       echo "Error with backup. Are you sure you're using the hardware and OSB Key that match this backup?"
       echo "Does the Encryption/Decryption password you entered in NEMS SST match what it was when the"
       echo "backup was created?"
+      echo "Cannot proceed."
       echo ""
       exit
     else
@@ -129,27 +146,34 @@ else
 
         fi
 
-				 ver=$(/usr/local/bin/nems-info nemsver)
-
 				 if (( ! $(awk 'BEGIN {print ("$backupver" >= "'1.0'")}') )); then
 				   echo Backup file is from NEMS $backupver. Proceeding.
-				   service nagios3 stop
+				   service $nagios stop
 
 				   # I know I warned you, but I love you too much to let you risk it.
 				   /root/nems/nems-migrator/backup.sh > /dev/null 2>&1
 				   cp -p /var/www/html/backup/snapshot/backup.nems /root/
 
-				   if [[ -d "/tmp/nems_migrator_restore/etc/nagios3" ]]; then
+                                   if (( ! $(awk 'BEGIN {print ("$backupver" >= "'1.4'")}') )); then
+                                     confsrc=/etc/nems/conf
+                                     resourcesrc=/usr/local/nagios/etc
+				   else
+				     confsrc=/etc/nagios3
+				     resourcesrc=/etc/nagios3
+				   fi
+
+				   if [[ -d "/tmp/nems_migrator_restore/$confsrc" ]]; then
+
 
                                          # Clobber the existing configs which will not be consolidated
-                                         rm /etc/nagios3/global/timeperiods.cfg && cp /tmp/nems_migrator_restore/etc/nagios3/global/timeperiods.cfg /etc/nagios3/global/ && chown www-data:www-data /etc/nagios3/global/timeperiods.cfg
+                                         rm $confsrc/global/timeperiods.cfg && cp /tmp/nems_migrator_restore/$confsrc/global/timeperiods.cfg $confdest/global/ && chown www-data:www-data $confdest/global/timeperiods.cfg
                                          # rm /etc/nagios3/parent_hosts.cfg && cp /tmp/nems_migrator_restore/etc/nagios3/parent_hosts.cfg /etc/nagios3/ && chown www-data:www-data /etc/nagios3/parent_hosts.cfg
 
                                          # Reconcile and clobber all other config files
-                                         /root/nems/nems-migrator/data/reconcile-nagios.sh
+                                         /root/nems/nems-migrator/data/reconcile-nagios.sh $ver $confsrc $confdest
 
 					 # Clear MySQL database and import new consolidated configs into NConf
-					 /root/nems/nems-migrator/data/nconf-import.sh
+					 /root/nems/nems-migrator/data/nconf-import.sh $ver $confdest
 
                                          # Activate default nagios monitor on all hosts
                                          /root/nems/nems-migrator/data/nconf-activate.sh
@@ -161,12 +185,12 @@ else
 
 
 					 if [[ $backupver == "1.0" ]]; then
-					 	echo "Upgrading to newer version of NEMS: Please edit /etc/nagios3/resource.cfg to configure your settings."
-					  elif [[ -e "/tmp/nems_migrator_restore/etc/nagios3/resource.cfg" ]]; then
-							 /root/nems/nems-migrator/data/reconcile-resource.sh
+					 	echo "Upgrading to newer version of NEMS. You'll need to use NEMS-SST to re-configure your email settings."
+					  elif [[ -e "/tmp/nems_migrator_restore$resourcesrc/resource.cfg" ]]; then
+							 /root/nems/nems-migrator/data/reconcile-resource.sh $resourcesrc $resourcedest
 						else
-						  echo "Nagios Configuration Missing. This is a critical error."
-							exit
+						  echo "NEMS-SST Configuration Missing. This is a critical error."
+						exit
 					 fi
 
 
@@ -192,16 +216,16 @@ else
 						 rm -rf /var/www/nconf/output/
 						 cp -Rp /tmp/nems_migrator_restore/var/www/nconf/output /var/www/nconf/
 				   else
-							 echo "NConf failed. Your NConf data is corrupt."
-							 echo "You should be able to re-create it."
+							 echo "NConf failed. Your NConf data is missing (perhaps you never generated a config before the backup)."
+							 echo "You can re-create it by running the Generate command in NEMS NConf - nothing to worry about."
 					 fi
 
 
 				   # This may cause errors, but at least it gives them the old logs.
-				   cp -Rp /tmp/nems_migrator_restore/var/log/* /var/log
+				   cp -Rfp /tmp/nems_migrator_restore/var/log/* /var/log
 
 				   service mysql start
-				   service nagios3 start
+				   service $nagios start
 
 				   echo ""
 				   echo I hope everything worked okay for you.
@@ -215,7 +239,7 @@ else
 				   echo Your backup file is either invalid, or an unsupported version. Aborted.
 				 fi
 
-				 #rm -rf /tmp/nems_migrator_restore
+				 rm -rf /tmp/nems_migrator_restore
 
 				 end=`date +%s`
 				 runtime=$((end-start))

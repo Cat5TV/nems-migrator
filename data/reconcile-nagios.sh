@@ -1,9 +1,12 @@
 #!/usr/bin/php
 <?php
+$ver = $argv[1];
+$confsrc = $argv[2];
+$confdest = $argv[3];
+
   // This script is used to reconcile the settings for default NEMS Nagios configs with your NEMS-Migrator backup.
   // We'll take care of the commands / services / hosts configs, but will leave users as is so we don't clobber the nems-init account data
 
-  // Files relative to /etc/nagios3/ and /tmp/nems_migrator_restore/etc/nagios3/ and /root/nems/nems-migrator/data/nagios/conf/
   $files = array(
     array('file'=>'Default_collector/advanced_services.cfg','unique'=>'service_description'),
     array('file'=>'Default_collector/hostgroups.cfg','unique'=>'hostgroup_name'),
@@ -19,9 +22,13 @@
   echo 'Reconciling ' . count($files) . ' files...' . PHP_EOL;
 
   foreach ($files as $file) {
-    $backup = '/tmp/nems_migrator_restore/etc/nagios3/' . $file['file'];
-    $default = '/root/nems/nems-migrator/data/nagios/conf/' . $file['file'];
-    $dest = '/etc/nagios3/' . $file['file'];
+    $backup = '/tmp/nems_migrator_restore' . $confsrc . '/' . $file['file'];
+    if ($ver >= 1.4) {
+      $default = '/root/nems/nems-migrator/data/1.4/nagios/conf/' . $file['file'];
+    } else {
+      $default = '/root/nems/nems-migrator/data/nagios/conf/' . $file['file'];
+    }
+    $dest = $confdest . '/' . $file['file'];
 
     $data = new stdClass();
     $data->backup = parsefile($backup,$file);
