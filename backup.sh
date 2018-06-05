@@ -1,4 +1,52 @@
 #!/bin/bash
+ver=$(/usr/local/bin/nems-info nemsver)
+ # NagVis maps are stored differently in NEMS 1.0
+ if [[ $ver = "" ]]; then
+   echo Could not detect the version of your NEMS server. Is this NEMS Linux?
+   echo Cannot continue.
+   exit
+ fi
+ if [[ $ver = "1.0" ]]; then
+		nagvis="maps/"
+   else
+		nagvis="etc/maps/"
+ fi
+
+
+ mainpriv=''
+ mainpub=''
+
+ if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then
+   nagios=nagios
+   # Modern Configs
+   mainpriv="/usr/local/nagios/etc/resource.cfg \
+   "
+   mainpub="    /usr/local/nagios/etc/cgi.cfg \
+     /etc/nems/conf/Default_collector/ \
+     /etc/nems/conf/global/ \
+   "
+ else
+   nagios=nagios3
+   # Legacy Configs
+   mainpriv="/etc/nagios3/resource.cfg \
+   "
+   mainpub="    /etc/nagios3/cgi.cfg \
+     /etc/nagios3/Default_collector/ \
+     /etc/nagios3/global/ \
+   "
+ fi
+ # Config shared among all versions
+ mainpriv="$mainpriv \
+    /usr/local/share/nems/nems.conf \
+    /var/www/nconf/config \
+    /var/www/nconf/output \
+ "
+ mainpub="  /var/www/htpasswd \
+  /etc/nagvis/$nagvis \
+  /var/log/ \
+  /var/lib/mysql/ \
+  /etc/rc.local \
+  "
 
 start=`date +%s`
 
@@ -22,7 +70,7 @@ else
    then
    exit
  fi
- 
+
  if [ -d /var/www/html/backup/snapshot ]
    then
    echo Saving to existing backup set at /var/www/html/backup/snapshot
@@ -31,30 +79,19 @@ else
    mkdir -p /var/www/html/backup/snapshot
    echo Created backup folder at /var/www/html/backup/snapshot
  fi
- 
- ver=$(/usr/local/bin/nems-info nemsver)
- 
- # NagVis maps are stored differently in NEMS 1.0
- if [[ $ver = "" ]]; then
-   echo NEMS Version data is corrupt. Did you remove files from /var/www?
-   echo This can be fixed. Contact me for help in restoring your version data.
-   echo Aborted.
-   exit
- fi
- if [[ $ver = "1.0" ]]; then
-		nagvis="maps/"
-   else
-		nagvis="etc/maps/"
- fi
 
  addpublic=''
  addprivate=''
 
  if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.2'")}') )); then
    # Additional items to backup if version matches
-   addpublic="/etc/rpimonitor \
-     /etc/webmin \
+   addpublic="   /etc/webmin \
    "
+   if [[ -d /etc/rpimonitor ]]; then # Only exists on Raspberry Pi. NEMS 1.4+ supports other platforms.
+     addpublic="$addpublic \
+       /etc/rpimonitor \
+     "
+   fi
  fi
 
  if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.3'")}') )); then
@@ -64,15 +101,12 @@ else
    "
  fi
 
- service nagios3 stop
+ systemctl stop $nagios
 
 # Create the archive containing sensitive information
  privfile='/tmp/private.tar.gz'
- tar czf $privfile \
-  /usr/local/share/nems/nems.conf \
-  /etc/nagios3/resource.cfg \
-  /var/www/nconf/config \
-  /var/www/nconf/output \
+ tar --ignore-failed-read -czf $privfile \
+  $mainpriv \
   $addprivate
 
 # Encrypt the private file if the user has specified a password in NEMS SST for encryption
@@ -89,20 +123,12 @@ else
 
 
 # Create the generic backup (not particularly sensitive)
- tar cf - \
+ tar --ignore-failed-read -cf - \
   $privfile \
-  /var/www/htpasswd \
-  /etc/nagvis/$nagvis \
-  /etc/nagios3/cgi.cfg \
-  /etc/nagios3/htpasswd.users \
-  /var/log/ \
-  /etc/nagios3/Default_collector/ \
-  /etc/nagios3/global/ \
-  /var/lib/mysql/ \
-  /etc/rc.local \
+  $mainpub \
   $addpublic | /bin/gzip --no-name > /tmp/backup.nems
 
- service nagios3 start
+ systemctl start $nagios
 
  rm $privfile
 
