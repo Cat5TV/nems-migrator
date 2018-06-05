@@ -3,7 +3,7 @@
 ver=$(/usr/local/bin/nems-info nemsver)
 
 # Backward compatible
-if (( ! $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then
+if (( $(echo "$ver >= 1.4" | bc -l) )); then
   nagios=nagios
   confdest=/etc/nems/conf
   resourcedest=/usr/local/nagios/etc
@@ -27,10 +27,10 @@ if (( ! $(awk 'BEGIN {print ("'$ver'" >= "'1.2.1'")}') )); then
    echo "ERROR: nems-restore requires NEMS 1.2.1 or higher"
    exit
 fi
-if [ ! -f /var/www/htpasswd ]; then
-   echo "ERROR: NEMS has not been initialized yet. Run: sudo nems-init"
-   exit
-fi
+#if [ ! -f /var/www/htpasswd ]; then
+#   echo "ERROR: NEMS has not been initialized yet. Run: sudo nems-init"
+#   exit
+#fi
 
 start=`date +%s`
 
@@ -154,7 +154,7 @@ else
 				   /root/nems/nems-migrator/backup.sh > /dev/null 2>&1
 				   cp -p /var/www/html/backup/snapshot/backup.nems /root/
 
-                                   if (( ! $(awk 'BEGIN {print ("$backupver" >= "'1.4'")}') )); then
+                                   if (( $(echo "$ver >= 1.4" | bc -l) )); then
                                      confsrc=/etc/nems/conf
                                      resourcesrc=/usr/local/nagios/etc
 				   else
@@ -162,11 +162,13 @@ else
 				     resourcesrc=/etc/nagios3
 				   fi
 
-				   if [[ -d "/tmp/nems_migrator_restore/$confsrc" ]]; then
+				   echo Input: "/tmp/nems_migrator_restore$confsrc"
+
+				   if [[ -d "/tmp/nems_migrator_restore$confsrc" ]]; then
 
 
                                          # Clobber the existing configs which will not be consolidated
-                                         rm $confsrc/global/timeperiods.cfg && cp /tmp/nems_migrator_restore/$confsrc/global/timeperiods.cfg $confdest/global/ && chown www-data:www-data $confdest/global/timeperiods.cfg
+                                         rm $confdest/global/timeperiods.cfg && cp /tmp/nems_migrator_restore/$confsrc/global/timeperiods.cfg $confdest/global/ && chown www-data:www-data $confdest/global/timeperiods.cfg
                                          # rm /etc/nagios3/parent_hosts.cfg && cp /tmp/nems_migrator_restore/etc/nagios3/parent_hosts.cfg /etc/nagios3/ && chown www-data:www-data /etc/nagios3/parent_hosts.cfg
 
                                          # Reconcile and clobber all other config files
@@ -239,7 +241,7 @@ else
 				   echo Your backup file is either invalid, or an unsupported version. Aborted.
 				 fi
 
-				 rm -rf /tmp/nems_migrator_restore
+#				 rm -rf /tmp/nems_migrator_restore
 
 				 end=`date +%s`
 				 runtime=$((end-start))

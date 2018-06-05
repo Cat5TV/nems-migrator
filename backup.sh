@@ -41,7 +41,8 @@ ver=$(/usr/local/bin/nems-info nemsver)
     /var/www/nconf/config \
     /var/www/nconf/output \
  "
- mainpub="  /var/www/htpasswd \
+ mainpub="$mainpub \
+  /var/www/htpasswd \
   /etc/nagvis/$nagvis \
   /var/log/ \
   /var/lib/mysql/ \

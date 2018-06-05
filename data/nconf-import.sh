@@ -7,7 +7,7 @@ confdest=$2 # Importing from DESTINATION because we already imported the backup 
   systemctl stop mysql
   # Clear the MySQL Database (replace with our Clean DB from NEMS-Migrator)
   rm -rf /var/lib/mysql/
-  if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then
+  if (( $(echo "$ver >= 1.4" | bc -l) )); then
     cp -R /root/nems/nems-migrator/data/1.4/mysql /var/lib
   else
     # legacy
@@ -18,7 +18,7 @@ confdest=$2 # Importing from DESTINATION because we already imported the backup 
   systemctl start mysql
   echo "Done."
 
-  echo "Importing Nagios3 Configs to NEMS NConf..."
+  echo "Importing Nagios Configs from $confdest to NEMS NConf..."
   # Import Nagios3 configs into NConf's MySQL Database
   echo "  Importing: timeperiod" && /var/www/nconf/bin/add_items_from_nagios.pl -c timeperiod -f $confdest/global/timeperiods.cfg 2>&1 | grep -E "ERROR"
   echo "  Importing: misccommand" && /var/www/nconf/bin/add_items_from_nagios.pl -c misccommand -f $confdest/global/misccommands.cfg 2>&1 | grep -E "ERROR"
