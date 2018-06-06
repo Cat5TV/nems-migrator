@@ -90,7 +90,7 @@ else
     if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 
     cd /tmp/nems_migrator_restore
-    tar -zxf $1
+    tar -zxf "$1"
 
   # if this is an encrypted set, decrypt
   if [[ -f /tmp/nems_migrator_restore/tmp/private.tar.gz.gpg ]]; then
@@ -151,10 +151,9 @@ else
 				   service $nagios stop
 
 				   # I know I warned you, but I love you too much to let you risk it.
-				   /root/nems/nems-migrator/backup.sh > /dev/null 2>&1
 				   cp -p /var/www/html/backup/snapshot/backup.nems /root/
 
-                                   if (( $(echo "$ver >= 1.4" | bc -l) )); then
+				   if (( $(awk 'BEGIN {print ("'$backupver'" >= "'1.4'")}') )); then
                                      confsrc=/etc/nems/conf
                                      resourcesrc=/usr/local/nagios/etc
 				   else
@@ -162,8 +161,7 @@ else
 				     resourcesrc=/etc/nagios3
 				   fi
 
-				   echo Input: "/tmp/nems_migrator_restore$confsrc"
-
+				   echo "Source: /tmp/nems_migrator_restore$confsrc"
 				   if [[ -d "/tmp/nems_migrator_restore$confsrc" ]]; then
 
 

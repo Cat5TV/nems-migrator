@@ -5,6 +5,8 @@
   # Traditional "replacement" of the config file would result in those new settings missing.
   # So this script consolidates the data between the source (backup.nems) and destination (resource.cfg).
 
+  echo "reconcile-resource...";
+
   $resourcesrc = $argv[1];
   $resourcedest = $argv[2];
 
