@@ -1,6 +1,7 @@
 #!/bin/bash
 # Remove restore functionality from legacy versions of NEMS
 ver=$(/usr/local/bin/nems-info nemsver)
+username=$(/usr/local/bin/nems-info username)
 
 # Backward compatible
 if (( $(echo "$ver >= 1.4" | bc -l) )); then
@@ -206,8 +207,20 @@ else
 							nagvisdest="etc/"
 					 fi
 				   if [[ -d "/tmp/nems_migrator_restore/etc/nagvis/$nagvissrc" ]]; then
-						 rm -rf /etc/nagvis/$nagvisdest\maps
+                                                 if [[ -f /etc/nagvis/$nagvisdest/auth.db ]]; then
+						  # NEMS is initialized! save the auth file from the running instance
+						   if [[ -f /tmp/auth.db ]]; then
+						     # There's an old copy. Delete it to prevent accidentally restoring an old copy.
+						     rm /tmp/auth.db
+						   fi
+                                                   cp -f /etc/nagvis/$nagvisdest/auth.db /tmp/auth.db
+						 fi
+						 rm -rf /etc/nagvis/$nagvisdest/maps
 						 cp -Rp /tmp/nems_migrator_restore/etc/nagvis/$nagvissrc /etc/nagvis/$nagvisdest
+                                                 if [[ -f /tmp/auth.db ]]; then
+						  # Replace the backup version, which was just restored, with our backup from the running instance
+                                                   cp -f /tmp/auth.db /etc/nagvis/$nagvisdest/auth.db
+						 fi
 				   else
 							 echo "NagVis failed. Your NagVis data is corrupt."
 					 fi
@@ -220,6 +233,41 @@ else
 							 echo "You can re-create it by running the Generate command in NEMS NConf - nothing to worry about."
 					 fi
 
+				   # Get the username that the NEMS Server was using before it was backed up
+				   # Get NEMS username
+				   # From nems.conf
+				   oldusername=`cat /tmp/nems_migrator_restore/usr/local/share/nems/nems.conf | grep username |  printf '%s' $(cut -n -d '=' -f 2)`
+				   # Legacy support: from htpasswd
+				   if [[ $oldusername == "" ]]; then
+				     oldusername=`cat /tmp/nems_migrator_restore/var/www/htpasswd | cut -d: -f1`
+				   fi
+				   if [[ $oldusername != $username ]]; then
+				     echo "The username of the new NEMS server ($username) differs from the old one ($oldusername)."
+				     printf "Reconciling the data..."
+				     # basically, do the init changes but with the old username to the new
+				     # This could be very problematic if the user has entered a common word as name
+				     # eg., "the" as a name would result in all instances of "the" being replaced.
+
+  # Configure RPi-Monitor to run as the new user
+  /bin/sed -i -- 's/'"$oldusername"'/'"$username"'/g' /etc/rpimonitor/daemon.conf
+
+  # Nagios
+  /bin/sed -i -- 's/'"$oldusername"'/'"$username"'/g' $confdest/global/contactgroups.cfg
+  /bin/sed -i -- 's/'"$oldusername"'/'"$username"'/g' $confdest/global/contacts.cfg
+  /bin/sed -i -- 's/'"$oldusername"'/'"$username"'/g' $resourcedest/cgi.cfg
+
+  if [[ -d /etc/check_mk ]]; then # Removed in NEMS 1.4+
+    /bin/sed -i -- 's/'"$oldusername"'/'"$username"'/g' /etc/check_mk/multisite.d/wato/users.mk
+  fi
+				     echo " Done."
+				     echo "Please note: This patch is applied via a find and replace."
+				     echo "             Therefore, if your old username was something that could be found erroneously,"
+				     echo "             eg., 'nagios', your configs may be broken by the replace operation since it will"
+				     echo "             find and replace ALL instances of 'nagios'. I cannot possibly account for this."
+				     echo "             To avoid this problem, use very unique usernames."
+				     echo "             If this has occurred, please re-initialize NEMS as '$oldusername' and restore"
+				     echo "             your backup again. There's really no other way."
+				   fi
 
 				   # This may cause errors, but at least it gives them the old logs.
 				   cp -Rfp /tmp/nems_migrator_restore/var/log/* /var/log
