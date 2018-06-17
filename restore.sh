@@ -4,7 +4,7 @@ ver=$(/usr/local/bin/nems-info nemsver)
 username=$(/usr/local/bin/nems-info username)
 
 # Backward compatible
-if (( $(echo "$ver >= 1.4" | bc -l) )); then
+if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then
   nagios=nagios
   confdest=/etc/nems/conf
   resourcedest=/usr/local/nagios/etc
@@ -14,7 +14,7 @@ else
   resourcedest=/etc/nagios3
 fi
 
-if (( $(echo "$ver >= 1.4" | bc -l) )); then
+if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then
   echo ""
   echo "**********************************************************************"
   echo "* NEMS Migrator on NEMS Linux 1.4 is quite young, so please be extra *"
