@@ -102,7 +102,7 @@ else
    "
  fi
 
- systemctl stop $nagios
+# systemctl stop $nagios
 
 # Create the archive containing sensitive information
  privfile='/tmp/private.tar.gz'
@@ -129,7 +129,7 @@ else
   $mainpub \
   $addpublic | /bin/gzip --no-name > /tmp/backup.nems
 
- systemctl start $nagios
+# systemctl start $nagios
 
  rm $privfile
 
