@@ -2,6 +2,7 @@
 # Remove restore functionality from legacy versions of NEMS
 ver=$(/usr/local/bin/nems-info nemsver)
 username=$(/usr/local/bin/nems-info username)
+startpath=$(/bin/pwd)
 
 # Backward compatible
 if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then
@@ -78,6 +79,9 @@ else
      fi
    fi
 
+        # Change to a folder where we know the file will not reside
+        # This way we can detect if path was given
+        cd /dev/
 	if [[ -e $1 ]]; then
 
 		echo Let me be VERY clear here...
@@ -307,7 +311,9 @@ else
 		fi
 
 	else
-	  echo $1 does not exist. Aborting.
+	  echo ERROR: $1 does not exist.
+          echo Did you specify the full path? Perhaps you meant $startpath/$1
+          echo Aborting.
 	fi
 
 fi
