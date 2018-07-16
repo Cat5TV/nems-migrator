@@ -3,7 +3,7 @@ ver=$1
 confdest=$2 # Importing from DESTINATION because we already imported the backup to the destination
 
   # Clear the MySQL Database (replace with our blank DB from NEMS-Migrator)
-  printf "Removing all NEMS NConf configuration... "
+  printf "Creating a clean NEMS NConf configuration... "
   systemctl stop mysql
   # Clear the MySQL Database (replace with our Clean DB from NEMS-Migrator)
   rm -rf /var/lib/mysql/
