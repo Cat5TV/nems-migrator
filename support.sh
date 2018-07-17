@@ -1,6 +1,7 @@
 #!/bin/bash
 ver=$(/usr/local/bin/nems-info nemsver)
-hwid=$(/usr/local/bin/nems-info hwid)
+hwid=$(/usr/local/bin/nems-info hwid|tr -d '\n'|tr -d '[:space:]')
+
  # NagVis maps are stored differently in NEMS 1.0
  if [[ $ver = "" ]]; then
    echo Could not detect the version of your NEMS server. Is this NEMS Linux?
