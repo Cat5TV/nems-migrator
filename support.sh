@@ -128,6 +128,8 @@ else
  echo You can access the support.nems file from your computer by navigating to
  echo https://NEMS.local/backup/ -or- \\\\NEMS.local\\backup
  echo ""
+ echo "The support.nems file will self-destruct in 15 minutes."
+ echo ""
 
  end=`date +%s`
 
