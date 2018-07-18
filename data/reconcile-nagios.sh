@@ -60,7 +60,13 @@ $confdest = $argv[3];
         $newfile .= PHP_EOL;
       }
       // clobber the original file
-      file_put_contents($dest,$newfile);
+      if ($file['file'] == 'Default_collector/advanced_services.cfg') {
+        # advanced_services cfg can't have services that are not associated with hosts. Therefore we need two copies: 1 for NConf and one for Nagios
+        copy($backup,$dest); # the exact duplicate of the backup
+	file_put_contents('/tmp/reconcile-advanced-services.cfg',$newfile);
+      } else {
+        file_put_contents($dest,$newfile);
+      }
     }
 
   }

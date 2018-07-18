@@ -32,7 +32,12 @@ confdest=$2 # Importing from DESTINATION because we already imported the backup 
   echo "Importing: host-dependency" && /var/www/nconf/bin/add_items_from_nagios.pl -c host-dependency -f $confdest/Default_collector/host_dependencies.cfg 2>&1 | grep -E "ERROR"
   echo "Importing: service-template" && /var/www/nconf/bin/add_items_from_nagios.pl -c service-template -f $confdest/global/service_templates.cfg 2>&1 | grep -E "ERROR"
   echo "Importing: service" && /var/www/nconf/bin/add_items_from_nagios.pl -c service -f $confdest/Default_collector/services.cfg 2>&1 | grep -E "ERROR"
-  echo "Importing: advanced-service" && /var/www/nconf/bin/add_items_from_nagios.pl -c advanced-service -f $confdest/Default_collector/advanced_services.cfg 2>&1 | grep -E "ERROR"
+#  echo "Importing: advanced-service" && /var/www/nconf/bin/add_items_from_nagios.pl -c advanced-service -f $confdest/Default_collector/advanced_services.cfg 2>&1 | grep -E "ERROR"
+  echo "Importing: advanced-service" && /var/www/nconf/bin/add_items_from_nagios.pl -c advanced-service -f /tmp/reconcile-advanced-services.cfg 2>&1 | grep -E "ERROR" && rm /tmp/reconcile-advanced-services.cfg
   echo "Importing: servicegroup" && /var/www/nconf/bin/add_items_from_nagios.pl -c servicegroup -f $confdest/Default_collector/servicegroups.cfg 2>&1 | grep -E "ERROR"
   echo "Importing: service-dependency" && /var/www/nconf/bin/add_items_from_nagios.pl -c service-dependency -f $confdest/Default_collector/service_dependencies.cfg 2>&1 | grep -E "ERROR"
   echo "Done."
+
+ # Make sure permissions are correct so configs can be written via browser.
+ chown -R www-data:www-data /var/www/html/nconf/
+

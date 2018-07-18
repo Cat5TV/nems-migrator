@@ -27,7 +27,7 @@ define('NAGIOS_BIN', '/usr/local/nagios/bin/nagios');
 # This is done over your browser, so the server where NConf is running on does not need Internet access.
 # NO information about your environment and NO NConf related info will be sent or made available to others!
 # If you don't want NConf to check for updates, you can disable it here.
-define('CHECK_UPDATE', 1);
+define('CHECK_UPDATE', 0);
 
 #
 # Defines which design-template (skin) to use
