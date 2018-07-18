@@ -3,7 +3,10 @@
 ver=$(/usr/local/bin/nems-info nemsver)
 username=$(/usr/local/bin/nems-info username)
 startpath=$(/bin/pwd)
-
+echo "I squashed a pregnant spider."
+echo "Gone to grab a can of RAID."
+echo "NEMS Migrator will be back in 24 hours."
+exit
 # Backward compatible
 if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then
   nagios=nagios
