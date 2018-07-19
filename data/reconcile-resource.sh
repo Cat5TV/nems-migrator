@@ -5,7 +5,7 @@
   # Traditional "replacement" of the config file would result in those new settings missing.
   # So this script consolidates the data between the source (backup.nems) and destination (resource.cfg).
 
-  echo "reconcile-resource...";
+  echo "reconcile-resource... " . PHP_EOL;
 
   $resourcesrc = $argv[1];
   $resourcedest = $argv[2];
@@ -15,14 +15,14 @@
 
   $data = new stdClass();
   if (file_exists($source)) $data->source = file($source);
-  if (file_exists($dest)) { $data->dest = file($dest); } else { exit('ERROR. Is this NEMS?' . PHP_EOL); }
+  if (file_exists($dest)) { $data->dest = file($dest); } else { echo 'ERROR. Is this NEMS?' . PHP_EOL; exit(); }
 
   if (isset($data->source) && is_array($data->source)) {
     foreach ($data->source as $line) {
       $line = trim($line);
       if (substr($line,0,1) == '$') {
         $import = new stdClass();
-        echo 'Importing: ' . $line . PHP_EOL;
+        echo '  Importing: ' . $line . PHP_EOL;
         $tmp = explode('$',$line);
         $tmp[3] = explode('=',$tmp[2]);
         $import->variable = $tmp[1];
