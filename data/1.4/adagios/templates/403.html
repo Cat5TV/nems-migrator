@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block toolbar %}{% endblock %}
+{% block smallheader %}{% endblock %}
+{% block largeheader %}Configuration{% endblock %}
+{% block title %}Configuration{% endblock %}
+{% block content %}
+<!-- NEMS00000 -->
+
+<div class="alert alert-primary">
+    Launch NEMS NConf to modify your Nagios configuration.
+</div>
+
+<a class="btn btn-primary" href="/nconf/">Launch NEMS NConf</a>
+
+{% endblock content %}
