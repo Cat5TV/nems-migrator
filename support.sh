@@ -54,6 +54,8 @@ hwid=$(/usr/local/bin/nems-info hwid|tr -d '\n'|tr -d '[:space:]')
  support="\
   /var/www/nconf/output/ \
   /var/www/html/backup/snapshot/backup.nems \
+  /etc/network/ \
+  /etc/ \
   "
 
 start=`date +%s`
