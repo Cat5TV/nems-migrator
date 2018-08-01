@@ -70,7 +70,7 @@ else
 
   # Let's grab it from Off-Site Backup instead
    if [[ ${1,,} == 'osb' ]]; then
-     /root/nems/nems-migrator/restore-offsite.sh || exit 1
+     /root/nems/nems-migrator/restore-offsite.sh $2 || exit 1
      if [[ -f /tmp/osb.backup.nems ]]; then
        set -- "/tmp/osb.backup.nems"
      else

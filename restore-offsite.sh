@@ -4,7 +4,14 @@
 # nemslinux.com | baldnerd.com | category5.tv
 
 # Load Config
-hwid=`/usr/local/bin/nems-info hwid`
+
+# If a hardware ID override is not provided, use the current device's HWID
+# (Assume restoring to same device)
+if [[ $1 != '' ]]; then
+  hwid=$1
+else
+  hwid=`/usr/local/bin/nems-info hwid`
+fi
 osbpass=$(cat /usr/local/share/nems/nems.conf | grep osbpass | printf '%s' $(cut -n -d '=' -f 2))
 osbkey=$(cat /usr/local/share/nems/nems.conf | grep osbkey | printf '%s' $(cut -n -d '=' -f 2))
 timestamp=$(/bin/date +%s)
@@ -56,7 +63,15 @@ then
   clear
 else
   clear
+  if [[ $datarr == "4" ]]; then # Invalid credentials
+    echo ""
+    echo "ERROR: Unauthorized (You do not have access to $hwid)"
+    echo ""
+    echo "Did you enter the correct HWID, OSB Key and Decryption Password?"
+    echo ""
+  fi
   echo "Canceled"
+  echo ""
   exit 1
 fi
 
