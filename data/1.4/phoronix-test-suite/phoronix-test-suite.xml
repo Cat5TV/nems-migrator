@@ -24,15 +24,15 @@
       <SearchMediaForCache>TRUE</SearchMediaForCache>
       <SymLinkFilesFromCache>FALSE</SymLinkFilesFromCache>
       <PromptForDownloadMirror>FALSE</PromptForDownloadMirror>
-      <EnvironmentDirectory>~/.phoronix-test-suite/installed-tests/</EnvironmentDirectory>
-      <CacheDirectory>~/.phoronix-test-suite/download-cache/</CacheDirectory>
+      <EnvironmentDirectory>/var/log/nems/phoronix/installed-tests/</EnvironmentDirectory>
+      <CacheDirectory>/var/log/nems/phoronix/download-cache/</CacheDirectory>
     </Installation>
     <Testing>
       <SaveSystemLogs>TRUE</SaveSystemLogs>
       <SaveInstallationLogs>FALSE</SaveInstallationLogs>
       <SaveTestLogs>FALSE</SaveTestLogs>
       <RemoveTestInstallOnCompletion></RemoveTestInstallOnCompletion>
-      <ResultsDirectory>~/.phoronix-test-suite/test-results/</ResultsDirectory>
+      <ResultsDirectory>/var/log/nems/phoronix/test-results/</ResultsDirectory>
       <AlwaysUploadResultsToOpenBenchmarking>FALSE</AlwaysUploadResultsToOpenBenchmarking>
       <AutoSortRunQueue>TRUE</AutoSortRunQueue>
     </Testing>
@@ -68,7 +68,7 @@
       <WebSocketPort>RANDOM</WebSocketPort>
       <AdvertiseServiceZeroConf>TRUE</AdvertiseServiceZeroConf>
       <AdvertiseServiceOpenBenchmarkRelay>TRUE</AdvertiseServiceOpenBenchmarkRelay>
-      <PhoromaticStorage>~/.phoronix-test-suite/phoromatic/</PhoromaticStorage>
+      <PhoromaticStorage>/var/log/nems/phoronix/phoromatic/</PhoromaticStorage>
     </Server>
   </Options>
 </PhoronixTestSuite>
