@@ -187,6 +187,7 @@ $message = '
 ***** Nagios *****
 
 Notification Type: ' .$f_notify_type. '
+NEMS Server: ' . $nems['alias'] . '
 Service: ' .$f_serv_desc. '
 Hostname: ' .$f_host_name. '
 Hostalias: ' .$f_host_alias. '
@@ -367,6 +368,15 @@ $HTMLmessage = '
             </table>
             <table border="0" cellpadding="0" cellspacing="0" style="border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;border-left-style: solid;border-right-style: solid;border-color: #d3d3d3;border-width: 1px;">
               <td style="font-size:16px;vertical-align:top;">&nbsp;</td>
+                <td style="font-size:9px;vertical-align:top;">&nbsp;</td>
+                <tbody>
+                  <tr>
+                    <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
+                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%; text-decoration:underline;">NEMS Server:</h4>
+                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $nems['alias'] . '</h2>
+                    </td>
+                  </tr>
+                </tbody>
                 <tbody>
                   <tr>
                     <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
