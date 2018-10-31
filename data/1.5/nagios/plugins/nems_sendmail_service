@@ -509,7 +509,9 @@ $HTMLmessage = '
 $mail = new PHPMailer;
 //$mail->SMTPDebug = 3; // Enable verbose debug output
 $mail->isSMTP();
-$mail->Host = $nems['resource']['USER7'];
+$mailserver = explode(':',$nems['resource']['USER7'];
+$mail->Host = $mailserver[0];
+$mail->Port = $mailserver[1];
 $mail->SMTPAuth = true;
 $mail->Username = $nems['resource']['USER9'];
 $mail->Password = $nems['resource']['USER10'];
