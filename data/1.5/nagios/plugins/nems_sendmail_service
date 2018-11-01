@@ -217,7 +217,7 @@ $HTMLmessage = '
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
     <meta charset="utf-8">
-    <meta name="description" content="Nagios Email Notification Alert">
+    <meta name="description" content="NEMS Email Notification Alert">
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="x-apple-disable-message-reformatting">
@@ -363,7 +363,7 @@ $HTMLmessage = '
                 <tbody>
                   <tr>
                     <td style="background-color:#424242;-webkit-border-top-right-radius: 25px;-webkit-border-top-left-radius: 25px;-moz-border-top-right-radius: 25px;-moz-border-top-left-radius: 25px;border-top-right-radius: 25px;border-top-left-radius: 25px;">
-                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#ffffff; text-align:center;">Alert Notification</h2>
+                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#ffffff; text-align:center;">NEMS Alert Notification</h2>
                     </td>
                   </tr>
                   <tr>
@@ -478,7 +478,7 @@ $HTMLmessage = '
                 </tr>
                 <tr>
                   <td style="background-color:#424242;-webkit-border-bottom-right-radius: 25px;-webkit-border-bottom-left-radius: 25px;-moz-border-bottom-right-radius: 25px;-moz-border-bottom-left-radius: 25px;border-bottom-right-radius: 25px;border-bottom-left-radius: 25px;">
-                    <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#ffffff; text-align:center;">Alert Notification</h2>
+                    <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#ffffff; text-align:center;">NEMS Alert Notification</h2>
                   </td>
                 </tr>
               </tbody>
