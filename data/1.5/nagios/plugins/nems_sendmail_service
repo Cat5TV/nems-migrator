@@ -196,8 +196,8 @@ $message = '
 Notification Type: ' .$f_notify_type. '
 Reporting NEMS Server: ' . $nems['alias'] . '
 Service: ' .$f_serv_desc. '
-Hostname: ' .$f_host_name. '
-Hostalias: ' .$f_host_alias. '
+Host: ' .$f_host_name. '
+Host Alias: ' .$f_host_alias. '
 State: ' .$f_serv_state. '
 Address: ' .$f_host_address. '
 Date/Time: ' .$f_long_datetime. '
@@ -401,7 +401,7 @@ $HTMLmessage = '
                 <tbody>
                   <tr>
                     <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
-                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%; text-decoration:underline;">Hostalias:</h4>
+                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%; text-decoration:underline;">Host Alias:</h4>
                       <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $f_host_alias . '</h2>
                     </td>
                   </tr>
