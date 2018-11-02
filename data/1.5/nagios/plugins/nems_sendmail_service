@@ -349,14 +349,14 @@ $HTMLmessage = '
 			[' .$f_notify_type. '] Service: ' .$f_serv_desc. ' on Host: ' .$f_host_alias. ' (' .$f_host_name. ') is ' .$f_serv_state. '. ***************************************************************************************************************************************
 		</div>
 
-		<div style="max-width: 600px; padding: 10px 0; margin: auto;" class="email-container">
+		<div style="padding: 10px 0; margin: auto;" class="email-container">
 			<!--[if mso]>
 			<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
 			<tr>
 			<td>
 			<![endif]-->
 
-			<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="95%" style="max-width: 600px;">
+			<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="95%">
 				<tr>
 					<td bgcolor="#ffffff" style="border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;-webkit-border-top-right-radius: 25px;-webkit-border-top-left-radius: 25px;-moz-border-top-right-radius: 25px;-moz-border-top-left-radius: 25px;border-top-right-radius: 25px;border-top-left-radius: 25px;-webkit-border-bottom-right-radius: 25px;-webkit-border-bottom-left-radius: 25px;-moz-border-bottom-right-radius: 25px;-moz-border-bottom-left-radius: 25px;border-bottom-right-radius: 25px;border-bottom-left-radius: 25px;">
             <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" align="center" style="border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;-webkit-border-top-right-radius: 25px;-webkit-border-top-left-radius: 25px;-moz-border-top-right-radius: 25px;-moz-border-top-left-radius: 25px;border-top-right-radius: 25px;border-top-left-radius: 25px;">
