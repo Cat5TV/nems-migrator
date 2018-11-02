@@ -194,7 +194,7 @@ $message = '
 ***** NEMS Linux *****
 
 Notification Type: ' .$f_notify_type. '
-NEMS Server: ' . $nems['alias'] . '
+Reporting NEMS Server: ' . $nems['alias'] . '
 Service: ' .$f_serv_desc. '
 Hostname: ' .$f_host_name. '
 Hostalias: ' .$f_host_alias. '
@@ -377,14 +377,6 @@ $HTMLmessage = '
                 <tbody>
                   <tr>
                     <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
-                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%; text-decoration:underline;">NEMS Server:</h4>
-                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $nems['alias'] . '</h2>
-                    </td>
-                  </tr>
-                </tbody>
-                <tbody>
-                  <tr>
-                    <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
                       <h5 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#b0b0b0; text-align:right; padding-right:5%;">' . $f_service_attempt_state . '/' . $f_max_service_attempt_state . '</h5>
                       <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; text-align:center; text-decoration:underline;">Host:</h4>
                       <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:26px; text-align:center;">' . $f_host_name . '</h2>
@@ -393,6 +385,15 @@ $HTMLmessage = '
                       <h5 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#b0b0b0; text-align:center;">is</h5>
                       <h1 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:30px; color:' .$f_color. ';text-align:center;">' . $f_serv_state . '</h1>
                       <h5 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; color:#b0b0b0; text-align:center;">for: ' . $f_serv_duration . '</h5>
+                    </td>
+                  </tr>
+                </tbody>
+                <td style="font-size:9px;vertical-align:top;">&nbsp;</td>
+                <tbody>
+                  <tr>
+                    <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
+                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%; text-decoration:underline;">Reporting NEMS Server:</h4>
+                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $nems['alias'] . '</h2>
                     </td>
                   </tr>
                 </tbody>
