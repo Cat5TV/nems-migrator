@@ -66,24 +66,24 @@ $LONGDATETIME = date('r');
 
 /* Defaults */
 $f_color="#5D6D7E";
-$f_ackauthor_desc="Acknowledged Author:";
-$f_ackcomment_desc="Acknowledged Comment:";
+$f_ackauthor_desc="Acknowledged By:";
+$f_ackcomment_desc="Comment:";
 
 /* Build type of alert */
 if($f_notify_type=="PROBLEM") {
   $f_color="#FF0000";
-  $f_ackauthor_desc="Acknowledged Author:";
-  $f_ackcomment_desc="Acknowledged Comment:";
+  $f_ackauthor_desc="Acknowledged By:";
+  $f_ackcomment_desc="Comment:";
 }
 if($f_notify_type=="RECOVERY") {
   $f_color="#00FF00";
-  $f_ackauthor_desc="Acknowledged Author:";
-  $f_ackcomment_desc="Acknowledged Comment:";
+  $f_ackauthor_desc="Acknowledged By:";
+  $f_ackcomment_desc="Comment:";
 }
 if($f_notify_type=="ACKNOWLEDGEMENT") {
   $f_color="#AEB6BF";
-  $f_ackauthor_desc="Acknowledged Author:";
-  $f_ackcomment_desc="Acknowledged Comment:";
+  $f_ackauthor_desc="Acknowledged By:";
+  $f_ackcomment_desc="Comment:";
 }
 if($f_notify_type=="FLAPPINGSTART") {
   $f_color="#800000";
