@@ -76,7 +76,7 @@ if($f_notify_type=="PROBLEM") {
   $f_ackcomment_desc="Comment:";
 }
 if($f_notify_type=="RECOVERY") {
-  $f_color="#00FF00";
+  $f_color="#006800";
   $f_ackauthor_desc="Acknowledged By:";
   $f_ackcomment_desc="Comment:";
 }
