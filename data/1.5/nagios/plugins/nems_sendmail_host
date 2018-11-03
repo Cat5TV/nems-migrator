@@ -34,7 +34,7 @@ $f_host_name =array_shift($argv);  /*2*/
 $f_host_alias =array_shift($argv);  /*3*/
 $f_host_state =array_shift($argv);  /*4*/
 $f_host_address =array_shift($argv);  /*5*/
-$f_host_output =array_shift($argv);  /*6*/
+$f_host_output =preg_replace('/[^(\x20-\x7F)\x0A\x0D]*/','',array_shift($argv));  /*6*/
 $f_long_date =array_shift($argv);  /*7*/
 $f_to  =array_shift($argv);  /*8*/
 $f_totalup  =array_shift($argv);  /*9*/
@@ -195,7 +195,7 @@ $HTMLmessage = '
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="description" content="NEMS Email Notification Alert">
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
