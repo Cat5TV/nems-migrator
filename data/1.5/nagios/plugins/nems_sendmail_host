@@ -18,7 +18,14 @@ with special permission from Heini Holm Andersen.
 
 *******************************************************************************/
 
-require_once '/var/www/PHPMailer/PHPMailerAutoload.php';
+header('Content-Type: text/html; charset=utf-8');
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '/var/www/PHPMailer/src/Exception.php';
+require '/var/www/PHPMailer/src/PHPMailer.php';
+require '/var/www/PHPMailer/src/SMTP.php';
 
 /* Arguments containing Nagios Alert/Notification Info */
 array_shift($argv);

@@ -18,6 +18,8 @@ with special permission from Heini Holm Andersen.
 
 *******************************************************************************/
 
+header('Content-Type: text/html; charset=utf-8');
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
