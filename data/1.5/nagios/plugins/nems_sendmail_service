@@ -34,7 +34,7 @@ $f_host_name =array_shift($argv);    /*2*/
 $f_host_alias =array_shift($argv);   /*3*/
 $f_host_state =array_shift($argv);    /*4*/
 $f_host_address =array_shift($argv);   /*5*/
-$f_serv_output =str_replace('Â', '',array_shift($argv));   /*6*/
+$f_serv_output =array_shift($argv);   /*6*/
 $f_long_datetime =array_shift($argv);     /*7*/
 $f_serv_desc  =array_shift($argv);    /*8*/
 $f_serv_state  =array_shift($argv);   /*9*/
@@ -47,7 +47,7 @@ $f_totunknowns =array_shift($argv);     /*15*/
 $f_lastserviceok = array_shift($argv);    /*16*/
 $f_lastwarning = array_shift($argv);     /*17*/
 $f_attempts= array_shift($argv);     /*18*/
-$f_serv_long_output =str_replace('Â', '', array_shift($argv));   /*19*/
+$f_serv_long_output =array_shift($argv);   /*19*/
 $f_ackauthor= array_shift($argv);     /*20*/
 $f_ackcomment= array_shift($argv);     /*21*/
 $f_serv_duration= array_shift($argv);     /*22*/
@@ -502,6 +502,7 @@ $HTMLmessage = '
 
 $mail = new PHPMailer;
 //$mail->SMTPDebug = 3; // Enable verbose debug output
+$mail->CharSet = 'UTF-8';
 $mail->isSMTP();
 $mailserver = explode(':',$nems['resource']['USER7']);
 $mail->Host = $mailserver[0];
