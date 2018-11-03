@@ -174,7 +174,6 @@ $message = '
 ***** NEMS Linux *****
 
 Notification Type: ' .$f_notify_type. '
-Reporting NEMS Server: ' . $nems['alias'] . '
 Host: ' .$f_host_name. '
 Host Alias: ' .$f_host_alias. '
 State: ' .$f_host_state. '
@@ -183,6 +182,8 @@ Date/Time: ' .$f_long_datetime. '
 ' .$f_notification_escalation_state_status_none_html. '
 ' .$f_ackauthor_status_none_html. '
 ' .$f_ackcomment_status_none_html. '
+
+Reporting NEMS Server: ' . $nems['alias'] . '
 
 Info:
 ' .$f_host_output. '
@@ -369,8 +370,8 @@ $HTMLmessage = '
                 <tbody>
                   <tr>
                     <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
-                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%; text-decoration:underline;">Reporting NEMS Server:</h4>
-                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $nems['alias'] . '</h2>
+                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">Status Information:</h4>
+                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $f_host_output . '</h2>
                     </td>
                   </tr>
                 </tbody>
@@ -405,8 +406,8 @@ $HTMLmessage = '
                 <tbody>
                   <tr>
                     <td width="98%" style="vertical-align:middle;font-size:14px;width:98%;margin:0 10px 0 10px;">
-                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%;text-decoration:underline;">Status Information:</h4>
-                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $f_host_output . '</h2>
+                      <h4 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:15px; color:#b0b0b0; padding-left:3%; text-decoration:underline;">Reporting NEMS Server:</h4>
+                      <h2 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; margin:0; font-size:20px; padding-left:5%;">' . $nems['alias'] . '</h2>
                     </td>
                   </tr>
                 </tbody>
