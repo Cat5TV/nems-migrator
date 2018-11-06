@@ -15,13 +15,11 @@ else
   resourcedest=/etc/nagios3
 fi
 
+  echo ""
+  echo "NEMS Migrator Restore - By Robbie Ferguson"
+  echo ""
+
 if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then
-  echo ""
-  echo "**********************************************************************"
-  echo "* NEMS Migrator on NEMS Linux 1.4 is quite young, so please be extra *"
-  echo "* cautious and keep a good backup at all times. There may be bugs.   *"
-  echo "**********************************************************************"
-  echo ""
   nagios=nagios
 fi
 
@@ -46,9 +44,6 @@ if pidof -o %PPID -x "`basename "$0"`">/dev/null; then
 fi
 
 if [[ $1 = "" ]]; then
-  echo ""
-  echo "NEMS Migrator Restore - By Robbie Ferguson"
-  echo ""
   echo "Local Usage: sudo nems-restore /location/of/backup.nems"
   echo "Off-Site Backup Usage: sudo nems-restore osb"
   echo ""
@@ -312,7 +307,7 @@ else
 
 	else
 	  echo ERROR: $1 does not exist.
-          echo Did you specify the full path? Perhaps you meant $startpath/$1
+          echo Did you specify the full path?
           echo Aborting.
 	fi
 

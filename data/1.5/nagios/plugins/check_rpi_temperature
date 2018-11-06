@@ -1,0 +1,49 @@
+#!/bin/bash
+# author: Andrea Cattaneo
+# check raspberry pi cpu temperature with perfdata and warn/crit thresholds
+#
+# check raspberry pi temperature with perfdata and warn/crit thresholds.
+# The data is read from sysfs ( file: /sys/class/thermal/thermal_zone0/temp ).
+#
+# Dependency: awk bc
+# licence: GPL
+if [ -z "$1" ] ; then
+    echo "UNKNOWN - missing warning temperature"
+    exit 3
+fi
+WARN=$1
+
+if [ -z "$2" ] ; then
+    echo "UNKNOWN - missing critical temperature"
+    exit 3
+fi
+CRIT=$2
+
+if ! ( command -v awk >/dev/null ) ; then
+    echo "UNKNOWN - awk command not found"
+    exit 3
+fi
+
+if ! ( command -v bc >/dev/null ) ; then
+    echo "UNKNOWN - bc command not found"
+    exit 3
+fi
+
+if ! [[ -f /sys/class/thermal/thermal_zone0/temp ]] ; then
+    echo "UNKNOWN - /sys/class/thermal/thermal_zone0/temp: No such file"
+    exit 3
+fi
+TEMP=`awk '{printf "%3.1f", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
+
+if (( $(echo "${TEMP} > ${CRIT}" | bc -l) )); then
+    echo "TEMPERATURE CRITICAL - CPU Temp: ${TEMP} °C | cpu_temp=${TEMP};${WARN};${CRIT};;"
+    exit 2
+fi
+
+if (( $(echo "${TEMP} > ${WARN}" | bc -l) )); then
+    echo "TEMPERATURE WARNING - CPU Temp: ${TEMP} °C | cpu_temp=${TEMP};${WARN};${CRIT};;"
+    exit 1
+fi
+
+echo "TEMPERATURE OK - CPU Temp: ${TEMP} °C | cpu_temp=${TEMP};${WARN};${CRIT};;"
+exit 0
