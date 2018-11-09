@@ -1,6 +1,6 @@
 #!/usr/bin/lua
 -- Big thanks to baggins for the original development in NEMS 1.3
--- and Kaganishu for helping with improvements in NEMS 1.5
+-- and Kaganishu for helping with improvements in NEMS 1.5, with input from NickTheGreek
 
 https = require('ssl.https')
 local handle = io.popen("/usr/local/bin/nems-info alias")
