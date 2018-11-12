@@ -4,8 +4,7 @@
 /**
  * notify-by-pushover.php - Nagios notification plugin
  *
- *
- * This file is part of "barryo / nagios-plugins" - a library of tools and
+ * Originally part of "barryo / nagios-plugins" - a library of tools and
  * utilities for Nagios developed by Barry O'Donovan
  * (http://www.barryodonovan.com/) and his company, Open Solutions
  * (http://www.opensolutions.ie/).
@@ -15,6 +14,9 @@
  *
  * Contact: Barry O'Donovan - info (at) opensolutions (dot) ie
  *          http://www.opensolutions.ie/
+ *
+ * Adapted for NEMS Linux by Robbie Ferguson
+ * https://nemslinux.com/
  *
  * LICENSE
  *
@@ -58,8 +60,8 @@
 // USAGE: notify-by-pushover.php <HOST/SERVICE> <APP_KEY> <USER_KEY> <TYPE> <STATE>
 
 
-date_default_timezone_set('Europe/Dublin');
-define( "VERSION", '1.0.0' );
+// date_default_timezone_set('Europe/Dublin');
+define( "VERSION", '1.5.0' );
 
 ini_set( 'max_execution_time', '55' );
 
@@ -82,6 +84,7 @@ $app   = isset( $argv[2] ) ? $argv[2] : false;
 $user  = isset( $argv[3] ) ? $argv[3] : false;
 $type  = isset( $argv[4] ) ? $argv[4] : false; // NOTIFICATIONTYPE
 $state = isset( $argv[5] ) ? $argv[5] : false; // STATE
+$nemsalias = trim(shell_exec('/usr/local/bin/nems-info alias'));
 
 if( !$mode || !$app || !$user || !$type || !$state )
     die( "ERROR - USAGE: notify-by-pushover.php <HOST/SERVICE> <APP_KEY> <USER_KEY> <TYPE> <STATE>\n\n" );
@@ -113,7 +116,7 @@ curl_setopt_array( $ch = curl_init(), array(
     CURLOPT_POSTFIELDS => array(
         "token" => $app,
         "user" => $user,
-        "message" => $message,
+        "message" => $message . PHP_EOL . PHP_EOL . 'Reporting NEMS Server: ' . $nemsalias,
         "title" => "NEMS Alert - $mode - $type - $state",
         "priority" => $priority
     )
