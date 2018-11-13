@@ -79,6 +79,9 @@ else
         cd /dev/
 	if [[ -e $1 ]]; then
 
+	  if [[ $2 == 'force' ]]; then
+            response=Y
+          else
 		echo Let me be VERY clear here...
 		echo This will WIPE OUT the configuration on this NEMS deployment.
 		echo The configuration will be replaced with the one stored in your NEMS backup.
@@ -90,6 +93,8 @@ else
 		echo ""
 
 		read -r -p "Are you sure you want to attempt restore? [y/N] " response
+          fi
+
     if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 
     cd /tmp/nems_migrator_restore
