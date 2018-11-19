@@ -21,6 +21,17 @@ $confdest = $argv[3];
     array('file'=>'global/service_templates.cfg','unique'=>'name'),
   );
 
+  if ($ver >= 1.5) {
+    // NEMS 1.5 introduces more support for migration
+    $files2 = array(
+# -need to add one for the unique id      array('file'=>'Default_collector/host_dependencies.cfg','unique'=>'name'),
+# -need to add one for the unique id      array('file'=>'Default_collector/service_dependencies.cfg','unique'=>'name'),
+      array('file'=>'global/contactgroups.cfg','unique'=>'contactgroup_name'),
+      array('file'=>'global/timeperiods.cfg','unique'=>'timeperiod_name'),
+    );
+    $files = array_merge($files,$files2);
+  }
+
   echo 'Reconciling ' . count($files) . ' files...' . PHP_EOL;
 
   foreach ($files as $file) {
@@ -96,7 +107,10 @@ $confdest = $argv[3];
   echo PHP_EOL;
 
     function parsefile($filename,$file) {
-      echo "Scanning " . $filename . "... ";
+      if (substr($filename,0,5) == '/tmp/') $filename_short = 'your backup of ';
+      if (substr($filename,0,6) == '/root/') $filename_short = 'NEMS\' Default of ';
+      $filename_short .= basename($filename);
+      echo "Scanning " . $filename_short . "... ";
       if (!file_exists($filename)) {
         echo "File not found. Cannot load." . PHP_EOL;
       } else {

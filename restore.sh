@@ -176,7 +176,7 @@ else
 				   if [[ -d "/tmp/nems_migrator_restore$confsrc" ]]; then
 
 
-                                         # Clobber the existing configs which will not be consolidated
+                                         # Clobber the existing configs which will not be consolidated (<=1.4.1, will be overwritten in 1.5+)
                                          rm $confdest/global/timeperiods.cfg && cp /tmp/nems_migrator_restore/$confsrc/global/timeperiods.cfg $confdest/global/ && chown www-data:www-data $confdest/global/timeperiods.cfg
                                          # rm /etc/nagios3/parent_hosts.cfg && cp /tmp/nems_migrator_restore/etc/nagios3/parent_hosts.cfg /etc/nagios3/ && chown www-data:www-data /etc/nagios3/parent_hosts.cfg
 
