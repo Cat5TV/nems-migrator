@@ -159,7 +159,10 @@ else
 				   service $nagios stop
 
 				   # I know I warned you, but I love you too much to let you risk it.
-				   cp -p /var/www/html/backup/snapshot/backup.nems /root/
+                                   DATE=`date '+%Y-%m-%d %H:%M:%S'`
+                                   USERNAME=`/usr/local/bin/nems-info username`
+                                   REDUNDANCY="/home/$USERNAME/$DATE - backup.nems"
+				   cp -p /var/www/html/backup/snapshot/backup.nems "$REDUNDANCY"
 
 				   if (( $(awk 'BEGIN {print ("'$backupver'" >= "'1.4'")}') )); then
                                      confsrc=/etc/nems/conf
@@ -286,7 +289,8 @@ else
 				   echo I hope everything worked okay for you.
 				   echo Please let me know if you had any trouble.
 				   echo ""
-				   echo PS - I saved a backup for you of the old config. /root/backup.nems
+				   echo PS - I saved a backup for you of the old config.
+                                   echo $REDUNDANCY
 				   echo      ... just in case
 				   echo ""
 
