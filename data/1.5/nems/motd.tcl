@@ -92,21 +92,19 @@ set mem(s)  [lindex $memory 19]
 
 # * ASCII head
 set creator {
-                            BY: ROBBIE FERGUSON                            
-                               NEMSLINUX.COM                               
+                   BY: ROBBIE FERGUSON
+                      NEMSLINUX.COM
 }
 
 # * Print Output
 puts "
-\033\[01;32m   `.-.`     .-.\033\[01;90m   `.........`     `..`         `..`     `...........      
-\033\[01;32m `:+++++/.   ++/\033\[01;90m `:///////////:` `:////:`     -/////:  `:///////////-      
-\033\[01;32m :++. `/+/   ++/\033\[01;90m -//.       .//: ://``//:    `//: -//. ://`                
-\033\[01;32m :++`  /++   ++/\033\[01;90m ://:-------://. ://` -//.   ://` -//. -//:-------.`       
-\033\[01;32m :++`  /++   ++/\033\[01;90m :///::::::::-`  ://` `//:  .//:  -//.  `-:::::::://:`     
-\033\[01;32m :++`  /++` `++/\033\[01;90m -//.            ://`  -//. ://`  -//.            .//.     
-\033\[01;32m :++`  ./+/:/+/.\033\[01;90m `://::::::::::. ://`  `://://-   -//. -:::::::::://:`     
-\033\[01;32m -:-    `.-:-.`\033\[01;90m    .------------ --.     .---`    `--` ------------.       
-                                                           LINUX                                   \033\[0m"
+          \033\[01;32m███\033\[01;90m╗   \033\[01;32m██\033\[01;90m╗\033\[01;37m███████\033\[01;90m╗\033\[01;37m███\033\[01;90m╗   \033\[01;37m███\033\[01;90m╗\033\[01;37m███████\033\[01;90m╗
+          \033\[01;32m████\033\[01;90m╗  \033\[01;32m██\033\[01;90m║\033\[01;37m██\033\[01;90m╔════╝\033\[01;37m████\033\[01;90m╗ \033\[01;37m████\033\[01;90m║\033\[01;37m██\033\[01;90m╔════╝
+          \033\[01;32m██\033\[01;90m╔\033\[01;32m██\033\[01;90m╗ \033\[01;32m██\033\[01;90m║\033\[01;37m█████\033\[01;90m╗  \033\[01;37m██\033\[01;90m╔\033\[01;37m████\033\[01;90m╔\033\[01;37m██\033\[01;90m║\033\[01;37m███████\033\[01;90m╗
+          \033\[01;32m██\033\[01;90m║╚\033\[01;32m██\033\[01;90m╗\033\[01;32m██\033\[01;90m║\033\[01;37m██\033\[01;90m╔══╝  \033\[01;37m██\033\[01;90m║╚\033\[01;37m██\033\[01;90m╔╝\033\[01;37m██\033\[01;90m║╚════\033\[01;37m██\033\[01;90m║
+          \033\[01;32m██\033\[01;90m║ ╚\033\[01;32m████\033\[01;90m║\033\[01;37m███████\033\[01;90m╗\033\[01;37m██\033\[01;90m║ ╚═╝ \033\[01;37m██\033\[01;90m║\033\[01;37m███████\033\[01;90m║
+          \033\[01;90m╚═╝  ╚═══╝╚══════╝╚═╝     ╚═╝╚══════╝
+          \033\[01;90m                               LINUX\033\[0m"
 puts "\033\[01;90m$creator\033\[0m"
 puts "  \033\[35mNEMS Platform....:\033\[0m \033\[36m$nemsplatform\033\[0m"
 puts "  \033\[35mNEMS Version.....:\033\[0m \033\[36m$nemsver\033\[0m \033\[33m\(Current Version is $nemsveravail\)\033\[0m"
@@ -116,17 +114,13 @@ puts "  \033\[35mUptime...........:\033\[0m \033\[36m$up(days)days $up(hours)hou
 puts "  \033\[35mLoad.............:\033\[0m \033\[36m$sysload(1) (1 minute) $sysload(5) (5 minutes) $sysload(15) (15 minutes)"
 puts "                     $sysload(10080) (1 week)\033\[0m"
 #puts "  \033\[35mMemory MB........:\033\[0m \033\[36m$mem(t)  Used: $mem(u)  Free: $mem(f)  Free Cached: $mem(c)  Swap In Use: $mem(s)\033\[0m"
-puts "  \033\[35mMemory...........:\033\[0m \033\[36mTotal: $mem(t) MB / Used: $mem(u) MB / Free: $mem(f) MB / Cached: $mem(c) MB\033\[0m"
+puts "  \033\[35mMemory...........:\033\[0m \033\[36mTotal: $mem(t) MB / Cached: $mem(c) MB"
+puts "                     Used: $mem(u) MB / Free: $mem(f) MB\033\[0m"
 #puts "  \033\[35mTemperature...:\033\[0m \033\[36mCore0: $tem(0)  M/B: $tem(m)  CPU: $tem(c)  Disk: ${hddtemp}\033\[0m"
 puts "  \033\[35mDisk Usage.......:\033\[0m \033\[36mYou're using ${usage}% of your root filesystem\033\[0m"
 puts "  \033\[35mSSH Logins.......:\033\[0m \033\[36m$log(c) logged in\033\[0m"
 puts "  \033\[35mProcesses........:\033\[0m \033\[36m$psa total running of which $psu $verb yours\033\[0m"
-#puts "  \033\[35mWeather.......:\033\[0m \033\[36m$wthr(t) $wthr(d) $wthr(e)\n\033\[0m"
-#puts "\033\[01;32m  ::::::::::::::::::::::::::::::::::-RULES-::::::::::::::::::::::::::::::::::"
-#puts "    This is a private system that you are not to give out access to anyone"
-#puts "    without permission from the admin. No illegal files or activity. Stay,"
-#puts "    in your home directory, keep the system clean, and make regular backups."
-#puts "     -==  DISABLE YOUR PROGRAMS FROM KEEPING SENSITIVE LOGS OR HISTORY ==-\033\[0m\n"
+puts ""
 
 if {[file exists /etc/changelog]&&[file readable /etc/changelog]} {
   puts " . .. More or less important system informations:\n"
