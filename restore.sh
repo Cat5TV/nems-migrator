@@ -102,14 +102,19 @@ else
 
   # if this is an encrypted set, decrypt
   if [[ -f /tmp/nems_migrator_restore/tmp/private.tar.gz.gpg ]]; then
-    printf "This backup is encrypted. Attempting to decrypt... "
+    echo "This backup is encrypted."
     # Load Config
     osbpass=$(cat /usr/local/share/nems/nems.conf | grep osbpass | printf '%s' $(cut -n -d '=' -f 2))
 
     if [[ $osbpass == '' ]]; then
-      echo Decryption password not entered in NEMS SST. Aborting.
-      echo ""
-      exit
+      echo Decryption password not entered in NEMS SST.
+      read -sp 'Enter Decryption Key: ' osbpass
+      if [[ $osbpass == '' ]]; then
+        echo "Aborted."
+        echo ""
+        exit
+      fi
+      echo "Attempting to decrypt with that key... "
     fi;
 
     /usr/bin/gpg --yes --batch --passphrase="::$osbpass::291ea559-471e-4bda-bb7d-774e782f84c1::" --decrypt /tmp/nems_migrator_restore/tmp/private.tar.gz.gpg > /tmp/nems_migrator_restore/tmp/private.tar.gz

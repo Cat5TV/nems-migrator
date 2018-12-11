@@ -107,6 +107,7 @@ $confdest = $argv[3];
   echo PHP_EOL;
 
     function parsefile($filename,$file) {
+      $definitions = array(); // prevent error if file is empty
       if (substr($filename,0,5) == '/tmp/') $filename_short = 'your backup of ';
       if (substr($filename,0,6) == '/root/') $filename_short = 'NEMS\' Default of ';
       $filename_short .= basename($filename);
