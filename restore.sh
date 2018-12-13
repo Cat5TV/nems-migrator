@@ -299,6 +299,9 @@ else
 				   echo      ... just in case
 				   echo ""
 
+                                   # Re-detect the hardware since files may be from other platform
+                                   /usr/local/share/nems/nems-scripts/hw_model.sh
+
 				 else
 				   echo Your backup file is either invalid, or an unsupported version. Aborted.
 				 fi
