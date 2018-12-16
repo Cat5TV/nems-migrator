@@ -172,7 +172,7 @@ function float_cond()
 # to speedtest on your system. On mine it is /usr/local/bin 
 # Ensure to leave the last slash off!
 # You MUST define this or the script will not run!
-STb=/usr/local/share/nems/nems-scripts/speedtest
+STb=/usr/local/share/nems/nems-scripts
 
 # Set up the variables to take the arguments
 DLw=
