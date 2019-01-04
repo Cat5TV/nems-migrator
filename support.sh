@@ -109,7 +109,7 @@ else
 
 
 # Create the generic backup (not particularly sensitive)
- tar --ignore-failed-read -cf - \
+ tar --warning=no-file-changed --ignore-failed-read -cf - \
   $support \
   $mainpub \
   $mainpriv \
