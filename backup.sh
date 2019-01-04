@@ -106,7 +106,8 @@ else
 
 # Create the archive containing sensitive information
  privfile='/tmp/private.tar.gz'
- tar --ignore-failed-read -czf $privfile \
+ printf "  "
+ tar --warning=no-file-changed --ignore-failed-read -czf $privfile \
   $mainpriv \
   $addprivate
 
@@ -124,10 +125,15 @@ else
 
 
 # Create the generic backup (not particularly sensitive)
- tar --ignore-failed-read -cf - \
+ printf "  "
+ tar --warning=no-file-changed --ignore-failed-read -cf - \
   $privfile \
   $mainpub \
   $addpublic | /bin/gzip --no-name > /tmp/backup.nems
+
+# Log the file size
+FILESIZE=$(stat -c%s "/tmp/backup.nems")
+echo $FILESIZE > /var/www/html/backup/snapshot/size.log
 
 # systemctl start $nagios
 
@@ -136,7 +142,6 @@ else
  mv /tmp/backup.nems /var/www/html/backup/snapshot/backup.nems
 
  echo "Done. You'll find the backup at /var/www/html/backup/snapshot/backup.nems"
-
  echo ""
  echo You can access the file from your computer by navigating to
  echo https://NEMS.local/backup/ -or- \\\\NEMS.local\\backup
