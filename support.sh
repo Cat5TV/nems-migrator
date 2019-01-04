@@ -81,6 +81,11 @@ else
    echo Created backup folder at /var/www/html/backup/snapshot
  fi
 
+ if [[ $1 == 'report' ]]; then
+   /usr/local/share/nems/nems-scripts/support-report.sh
+   exit
+ fi
+
  addpublic=''
  addprivate=''
 
