@@ -19,6 +19,22 @@ fi;
 data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "query=status" https://nemslinux.com/api-backend/offsite-backup-checkin.php)
 if [[ $data == '1' ]]; then # this account passes authentication
 
+if pidof -o %PPID -x "backup.sh">/dev/null; then
+    echo "Standby... backup is running."
+    sleep 5
+    v=0
+    while pidof -o %PPID -x "backup.sh">/dev/null
+    do
+      v=$(($v+1))
+      if [[ $v -ge 120 ]]; then
+        echo "It has been 10 minutes and backup is still running. Aborted."
+        exit 1
+      fi
+      sleep 5
+    done
+fi
+
+
   # Encrypt the file
   # Combine the user's passphrase with the OSB Key to further strenghten the entropy of the passphrase
   gpg --yes --batch --passphrase="::$osbpass::$osbkey::" -c /var/www/html/backup/snapshot/backup.nems

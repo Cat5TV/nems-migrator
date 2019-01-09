@@ -52,7 +52,7 @@ ver=$(/usr/local/bin/nems-info nemsver)
  mainpub="$mainpub \
   /var/www/htpasswd \
   /etc/nagvis/$nagvis \
-  /var/log/ \
+  /var/log/nems/ \
   /var/lib/mysql/ \
   /etc/rc.local \
   "
