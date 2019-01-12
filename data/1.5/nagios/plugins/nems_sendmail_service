@@ -18,6 +18,8 @@ with special permission from Heini Holm Andersen.
 
 *******************************************************************************/
 
+error_reporting(E_ALL & ~E_NOTICE);
+
 header('Content-Type: text/html; charset=utf-8');
 
 $ver = shell_exec('/usr/local/bin/nems-info nemsver');
