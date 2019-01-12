@@ -89,61 +89,73 @@ if($f_notify_type=="PROBLEM") {
   $f_color="#FF0000";
   $f_ackauthor_desc="Acknowledged By:";
   $f_ackcomment_desc="Comment:";
+  $f_notify_type_friendly = 'Problem';
 }
 if($f_notify_type=="PROBLEM" && $f_serv_state=="CRITICAL") {
   $f_color="#FF0000";
   $f_ackauthor_desc="Acknowledged By:";
   $f_ackcomment_desc="Comment:";
+  $f_notify_type_friendly = 'Critical Problem';
 }
 if($f_notify_type=="PROBLEM" && $f_serv_state=="WARNING") {
   $f_color="#FFBF00";
   $f_ackauthor_desc="Acknowledged By:";
   $f_ackcomment_desc="Comment:";
+  $f_notify_type_friendly = 'Problem Warning';
 }
 if($f_notify_type=="RECOVERY") {
   $f_color="#006800";
   $f_ackauthor_desc="Acknowledged By:";
   $f_ackcomment_desc="Comment:";
+  $f_notify_type_friendly = 'Recovered';
 }
 if($f_notify_type=="ACKNOWLEDGEMENT") {
   $f_color="#AEB6BF";
   $f_ackauthor_desc="Acknowledged By:";
   $f_ackcomment_desc="Comment:";
+  $f_notify_type_friendly = 'Problem Acknowledged';
 }
 if($f_notify_type=="FLAPPINGSTART") {
   $f_color="#800000";
   $f_ackauthor_desc="Flapping Author:";
   $f_ackcomment_desc="Flapping Comment:";
+  $f_notify_type_friendly = 'Flapping Started';
 }
 if($f_notify_type=="FLAPPINGSTOP") {
   $f_color="#008000";
   $f_ackauthor_desc="Flapping Author:";
   $f_ackcomment_desc="Flapping Comment:";
+  $f_notify_type_friendly = 'Flapping Ended';
 }
 if($f_notify_type=="FLAPPINGDISABLED") {
   $f_color="#F7FE2E";
   $f_ackauthor_desc="Flapping Author:";
   $f_ackcomment_desc="Flapping Comment:";
+  $f_notify_type_friendly = 'Flapping Disabled';
 }
 if($f_notify_type=="DOWNTIMESTART") {
   $f_color="#5DADE2";
   $f_ackauthor_desc="Scheduled Downtime by:";
   $f_ackcomment_desc="Comment for Scheduled Downtime:";
+  $f_notify_type_friendly = 'Begin Scheduled Downtime';
 }
 if($f_notify_type=="DOWNTIMEEND") {
   $f_color="#48C9B0";
   $f_ackauthor_desc="Scheduled Downtime by:";
   $f_ackcomment_desc="Comment for Scheduled Downtime:";
+  $f_notify_type_friendly = 'End Scheduled Downtime';
 }
 if($f_notify_type=="DOWNTIMECANCELLED") {
   $f_color="#AF7AC5";
   $f_ackauthor_desc="Scheduled Downtime by:";
   $f_ackcomment_desc="Comment for Scheduled Downtime:";
+  $f_notify_type_friendly = 'Cancelled Scheduled Downtime';
 }
 if($f_notify_type=="CUSTOM") {
   $f_color="#5D6D7E";
   $f_ackauthor_desc="Custom Author:";
   $f_ackcomment_desc="Custom Comment:";
+  $f_notify_type_friendly = 'Custom Notification';
 }
 
 /* Modify the long service output so line breaks can work if present in the output */
@@ -197,7 +209,7 @@ if($f_notification_escalation_state==1){
 $message = '
 ***** NEMS Linux *****
 
-Notification Type: ' .$f_notify_type. '
+Notification Type: ' . ($f_notify_type_friendly ?: $f_notify_type) . '
 Service: ' .$f_serv_desc. '
 Host: ' .$f_host_name. '
 Host Alias: ' .$f_host_alias. '
@@ -351,7 +363,7 @@ $HTMLmessage = '
 	<center style="width: 100%; background: #f6f6f6; text-align: left;">
 
 		<div style="display:none;font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;mso-hide:all;font-family: sans-serif;">
-			[' .$f_notify_type. '] Service: ' .$f_serv_desc. ' on Host: ' .$f_host_alias. ' (' .$f_host_name. ') is ' .$f_serv_state. '. ***************************************************************************************************************************************
+			[' .($f_notify_type_friendly ?: $f_notify_type). '] Service: ' .$f_serv_desc. ' on Host: ' .$f_host_alias. ' (' .$f_host_name. ') is ' .$f_serv_state. '. ***************************************************************************************************************************************
 		</div>
 
 		<div style="padding: 10px 0; margin: auto;" class="email-container">
@@ -373,7 +385,7 @@ $HTMLmessage = '
                   </tr>
                   <tr>
                     <td style="background-color:' .$f_color. ';">
-                      <h1 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; padding:0; margin:10px; color:#ffffff; text-align:center;">' .$f_notify_type. '</h1>
+                      <h1 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; padding:0; margin:10px; color:#ffffff; text-align:center;">' .($f_notify_type_friendly ?: $f_notify_type). '</h1>
                     </td>
                   </tr>
                 </tbody>
@@ -477,7 +489,7 @@ $HTMLmessage = '
               <tbody>
                 <tr>
                   <td style="background-color:' .$f_color. ';">
-                    <h1 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; padding:0; margin:10px; color:#ffffff; text-align:center;">' .$f_notify_type. '</h1>
+                    <h1 style="font-family: CoconPro-BoldCond, Open Sans, Verdana, sans-serif; padding:0; margin:10px; color:#ffffff; text-align:center;">' .($f_notify_type_friendly ?: $f_notify_type). '</h1>
                   </td>
                 </tr>
                 <tr>
@@ -541,7 +553,7 @@ $mail->addAddress($f_to); // Add a recipient + Name is optional "$mail->addAddre
 $mail->isHTML(true); // Set email format to HTML
 $mail->WordWrap = 50; // Set word wrap to 50 characters
 
-$mail->Subject = '*** '.$f_notify_type.': '.$f_serv_desc.' on '.$f_host_name.' is '.$f_serv_state.' ***';
+$mail->Subject = '*** '.($f_notify_type_friendly ?: $f_notify_type).': '.$f_serv_desc.' on '.$f_host_name.' is '.$f_serv_state.' ***';
 $mail->AltBody = $message;
 $mail->Body = $HTMLmessage;
 
