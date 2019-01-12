@@ -119,13 +119,13 @@ if($f_notify_type=="FLAPPINGSTART") {
   $f_color="#800000";
   $f_ackauthor_desc="Flapping Author:";
   $f_ackcomment_desc="Flapping Comment:";
-  $f_notify_type_friendly = 'Flapping Started';
+  $f_notify_type_friendly = 'Service Started Flapping';
 }
 if($f_notify_type=="FLAPPINGSTOP") {
   $f_color="#008000";
   $f_ackauthor_desc="Flapping Author:";
   $f_ackcomment_desc="Flapping Comment:";
-  $f_notify_type_friendly = 'Flapping Ended';
+  $f_notify_type_friendly = 'Service Has Stopped Flapping';
 }
 if($f_notify_type=="FLAPPINGDISABLED") {
   $f_color="#F7FE2E";
@@ -149,7 +149,7 @@ if($f_notify_type=="DOWNTIMECANCELLED") {
   $f_color="#AF7AC5";
   $f_ackauthor_desc="Scheduled Downtime by:";
   $f_ackcomment_desc="Comment for Scheduled Downtime:";
-  $f_notify_type_friendly = 'Cancelled Scheduled Downtime';
+  $f_notify_type_friendly = 'Scheduled Downtime Has Been Cancelled';
 }
 if($f_notify_type=="CUSTOM") {
   $f_color="#5D6D7E";
