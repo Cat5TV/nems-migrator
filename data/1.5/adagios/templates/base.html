@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+{% load url from future %}
+{% load ssi from future %}
+{% load static %}
+{% load i18n %}
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>{{ settings.title_prefix  }}{% block title %}block=title{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Adagios - Nagios Configuration Made Easy">
+    <meta name="author" content="Tomas Edwardsson, Pall Sigurdsson">
+    <meta http-equiv="X-UA-Compatible" content="IE=9">
+    <link href="{% url "media" path=user_data.theme_path %}" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="{% url "media" path="html5shim/html5.js" %}"></script>
+    <![endif]-->
+
+    <!-- fav and touch icons -->
+    <link rel="shortcut icon" href="{% url "media" path="img/favicon.ico" %}">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114"
+          href="{% url "media" path="ico/apple-touch-icon-114-precomposed.png" %}">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72"
+          href="{% url "media" path="ico/apple-touch-icon-72-precomposed.png" %}">
+    <link rel="apple-touch-icon-precomposed"
+          href="{% url "media" path="ico/apple-touch-icon-57-precomposed.png" %}">
+
+    <!-- Block header starts -->
+    {%  block header %}{% endblock %}
+    <!-- Block header ends -->
+    <script>
+        var BASE_URL = "{% url "home" %}";
+    </script>
+    <script type="text/javascript" src="{% url "django.views.i18n.javascript_catalog" %}"></script>
+
+    <!-- NEMS00000 -->
+
+</head>
+
+<body>
+
+<!-- begin serverside includes from common-header.ssi and {{ urlname }}-header.ssi -->
+{% for ssi_header in ssi_headers %}
+    <!-- including content from {{ ssi_header }} -->
+    {% ssi ssi_header parsed %}
+    <!-- end of file {{ ssi_header }} -->
+{% endfor %}
+<!-- end of serverside includes -->
+
+
+
+<!-- block top_navigation starts -->
+{% block top_navigation %}
+    {%  include "snippets/top_navigation_bar.html" %}
+{% endblock %}
+<!-- block top_navigation ends -->
+
+
+
+
+
+<!-- block page_content starts -->
+{% block page_content %}
+
+    <!-- block left_sidebar starts -->
+    {% block left_sidebar %}
+    <div class="pull-left visible-desktop container-fluid well" id="left_sidebar">
+      <ul class="nav nav-list">
+        <li class="nav-header" style="color: black;">{% trans "Shortcuts" %}</li>
+        <li{% if urlname == 'adagios.status.views.status_index' %} class="active"{% endif %}><a href="{% url "status.views.status_index" %}">{% trans "Status Overview" %} </a></li>
+        <li{% if urlname == 'adagios.status.views.problems' and 'unhandled' in request.GET %} class="active"{% endif %}>
+          <a {% if num_problems_unhandled %}{% endif %} href="{% url "status.views.problems" %}?unhandled">{% trans "Open Problems" %} {% if num_problems_unhandled %}<span class="pull-right">({{ num_problems_unhandled }})</span>{% endif %}</a>
+        </li>
+        <li{% if urlname == 'adagios.status.views.problems' and 'unhandled' not in request.GET %} class="active"{% endif %}>
+          <a href="{% url "status.views.problems" %}">{% trans "All Problems" %} {% if num_problems_all %}<span class="pull-right">({{ num_problems_all }})</span>{% endif %}</a>
+        </li>
+        <li{% if urlname == 'adagios.status.views.hosts' %} class="active"{% endif %}><a href="{% url "status.views.hosts" %}">{% trans "Hosts" %}</a></li>
+        <li{% if urlname == 'adagios.status.views.services' %} class="active"{% endif %}><a href="{% url "status.views.services" %}">{% trans "Services" %} </a></li>
+        <li{% if urlname == 'adagios.status.views.contact_list' %} class="active"{% endif %}><a href="{% url "status.views.contact_list" %}">{% trans "Contacts" %}</a></li>
+        <li{% if urlname == 'adagios.status.views.network_parents' %} class="active"{% endif %}><a href="{% url "status.views.network_parents" %}">{% trans "Network Parents" %} </a></li>
+<!--        <li{% if urlname == 'objectbrowser' %} class="active"{% endif %}><a href="{% url "objectbrowser.views.list_object_types" %}">{% trans "Configuration" %}</a></li>-->
+        
+        <li class="nav-header" style="color: black;">{% trans "Reports" %}</li>
+        
+        <li{% if urlname == 'adagios.status.views.state_history' %} class="active"{% endif %}><a href="{% url "status.views.state_history" %}">{% trans "State History" %} </a></li>
+        <li{% if urlname == 'adagios.status.views.log' %} class="active"{% endif %}><a href="{% url "status.views.log" %}">{% trans "Log" %}</a></li>
+        <li{% if urlname == 'adagios.status.views.comment_list' %} class="active"{% endif %}><a href="{% url "status.views.comment_list" %}">{% trans "Comments" %}</a></li>
+        <li{% if urlname == 'adagios.status.views.downtime_list' %} class="active"{% endif %}><a href="{% url "status.views.downtime_list" %}">{% trans "Downtimes" %}</a></li>
+        
+        <li class="nav-header" style="color: black;">{% trans "Groups" %}</li>
+        
+        <li{% if urlname == 'adagios.status.views.status_hostgroups' %} class="active"{% endif %}><a href="{% url "status.views.status_hostgroups" %}">{% trans "Hostgroups" %}</a></li>
+        <li{% if urlname == 'adagios.status.views.status_servicegroups' %} class="active"{% endif %}><a href="{% url "status.views.status_servicegroups" %}">{% trans "Servicegroups" %}</a></li>
+        <li{% if urlname == 'adagios.status.views.contactgroups' %} class="active"{% endif %}><a href="{% url "status.views.contactgroups" %}">{% trans "Contactgroups" %}</a></li>
+        
+        <li class="nav-header" style="color: black;">{% trans "Experimental" %}</li>
+        
+        <li{% if urlname == 'adagios.status.views.map_view' %} class="active"{% endif %}><a href="{% url "status.views.map_view" %}">{% trans "Map" %}</a></li>
+        <li{% if urlname == 'adagios.status.views.perfdata' %} class="active"{% endif %}><a href="{% url "status.views.perfdata" %}">{% trans "Performance Data 1" %}</a></li>
+        <li{% if urlname == 'adagios.status.views.perfdata2' %} class="active"{% endif %}><a href="{% url "status.views.perfdata2" %}">{% trans "Performance Data 2" %}</a></li>
+        <li{% if urlname == 'adagios.bi.views.index' %} class="active"{% endif %}><a href="{% url "bi.views.index" %}">{% trans "Business Intelligence" %}</a></li>
+        <li{% if urlname == 'adagios.status.views.dashboard' %} class="active"{% endif %}><a href="{% url "status.views.dashboard" %}">{% trans "Dashboard" %}</a></li>
+
+        <li class="nav-header" style="color: black">
+            {% trans "Saved Searches" %}
+            <a class="pull-right" href="#"  id="save_search_button" data-toggle="modal" data-target="#save_search_modal" style="padding: 0">(+)</a>
+        </li>
+    </ul>
+    <ul class="nav nav-list" id="saved_searches_list"></ul>
+</div>
+    {% endblock left_sidebar %}
+    <!-- block left_sidebar ends -->
+
+    <div id="main_content">
+
+        <!-- page_header contains stuff breadcrumbs and title of the current page -->
+        {% block page_header %}
+            <div class="pull-right" id="top_right">
+            {% block top_right %}
+            {% endblock top_right %}
+            </div>
+            <div id="page_header" class="page_header" >
+                <h3 class="nowrap">
+                    {% block smallheader %}block=smallheader{% endblock %}
+                    {% block largeheader %}block=largeheader {% endblock %}
+                </h3>
+            </div>
+
+
+
+        {% endblock page_header %}
+        <!-- block page_header ends -->
+
+        <!-- block toolbar starts -->
+        {% block toolbar %}block=toolbar{% endblock %}
+        <!-- block toolbar ends -->
+
+        <!-- block content starts -->
+        {% block content %}block=content{% endblock %}
+        <!-- block content ends -->
+
+
+    </div>
+{% endblock page_content %}
+<!-- block page_content ends -->
+
+{% block page_footer %}
+    <div id="page_footer">
+        <hr>
+        <div class="pull-left" id="bottom_left">
+            {% block bottom_left %}
+            {% endblock bottom_left %}
+        </div>
+        <div class="pull-left" id="glyphicons-attribution">
+          <p>Icons from <a href="http://glyphicons.com">Glyphicons Free</a>, licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+        </div>
+        <div class="pull-right" id="make_a_wish" >
+            <label class=hide for="id_wish_input"></label>
+            <input id=id_wish_input type="text" class="input-large" placeholder="I wish this page could..." onclick='$("#wish_modal").modal("show");'/>
+            <button class="btn btn-" style="margin-bottom: 9px;" onclick='$("#wish_modal").modal("show");'>{% trans "Make a wish" %}</button>
+        </div>
+    </div>
+{% endblock page_footer %}
+
+
+
+<!-- Miscellaneous stuff starts here -->
+<!-- Wish modal -->
+<div class="modal hide fade" id="wish_modal">
+    <form class="form-horizontal" action="https://opensource.ok.is/cgi-bin/wish.cgi" >
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>{% trans "Make a wish" %}</h3>
+        </div>
+        <div class="modal-body">
+            <p>{% trans "Anything cool you think Adagios could be doing for you?" %}
+            </p>
+            <p>
+            {% trans "Sweet! Ask for it here, and we'll see what we can do." %}
+            </p>
+            <p>
+                    {% trans "We'd love to hear from you, but we cannot guarantee that your wish will come true." %}
+            </p>
+            <label class="hide" for="wish_textarea"></label>
+            <textarea  id="wish_textarea" style="width:100%;" cols="200" rows="10" name="wish" placeholder="{% trans "I wish this page could..." %}"></textarea>
+            <hr>
+            <input name="bribes" id="id_bribes" class="pull-left" type="checkbox"  />
+            <label class="pull-left" for="id_bribes">{% trans "I'll back it up with bribes." %}</label>
+        </div>
+
+        <div class="modal-footer">
+            <a href="#" class="btn" onclick='$("#wish_modal").modal("hide");'>{% trans "Cancel" %}</a>
+            <button type="submit" id="wish_submit_button" class="btn">{% trans "Make a wish" %}</button>
+        </div>
+    </form>
+</div>
+<!-- Wish modal ends -->
+
+
+<!-- Misc - General purpose modal modal, originally destined to show error messages -->
+<div class="modal hide fade" id="misc_modal">
+    <form class="form-horizontal" action="https://opensource.ok.is/cgi-bin/wish.cgi" >
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="misc_modal_body">
+
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <a href="#" class="btn" onclick='$("#misc_modal").modal("hide");'>{% trans "Close" %}</a>
+        </div>
+    </form>
+</div>
+<!-- Misc modal ends -->
+
+
+<!-- error_messages -->
+<div id="error_messages"  class="message_overlay">
+    {% if errors|length %}
+        {%  for error in errors %}
+            <div class="alert">
+                <button class="close" data-dismiss="alert">×</button>
+                <strong>{% trans "Warning!" %}</strong> {{ error }}
+            </div>
+        {%  endfor %}
+    {% endif %}
+    {% if messages|length %}
+        {%  for message in messages  %}
+            <div class="alert alert-success">
+                <button class="close" data-dismiss="alert">×</button>
+                <strong>{% trans "Info!" %}</strong> {{ message }}
+            </div>
+        {%  endfor %}
+    {% endif %}
+    <div id="nagios_is_reloading" class="hide alert alert-success"><img src="{% url "media" path="external/select2/spinner.gif" %}"> {% trans "Nagios is reloading..." %}</div>
+</div>
+
+
+<!-- This is a template markup for a typical notification -->
+<div id="typical_notification" class="hide fade">
+    <div id="NOTIFICATION_ID" class="notification alert alert-LEVEL">
+        <button id="NOTIFICATION_ID-close" class="close notification" data-dismiss="alert" onclick='adagios.rest.adagios.clear_notification({"notification_id": "NOTIFICATION_ID"});'>×</button>
+        MESSAGE
+    </div>
+</div>
+
+<!--  javascripts start here -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{% url "home" %}rest/pynag.js"></script>
+<script src="{% url "home" %}rest/status.js"></script>
+<script src="{% url "home" %}rest/adagios.js"></script>
+{% if okconfig %}
+<script src="{% url "home" %}rest/okconfig.js"></script>
+{% endif %}
+
+
+<script src="{% url "media" path="external/jquery/jquery-1.9.1.min.js" %}"></script>
+<script src="{% url "media" path="external/bootstrap/js/bootstrap.min.js" %}"></script>
+
+<script src="{% url "media" path="external/datatables/js/jquery.dataTables.min.js" %}"></script>
+<script src="{% url "media" path="external/datatables/DT_bootstrap.js" %}"></script>
+
+<script src="{% url "media" path="external/select2/select2.min.js" %}" type="text/javascript"></script>
+<script src="{% url "media" path="js/adagios.js" %}"></script>
+<script src="{% url "media" path="js/adagios_status.js" %}"></script>
+
+<script src="{% url "media" path="external/datepicker/js/bootstrap-datepicker.js" %}"></script>
+
+
+
+
+<!-- block footer starts -->
+{% block footer %}
+{% endblock %}
+<!-- block footer ends -->
+
+<!-- begin serverside includes for common-footer.ssi and {{ urlname }}-footer.ssi -->
+{% for ssi_footer in ssi_footers %}
+    <!-- including content from {{ ssi_footer }} -->
+    {% ssi ssi_footer parsed %}
+    <!-- end of file {{ ssi_footer }} -->
+{% endfor %}
+<!-- end of serverside includes -->
+
+<!--
+GLYPHICONS FREE are released under the Creative Commons Attribution 3.0 Unported (CC BY 3.0). The Glyphicons FREE can
+be used both commercially and for personal use, but you must always add a link to www.glyphicons.com in a prominent
+place (e.g. the footer of a website), include the CC-BY license and the reference to www.glyphicons.com on every page
+using Glyphicons.
+
+All logos and trademarks in social icons are the property of the respective trademark owners.®
+-->
+
+</body>
+
+</html>
