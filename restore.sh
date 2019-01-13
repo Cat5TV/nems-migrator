@@ -4,6 +4,9 @@ ver=$(/usr/local/bin/nems-info nemsver)
 username=$(/usr/local/bin/nems-info username)
 startpath=$(/bin/pwd)
 
+# Get the email address as per initialized NEMS NConf - will use this to later update the imported contact to match
+email=$(mysql -s -r -u nconf -pnagiosadmin nconf -e "SELECT attr_value FROM ConfigValues WHERE fk_id_attr=55;" | sed -n 1p)
+
 # Backward compatible
 if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then
   nagios=nagios
@@ -284,11 +287,30 @@ else
 				     echo "             your backup again. There's really no other way."
 				   fi
 
+
 				   # This may cause errors, but at least it gives them the old logs.
 				   cp -Rfp /tmp/nems_migrator_restore/var/log/* /var/log
 
 				   service mysql start
 				   service $nagios start
+
+				# NEMS 1.5+
+				if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.5'")}') )); then
+				  cp -fr /root/nems/nems-migrator/data/1.5/nagios/etc/* /usr/local/nagios/etc/
+				  /bin/sed -i -- 's/nemsadmin/'"$username"'/g' /usr/local/nagios/etc/cgi.cfg
+
+				  # Remove nconf history, should it exist
+				  mysql -u nconf -pnagiosadmin nconf -e "TRUNCATE History"
+
+				  # Change contact info in NConf
+				  if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.5'")}') )); then
+				    # Update user info (no need to import in 1.5
+				    echo "  Updating contact: $username"
+				    mysql -t -u nconf -pnagiosadmin nconf -e "UPDATE ConfigValues SET attr_value='$username' WHERE fk_id_attr=47;"
+				    mysql -t -u nconf -pnagiosadmin nconf -e "UPDATE ConfigValues SET attr_value='$email' WHERE fk_id_attr=55;"
+				  fi
+				fi
+
 
 				   echo ""
 				   echo I hope everything worked okay for you.

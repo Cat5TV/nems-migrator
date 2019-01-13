@@ -30,7 +30,10 @@ confdest=$2 # Importing from DESTINATION because we already imported the backup 
   # Import Nagios configs into NConf's MySQL Database
   echo "Importing: timeperiod" && /var/www/nconf/bin/add_items_from_nagios.pl -c timeperiod -f $confdest/global/timeperiods.cfg 2>&1 | grep -E "ERROR"
   echo "Importing: misccommand" && /var/www/nconf/bin/add_items_from_nagios.pl -c misccommand -f $confdest/global/misccommands.cfg 2>&1 | grep -E "ERROR"
-  echo "Importing: checkcommand" && /var/www/nconf/bin/add_items_from_nagios.pl -c checkcommand -f $confdest/global/checkcommands.cfg 2>&1 | grep -E "ERROR"
+  # Do not import check commands in NEMS 1.5+ - these come from the database itself, otherwise arg variables (names, count) get lost since they are not part of nagios conf
+  if (( $(awk 'BEGIN {print ("'$ver'" < "'1.5'")}') )); then
+    echo "Importing: checkcommand" && /var/www/nconf/bin/add_items_from_nagios.pl -c checkcommand -f $confdest/global/checkcommands.cfg 2>&1 | grep -E "ERROR"
+  fi
   echo "Importing: contact" && /var/www/nconf/bin/add_items_from_nagios.pl -c contact -f $confdest/global/contacts.cfg 2>&1 | grep -E "ERROR"
   echo "Importing: contactgroup" && /var/www/nconf/bin/add_items_from_nagios.pl -c contactgroup -f $confdest/global/contactgroups.cfg 2>&1 | grep -E "ERROR"
   echo "Importing: host-template" && /var/www/nconf/bin/add_items_from_nagios.pl -c host-template -f $confdest/global/host_templates.cfg 2>&1 | grep -E "ERROR"
