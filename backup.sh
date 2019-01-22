@@ -12,11 +12,11 @@ ver=$(/usr/local/bin/nems-info nemsver)
 		nagvis="etc/maps/"
  fi
 
- # Only create a backup file every 6 hours.
+ # Only create a backup file every 30 minutes.
  if [[ -f /var/www/html/backup/snapshot/backup.nems ]]; then
-   if ! test `find "/var/www/html/backup/snapshot/backup.nems" -mmin +360`
+   if ! test `find "/var/www/html/backup/snapshot/backup.nems" -mmin +30`
    then
-     # Current backup file is less than 6 hours old. Abort.
+     # Current backup file is less than 30 minutes old. Abort.
      exit
    fi
  fi
