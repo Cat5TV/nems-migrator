@@ -1,5 +1,8 @@
 #!/usr/bin/php
 <?php
+require_once('/usr/local/share/nems/nems-scripts/inc/terminal-colors.php');
+$colors = new Colors();
+
 $ver = $argv[1];
 $confsrc = $argv[2];
 $confdest = $argv[3];
@@ -109,18 +112,19 @@ $confdest = $argv[3];
   echo PHP_EOL;
 
     function parsefile($filename,$file) {
+      global $colors;
       $definitions = array(); // prevent error if file is empty
       if (substr($filename,0,5) == '/tmp/') $filename_short = 'your backup of ';
       if (substr($filename,0,6) == '/root/') $filename_short = 'NEMS\' Default of ';
       $filename_short .= basename($filename);
-      echo "Scanning " . $filename_short . "... ";
+      echo 'Scanning ' . $colors->getColoredString($filename_short, "light_gray", "black") . '... ';
       if (!file_exists($filename)) {
-        echo "File not found. Cannot load." . PHP_EOL;
+        echo $colors->getColoredString("File not found. Cannot load.", 'red', 'black') . PHP_EOL;
       } else {
-        echo "File found. Loading...";
+        echo $colors->getColoredString("File found.", 'green', 'black') . ' ';
 	$data = file($filename);
         if (is_array($data) && count($data) > 0) {
-          echo 'Found ' . count($data) . ' lines... Importing.';
+          echo 'Importing ' . count($data) . ' lines.';
       $inside = 0;
       $index = 0;
 
@@ -147,7 +151,7 @@ $confdest = $argv[3];
 
       }
       } else {
-        echo "Couldn't find any data. Aborting.";
+        echo $colors->getColoredString("Couldn't find any data. Aborting.", 'red', 'black');
       }
       echo PHP_EOL;
       }

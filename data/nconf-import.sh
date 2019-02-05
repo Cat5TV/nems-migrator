@@ -28,22 +28,22 @@ confdest=$2 # Importing from DESTINATION because we already imported the backup 
 
   echo "Importing Nagios Configs to NEMS NConf..."
   # Import Nagios configs into NConf's MySQL Database
-  echo "Importing: timeperiod" && /var/www/nconf/bin/add_items_from_nagios.pl -c timeperiod -f $confdest/global/timeperiods.cfg 2>&1 | grep -E "ERROR"
-  echo "Importing: misccommand" && /var/www/nconf/bin/add_items_from_nagios.pl -c misccommand -f $confdest/global/misccommands.cfg 2>&1 | grep -E "ERROR"
+  printf -- "\e[37mImporting:\e[97m timeperiod\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c timeperiod -f $confdest/global/timeperiods.cfg 2>&1 | grep -E "ERROR"
+  printf -- "\e[37mImporting:\e[97m misccommand\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c misccommand -f $confdest/global/misccommands.cfg 2>&1 | grep -E "ERROR"
   # Do not import check commands in NEMS 1.5+ - these come from the database itself, otherwise arg variables (names, count) get lost since they are not part of nagios conf
   if (( $(awk 'BEGIN {print ("'$ver'" < "'1.5'")}') )); then
-    echo "Importing: checkcommand" && /var/www/nconf/bin/add_items_from_nagios.pl -c checkcommand -f $confdest/global/checkcommands.cfg 2>&1 | grep -E "ERROR"
+    printf -- "\e[37mImporting:\e[97m checkcommand\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c checkcommand -f $confdest/global/checkcommands.cfg 2>&1 | grep -E "ERROR"
   fi
-  echo "Importing: contact" && /var/www/nconf/bin/add_items_from_nagios.pl -c contact -f $confdest/global/contacts.cfg 2>&1 | grep -E "ERROR"
-  echo "Importing: contactgroup" && /var/www/nconf/bin/add_items_from_nagios.pl -c contactgroup -f $confdest/global/contactgroups.cfg 2>&1 | grep -E "ERROR"
-  echo "Importing: host-template" && /var/www/nconf/bin/add_items_from_nagios.pl -c host-template -f $confdest/global/host_templates.cfg 2>&1 | grep -E "ERROR"
-  echo "Importing: host" && /var/www/nconf/bin/add_items_from_nagios.pl -c host -f $confdest/Default_collector/hosts.cfg 2>&1 | grep -E "ERROR"
-  echo "Importing: hostgroup" && /var/www/nconf/bin/add_items_from_nagios.pl -c hostgroup -f $confdest/Default_collector/hostgroups.cfg 2>&1 | grep -E "ERROR"
-  echo "Importing: host-dependency" && /var/www/nconf/bin/add_items_from_nagios.pl -c host-dependency -f $confdest/Default_collector/host_dependencies.cfg 2>&1 | grep -E "ERROR"
-  echo "Importing: service-template" && /var/www/nconf/bin/add_items_from_nagios.pl -c service-template -f $confdest/global/service_templates.cfg 2>&1 | grep -E "ERROR"
-  echo "Importing: service" && /var/www/nconf/bin/add_items_from_nagios.pl -c service -f $confdest/Default_collector/services.cfg 2>&1 | grep -E "ERROR"
-  echo "Importing: advanced-service" && /var/www/nconf/bin/add_items_from_nagios.pl -c advanced-service -f /tmp/reconcile-advanced-services.cfg 2>&1 | grep -E "ERROR" && rm /tmp/reconcile-advanced-services.cfg
-  echo "Importing: servicegroup" && /var/www/nconf/bin/add_items_from_nagios.pl -c servicegroup -f $confdest/Default_collector/servicegroups.cfg 2>&1 | grep -E "ERROR"
-  echo "Importing: service-dependency" && /var/www/nconf/bin/add_items_from_nagios.pl -c service-dependency -f $confdest/Default_collector/service_dependencies.cfg 2>&1 | grep -E "ERROR"
+  printf -- "\e[37mImporting:\e[97m contact\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c contact -f $confdest/global/contacts.cfg 2>&1 | grep -E "ERROR"
+  printf -- "\e[37mImporting:\e[97m contactgroup\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c contactgroup -f $confdest/global/contactgroups.cfg 2>&1 | grep -E "ERROR"
+  printf -- "\e[37mImporting:\e[97m host-template\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c host-template -f $confdest/global/host_templates.cfg 2>&1 | grep -E "ERROR"
+  printf -- "\e[37mImporting:\e[97m host\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c host -f $confdest/Default_collector/hosts.cfg 2>&1 | grep -E "ERROR"
+  printf -- "\e[37mImporting:\e[97m hostgroup\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c hostgroup -f $confdest/Default_collector/hostgroups.cfg 2>&1 | grep -E "ERROR"
+  printf -- "\e[37mImporting:\e[97m host-dependency\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c host-dependency -f $confdest/Default_collector/host_dependencies.cfg 2>&1 | grep -E "ERROR"
+  printf -- "\e[37mImporting:\e[97m service-template\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c service-template -f $confdest/global/service_templates.cfg 2>&1 | grep -E "ERROR"
+  printf -- "\e[37mImporting:\e[97m service\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c service -f $confdest/Default_collector/services.cfg 2>&1 | grep -E "ERROR"
+  printf -- "\e[37mImporting:\e[97m advanced-service\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c advanced-service -f /tmp/reconcile-advanced-services.cfg 2>&1 | grep -E "ERROR" && rm /tmp/reconcile-advanced-services.cfg
+  printf -- "\e[37mImporting:\e[97m servicegroup\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c servicegroup -f $confdest/Default_collector/servicegroups.cfg 2>&1 | grep -E "ERROR"
+  printf -- "\e[37mImporting:\e[97m service-dependency\033[0m\n" && /var/www/nconf/bin/add_items_from_nagios.pl -c service-dependency -f $confdest/Default_collector/service_dependencies.cfg 2>&1 | grep -E "ERROR"
   echo "Done."
 
