@@ -195,7 +195,7 @@ else
 					 /root/nems/nems-migrator/data/nconf-import.sh $ver $confdest
 
                                          # Activate default nagios monitor on all hosts
-                                         /root/nems/nems-migrator/data/nconf-activate.sh
+                                         /root/nems/nems-migrator/data/nconf-activate.sh $ver
 
             else
                                          echo "Nagios Configuration Missing. This is a critical error."

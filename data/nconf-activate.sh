@@ -1,5 +1,7 @@
 #!/usr/bin/php
 <?php
+  $ver = $argv[1];
+
   $user = 'nconf';
   $db   = 'nconf';
   $pass = 'nagiosadmin';
@@ -44,7 +46,13 @@
 
   # Activate Host Presets
   printf('Activating default host presets... ');
-  $query = "INSERT INTO ItemLinks (`fk_id_item`,`fk_item_linked2`,`fk_id_attr`,`cust_order`) VALUES (5231,5286,81,0),(5258,5286,81,0),(5259,5286,81,0),(5276,5286,81,0);";
+  # 5231, 5258, etc are the ID corresponding with the host preset, which can be found by enabling General Query Log and monitoring the insert command when saving the host presets
+  # 5473 however, is the ID of the NEMS host (default host)
+  if ($ver >= 1.5) { // NEMS host was re-created, changing the ID from 5286 to 5473
+    $query = "INSERT INTO ItemLinks (fk_id_item, fk_item_linked2, fk_id_attr, cust_order) VALUES (5276, 5473, 81, 0), (5259, 5473, 81, 0), (5231, 5473, 81, 0), (5258, 5473, 81, 0);";
+  } else { // older version before NEMS host was re-created
+    $query = "INSERT INTO ItemLinks (`fk_id_item`,`fk_item_linked2`,`fk_id_attr`,`cust_order`) VALUES (5231,5286,81,0),(5258,5286,81,0),(5259,5286,81,0),(5276,5286,81,0);";
+  }
   $result = @mysqli_query($GLOBALS["___mysqli_ston"], $query);
   if ($result) { echo ' Done.'; } else { echo ' Error.'; }
   echo PHP_EOL;
