@@ -191,6 +191,11 @@ else
                                          # Reconcile and clobber all other config files
                                          /root/nems/nems-migrator/data/reconcile-nagios.sh $ver $confsrc $confdest
 
+                                         # NEMS 1.5+ imports the contactgroups, so needs to have correct username
+                                         if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.5'")}') )); then
+                                           /bin/sed -i -- 's/nemsadmin/'"$username"'/g' $confdest/global/contactgroups.cfg
+                                         fi
+
 					 # Clear MySQL database and import new consolidated configs into NConf
 					 /root/nems/nems-migrator/data/nconf-import.sh $ver $confdest
 
