@@ -194,6 +194,7 @@ else
                                          # NEMS 1.5+ imports the contactgroups, so needs to have correct username
                                          if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.5'")}') )); then
                                            /bin/sed -i -- 's/nemsadmin/'"$username"'/g' $confdest/global/contactgroups.cfg
+                                           /bin/sed -i -- 's/nemsadmin/'"$username"'/g' $confdest/global/contacts.cfg
                                          fi
 
 					 # Clear MySQL database and import new consolidated configs into NConf
