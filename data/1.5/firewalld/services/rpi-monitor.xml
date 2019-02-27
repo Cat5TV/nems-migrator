@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>RPi-Monitor</short>
+  <description>A system dashboard available on Raspberry Pi-based NEMS servers.</description>
+  <port protocol="tcp" port="8888"/>
+</service>

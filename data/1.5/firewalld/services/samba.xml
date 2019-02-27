@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Samba</short>
+  <description>Samba allows you to access your NEMS Migrator backup and your NEMS user home folder as network shares in Windows (via \\nems.local) or Mac/Linux (via smb://nems.local).</description>
+  <port protocol="udp" port="137"/>
+  <port protocol="udp" port="138"/>
+  <port protocol="tcp" port="139"/>
+  <port protocol="tcp" port="445"/>
+  <module name="nf_conntrack_netbios_ns"/>
+</service>

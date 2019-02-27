@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>monit</short>
+  <description>Monitors critical services (such as Nagios and Apache2) on your NEMS server and re-starts them if they crash. Disabling this will only remove your ability to access the web interface, but will not disable the service.</description>
+  <port protocol="tcp" port="2812"/>
+</service>

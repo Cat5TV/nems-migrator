@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Multicast DNS (mDNS)</short>
+  <description>mDNS (which supports avahi) allows you to access your NEMS Linux server via its hostname (ie., nems.local) instead of IP address. It is recommended to leave this enabled.</description>
+  <port protocol="udp" port="5353,5354"/>
+  <destination ipv4="224.0.0.251" ipv6="ff02::fb"/>
+</service>

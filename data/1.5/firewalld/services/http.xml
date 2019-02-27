@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>NEMS Dashboard Standard Connection</short>
+  <description>Allows insecure http elements to be accessed on NEMS Linux. If you wish to access your NEMS Dashboard, keep this enabled. Disable to block all traffic on port 80.</description>
+  <port protocol="tcp" port="80"/>
+</service>

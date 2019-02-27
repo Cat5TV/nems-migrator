@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>NEMS Dashboard Secure Connection</short>
+  <description>This allows access to the NEMS Dashboard using https. Keep this enabled if you wish to access NEMS via the browser. Disable it to block all traffic on port 443.</description>
+  <port protocol="tcp" port="443"/>
+</service>

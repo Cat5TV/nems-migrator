@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>NEMS 9590 Listener</short>
+  <description>A simple port listener which is used in NEMS Linux educational exercises.</description>
+  <port protocol="tcp" port="9590"/>
+</service>
