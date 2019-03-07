@@ -508,7 +508,7 @@ $mail->isSMTP();
 $mailserver = explode(':',$nems['resource']['USER7']);
 $mail->Host = $mailserver[0]; 
 $mail->Port = $mailserver[1];
-// if user has an empty username, treat as no SMTP auth
+// NEMS00001 if user has an empty username, treat as no SMTP auth
 if (strlen($nems['resource']['USER9']) > 0) {
   $mail->SMTPAuth = true;
   $mail->Username = $nems['resource']['USER9'];
