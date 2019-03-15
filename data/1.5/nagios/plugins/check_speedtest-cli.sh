@@ -4,6 +4,8 @@
 #
 # Jon Witts and others - https://github.com/jonwitts/nagios-speedtest/
 #
+# Modified for NEMS Linux by Robbie Ferguson - https://nemslinux.com/
+#
 #########################################################################################################################################################
 #
 # Nagios Exit Codes
@@ -19,8 +21,9 @@
 #
 ########################################################################################################################################################
 
-plugin_name="Nagios speedtest-cli plugin"
-version="1.2 2017122011:01"
+plugin_name="NEMS speedtest-cli plugin"
+version="1.3"
+# Based on "1.2 2017122011:01"
 
 #####################################################################
 #
@@ -38,6 +41,7 @@ version="1.2 2017122011:01"
 #                   - Minor adjustments to help files
 #                   - Change to perf data output - see https://github.com/jonwitts/nagios-speedtest/issues/2
 #
+#       Version 1.3 - Fork for NEMS Linux. Do not pre-allocate memory (would cause out of memory error on Raspi Zero)
 
 #####################################################################
 # function to output script usage
@@ -301,12 +305,12 @@ if [ "$Loc" == "e" ]; then
 	if [ "$debug" == "TRUE" ]; then
 		echo "External Server defined"
 	fi
-	command=$($STb/speedtest --server=$SEs --simple)
+	command=$($STb/speedtest --no-pre-allocate --server=$SEs --simple)
 elif [ "$Loc" == "i" ]; then
 	if [ "$debug" == "TRUE" ]; then
 		echo "Internal Server defined"
 	fi
-	command=$($STb/speedtest --mini=$SEs --simple)
+	command=$($STb/speedtest --no-pre-allocate --mini=$SEs --simple)
 else
 	if [ "$debug" == "TRUE" ]; then
 		echo "We should never get here as we checked the contents of Location variable earlier!"
