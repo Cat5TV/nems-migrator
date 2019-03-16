@@ -1,0 +1,28 @@
+body.login-pf {
+  background: url("server_room_dark.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#badge {
+    width: 258px;
+    height: 80px;
+    background-image: url("nems_logo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+#brand {
+    font-size: 18pt;
+    text-transform: uppercase;
+}
+
+#brand:before {
+    content: "Nagios Enterprise Monitoring Server";
+}
+
+#index-brand:before {
+    content: "Nagios Enterprise Monitoring Server";
+}
