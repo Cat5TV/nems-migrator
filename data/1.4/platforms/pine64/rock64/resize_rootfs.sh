@@ -39,3 +39,12 @@ partprobe "$DISK"
 
 # online resize filesystem
 resize2fs "$dev"
+
+# Log that patch (resize) has been applied to this system
+# Activates features such as bootscreen.sh
+if ! grep -q "PATCH-000002" /var/log/nems/patches.log; then
+  echo "PATCH-000002" >> /var/log/nems/patches.log
+fi
+
+sync
+
