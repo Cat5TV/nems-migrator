@@ -42,7 +42,9 @@ version="1.3"
 #                   - Change to perf data output - see https://github.com/jonwitts/nagios-speedtest/issues/2
 #
 #       Version 1.3 - Fork for NEMS Linux. Do not pre-allocate memory (would cause out of memory error on Raspi Zero)
-
+#
+#       Version 1.4 - Use best server number or passed arg based on settings in NEMS System Settings Tool
+#
 #####################################################################
 # function to output script usage
 usage()
@@ -184,7 +186,7 @@ DLc=
 ULw=
 ULc=
 Loc=
-SEs=
+SEs=`/usr/local/bin/nems-info speedtest`
 PerfData=
 MaxDL=
 MaxUL=
@@ -214,7 +216,10 @@ do
 		Loc=$OPTARG
 		;;
 	s)
-		SEs=$OPTARG
+                sestype=`/usr/local/bin/nems-info speedtest which`
+                if [[ $sestype == 'switch' ]]; then
+		  SEs=$OPTARG
+                fi
 		;;
 	p)
 		PerfData="TRUE"
