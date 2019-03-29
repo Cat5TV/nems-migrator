@@ -35,8 +35,7 @@ fi;
 quickfix=`/usr/local/bin/nems-info quickfix`
 if [[ $quickfix == 1 ]]; then
   if [[ $(find "/var/run/nems-quickfix.pid" -mmin +90 -print) ]]; then
-    kill `cat /var/run/nems-quickfix.pid`
-    cd /usr/local/share/nems/nems-scripts
-    git pull
+    kill `cat /var/run/nems-quickfix.pid` && rm /var/run/nems-quickfix.pid
+    cd /usr/local/share/nems/nems-scripts && git pull
   fi
 fi
