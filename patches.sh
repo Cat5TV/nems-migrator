@@ -30,3 +30,13 @@ else
   fi;
 
 fi;
+
+# This is ONLY a failsafe: If quickfix has been running > 90 minutes, it's pretty apparent something is wrong, so do a git pull in case a patch has been issued
+quickfix=`/usr/local/bin/nems-info quickfix`
+if [[ $quickfix == 1 ]]; then
+  if [[ $(find "/var/run/nems-quickfix.pid" -mmin +90 -print) ]]; then
+    kill `cat /var/run/nems-quickfix.pid`
+    cd /usr/local/share/nems/nems-scripts
+    git pull
+  fi
+fi
