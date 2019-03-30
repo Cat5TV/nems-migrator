@@ -33,7 +33,10 @@ if ! [[ -f /sys/class/thermal/thermal_zone0/temp ]] ; then
     echo "UNKNOWN - /sys/class/thermal/thermal_zone0/temp: No such file"
     exit 3
 fi
-TEMP=`awk '{printf "%3.1f", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
+
+#TEMP=`awk '{printf "%3.1f", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
+# nems-info does a better job and detects if it is millidegree Celsius (eg., RPi) or just Celsius (eg., PINE64).
+TEMP=`/usr/local/bin/nems-info temperature`
 
 if (( $(echo "${TEMP} > ${CRIT}" | bc -l) )); then
     echo "TEMPERATURE CRITICAL - CPU Temp: ${TEMP} °C | cpu_temp=${TEMP};${WARN};${CRIT};;"
