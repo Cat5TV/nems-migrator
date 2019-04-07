@@ -7,6 +7,11 @@
 #
 # Dependency: awk bc
 # licence: GPL
+#
+# Revised by Robbie Ferguson for NEMS Linux
+
+platform=$(/usr/local/share/nems/nems-scripts/info.sh platform)
+
 if [ -z "$1" ] ; then
     echo "UNKNOWN - missing warning temperature"
     exit 3
@@ -29,8 +34,13 @@ if ! ( command -v bc >/dev/null ) ; then
     exit 3
 fi
 
+if (( $platform == 20 )); then
+  echo "UNKNOWN - Virtual Appliance cannot provide thermal data"
+  exit 3
+fi
+
 if ! [[ -f /sys/class/thermal/thermal_zone0/temp ]] ; then
-    echo "UNKNOWN - /sys/class/thermal/thermal_zone0/temp: No such file"
+    echo "UNKNOWN - Thermal sensor doesn't exist"
     exit 3
 fi
 
