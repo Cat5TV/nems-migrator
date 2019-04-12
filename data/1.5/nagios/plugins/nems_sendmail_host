@@ -541,7 +541,7 @@ if(!$mail->send()) {
 	echo 'Message could not be sent.' . PHP_EOL;
 	echo 'Mailer Error: ' . $mail->ErrorInfo . PHP_EOL;
 	$error = '[' . strtotime('now') . '] NEMS EMAILER: ' . $mail->ErrorInfo . PHP_EOL;
-        if (!file_put_contents('/var/log/nagios/nagios.log',$error,FILE_APPEND)) {
+        if (!@file_put_contents('/var/log/nagios/nagios.log',$error,FILE_APPEND)) {
           echo 'Could not save log as you are not running as a privileged user.' . PHP_EOL . 'Next time use sudo if this matters to you.';
           echo PHP_EOL . $error . PHP_EOL;
         }
