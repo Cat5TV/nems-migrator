@@ -518,6 +518,9 @@ if (strlen($nems['resource']['USER9']) > 0 && strtoupper($nems['resource']['USER
 }
 if ($nems['resource']['USER15'] == 1 || !isset($nems['resource']['USER15'])) {
   $mail->SMTPSecure = 'tls';
+} else {
+  $mail->SMTPSecure = false;
+  $mail->SMTPAutoTLS = false;
 }
 $mail->SMTPOptions = array(
     'ssl' => array(
