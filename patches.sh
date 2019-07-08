@@ -39,3 +39,11 @@ if [[ $quickfix == 1 ]]; then
     cd /usr/local/share/nems/nems-scripts && git pull
   fi
 fi
+# Do the same for fixes
+fixes=`/usr/local/bin/nems-info fixes`
+if [[ $fixes == 1 ]]; then
+  if [[ $(find "/var/run/nems-fixes.pid" -mmin +90 -print) ]]; then
+    kill `cat /var/run/nems-fixes.pid` && rm /var/run/nems-fixes.pid
+    cd /usr/local/share/nems/nems-scripts && git pull
+  fi
+fi
