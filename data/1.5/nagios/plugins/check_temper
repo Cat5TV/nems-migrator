@@ -1,0 +1,30 @@
+#!/usr/bin/env php
+<?php
+  if (count($argv) >=5) {
+    array_shift($argv);
+    $data['crit_low'] = intval(array_shift($argv));
+    $data['warn_low'] = intval(array_shift($argv));
+    $data['warn_high'] = intval(array_shift($argv));
+    $data['crit_high'] = intval(array_shift($argv));
+  } else {
+    echo 'Usage:    ' . $argv[0] . ' crit_low warn_low warn_high crit_high' . PHP_EOL;
+    echo 'Example:  ' . $argv[0] . ' 10 20 39 45' . PHP_EOL;
+    exit();
+  }
+  $tmp = json_decode(shell_exec('/usr/local/bin/nems-info temper'));
+  $temper = $tmp[0]; unset($tmp);
+  $data['temperature'] = $temper->{"internal temperature"};
+
+  if ($data['temperature'] < $data['crit_low']) {
+    echo 'CRITICAL - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (LOW)';
+  } elseif ($data['temperature'] < $data['warn_low']) {
+    echo 'WARNING - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (LOW)';
+  } elseif ($data['temperature'] > $data['crit_high']) {
+    echo 'CRITICAL - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (HIGH)';
+  } elseif ($data['temperature'] > $data['warn_high']) {
+    echo 'WARNING - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (HIGH)'; 
+  } else {
+    echo 'OK - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F'; 
+  }
+
+?>
