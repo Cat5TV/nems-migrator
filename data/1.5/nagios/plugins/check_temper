@@ -3,10 +3,11 @@
 
 /*
 
-  check_temper - Version 1.0
+  check_temper - Version 1.1
   Written by Robbie Ferguson for NEMS Linux
   -----
   1.0 - July 29, 2019 - Initial release 
+  1.1 - July 31, 2019 - Add exit codes
 
 */
 
@@ -27,14 +28,19 @@
 
   if ($data['temperature'] < $data['crit_low']) {
     echo 'CRITICAL - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (LOW)';
+    exit(2);
   } elseif ($data['temperature'] < $data['warn_low']) {
     echo 'WARNING - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (LOW)';
+    exit(1);
   } elseif ($data['temperature'] > $data['crit_high']) {
     echo 'CRITICAL - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (HIGH)';
+    exit(2);
   } elseif ($data['temperature'] > $data['warn_high']) {
     echo 'WARNING - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (HIGH)'; 
+    exit(1);
   } else {
     echo 'OK - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F'; 
+    exit(0);
   }
 
 ?>
