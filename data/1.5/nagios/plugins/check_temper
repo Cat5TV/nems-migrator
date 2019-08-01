@@ -3,11 +3,12 @@
 
 /*
 
-  check_temper - Version 1.1
+  check_temper - Version 1.2
   Written by Robbie Ferguson for NEMS Linux
   -----
-  1.0 - July 29, 2019 - Initial release 
+  1.2 - August 1, 2019 - Add UNKNOWN state if TEMPer is not connected
   1.1 - July 31, 2019 - Add exit codes
+  1.0 - July 29, 2019 - Initial release 
 
 */
 
@@ -23,24 +24,28 @@
     exit();
   }
   $tmp = json_decode(shell_exec('/usr/local/bin/nems-info temper'));
-  $temper = $tmp[0]; unset($tmp);
-  $data['temperature'] = $temper->{"internal temperature"};
+  if (is_array($tmp) && isset($tmp[0])) {
+    $temper = $tmp[0]; unset($tmp);
+    $data['temperature'] = $temper->{"internal temperature"};
 
-  if ($data['temperature'] < $data['crit_low']) {
-    echo 'CRITICAL - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (LOW)';
-    exit(2);
-  } elseif ($data['temperature'] < $data['warn_low']) {
-    echo 'WARNING - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (LOW)';
-    exit(1);
-  } elseif ($data['temperature'] > $data['crit_high']) {
-    echo 'CRITICAL - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (HIGH)';
-    exit(2);
-  } elseif ($data['temperature'] > $data['warn_high']) {
-    echo 'WARNING - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (HIGH)'; 
-    exit(1);
+    if ($data['temperature'] < $data['crit_low']) {
+      echo 'CRITICAL - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (LOW)';
+      exit(2);
+    } elseif ($data['temperature'] < $data['warn_low']) {
+      echo 'WARNING - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (LOW)';
+      exit(1);
+    } elseif ($data['temperature'] > $data['crit_high']) {
+      echo 'CRITICAL - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (HIGH)';
+      exit(2);
+    } elseif ($data['temperature'] > $data['warn_high']) {
+      echo 'WARNING - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (HIGH)'; 
+      exit(1);
+    } else {
+      echo 'OK - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F'; 
+      exit(0);
+    }
   } else {
-    echo 'OK - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F'; 
-    exit(0);
+    echo 'UNKNOWN - TEMPer Device Disconnected.';
+    exit(3);
   }
-
 ?>
