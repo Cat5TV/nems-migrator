@@ -3,9 +3,10 @@
 
 /*
 
-  check_temper - Version 1.2
+  check_temper - Version 1.3
   Written by Robbie Ferguson for NEMS Linux
   -----
+  1.3 - August 4, 2019 - Automatically determine whether ARG is C or F and act accordingly
   1.2 - August 1, 2019 - Add UNKNOWN state if TEMPer is not connected
   1.1 - July 31, 2019 - Add exit codes
   1.0 - July 29, 2019 - Initial release 
@@ -18,6 +19,12 @@
     $data['warn_low'] = intval(array_shift($argv));
     $data['warn_high'] = intval(array_shift($argv));
     $data['crit_high'] = intval(array_shift($argv));
+    if ($data['warn_high'] > 70) {
+      // Over 70 Degrees: we're working in Fahrenheit
+      $type = 'F';
+    } else {
+      $type = 'C';
+    }
   } else {
     echo 'Usage:    ' . $argv[0] . ' crit_low warn_low warn_high crit_high' . PHP_EOL;
     echo 'Example:  ' . $argv[0] . ' 10 20 39 45' . PHP_EOL;
@@ -26,22 +33,24 @@
   $tmp = json_decode(shell_exec('/usr/local/bin/nems-info temper'));
   if (is_array($tmp) && isset($tmp[0])) {
     $temper = $tmp[0]; unset($tmp);
-    $data['temperature'] = $temper->{"internal temperature"};
 
-    if ($data['temperature'] < $data['crit_low']) {
-      echo 'CRITICAL - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (LOW)';
+    $data['temperature']['C'] = round($temper->{"internal temperature"},1);
+    $data['temperature']['F'] = round(($data['temperature']['C'] * 1.8 + 32),1);
+
+    if ($data['temperature'][$type] < $data['crit_low']) {
+      echo 'CRITICAL - ' . $data['temperature']['C'] . '°C / ' . $data['temperature']['F'] . '°F (LOW)';
       exit(2);
-    } elseif ($data['temperature'] < $data['warn_low']) {
-      echo 'WARNING - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (LOW)';
+    } elseif ($data['temperature'][$type] < $data['warn_low']) {
+      echo 'WARNING - ' . $data['temperature']['C'] . '°C / ' . $data['temperature']['F'] . '°F (LOW)';
       exit(1);
-    } elseif ($data['temperature'] > $data['crit_high']) {
-      echo 'CRITICAL - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (HIGH)';
+    } elseif ($data['temperature'][$type] > $data['crit_high']) {
+      echo 'CRITICAL - ' . $data['temperature']['C'] . '°C / ' . $data['temperature']['F'] . '°F (HIGH)';
       exit(2);
-    } elseif ($data['temperature'] > $data['warn_high']) {
-      echo 'WARNING - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F (HIGH)'; 
+    } elseif ($data['temperature'][$type] > $data['warn_high']) {
+      echo 'WARNING - ' . $data['temperature']['C'] . '°C / ' . $data['temperature']['F'] . '°F (HIGH)'; 
       exit(1);
     } else {
-      echo 'OK - ' . round($data['temperature'],1) . '°C / ' . round(($data['temperature'] * 1.8 + 32),1) . '°F'; 
+      echo 'OK - ' . $data['temperature']['C'] . '°C / ' . $data['temperature']['F'] . '°F'; 
       exit(0);
     }
   } else {
