@@ -4,13 +4,15 @@
 --   Kaganishu for helping with documentation and improvements for NEMS 1.5
 --   NickTheGreek for contributing his findings to help improve functionality for NEMS 1.5
 
+-- VERSION 1.5.1
+
 https = require('ssl.https')
 local handle = io.popen("/usr/local/bin/nems-info alias")
 local result = handle:read("*a")
 handle:close()
 local nemsalias = string.gsub(result, "\n", "")
 local telegram_url = 'https://api.telegram.org/bot' .. arg[1] .. '/sendMessage?'
-local chat_id = '-' .. arg[2]
+local chat_id = '-' .. arg[2]:gsub('%g', '')
 
    Notification = "Notification Type: " .. arg[3] ..'\n'    --$NOTIFICATIONTYPE$
    Host = "Host: " .. arg[4] ..'\n'                         --$HOSTNAME$
