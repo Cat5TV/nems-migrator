@@ -89,6 +89,9 @@ else
    echo Created backup folder at /var/www/html/backup/snapshot
  fi
 
+ # If it is owned by root, user will not be able to open it in browser.
+ chown -R www-data:www-data /var/www/html/backup/snapshot
+
  addpublic=''
  addprivate=''
 
