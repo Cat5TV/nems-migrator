@@ -89,9 +89,6 @@ else
    echo Created backup folder at /var/www/html/backup/snapshot
  fi
 
- # If it is owned by root, user will not be able to open it in browser.
- chown -R www-data:www-data /var/www/html/backup/snapshot
-
  addpublic=''
  addprivate=''
 
@@ -170,5 +167,8 @@ echo $FILESIZE > /var/www/html/backup/snapshot/size.log
      mkdir /var/log/nems
      echo $runtime > /var/log/nems/migrator-backup-runtime.log
  fi
- 
+
+ # If it is owned by root, user will not be able to open it in browser.
+ chown -R www-data:www-data /var/www/html/backup/snapshot
+
 fi
