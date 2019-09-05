@@ -4,7 +4,7 @@
 --   Kaganishu for helping with documentation and improvements for NEMS 1.5
 --   NickTheGreek for contributing his findings to help improve functionality for NEMS 1.5
 
--- VERSION 1.5.2
+-- VERSION 1.5.3
 
 https = require('ssl.https')
 local handle = io.popen("/usr/local/bin/nems-info alias")
@@ -15,15 +15,16 @@ local telegram_url = 'https://api.telegram.org/bot' .. arg[1] .. '/sendMessage?'
 local chat_id = '-' .. arg[2]:gsub('%g', '')
 
 -- UTF-8 Emojis Based on State
-if string.find(arg[5]:lower(), "crit") then
-  scolor = "🚫" -- No Entry Sign
-elseif string.find(arg[5]:lower(), "warn") then
+if string.find(arg[3]:lower(), "problem") then
   scolor = "⚠️" -- Warning Sign
-elseif string.find(arg[5]:lower(), "unknown") then
-  scolor = "❓" -- Question Mark
+elseif string.find(arg[3]:lower(), "flappingstart") then
+  scolor = "⚠️" -- Warning Sign
 else
   scolor = "✅" -- White Heavy Check Mark
 end
+-- Extras (may use later)
+-- scolor = "🚫" -- No Entry Sign
+-- scolor = "❓" -- Question Mark
 
    Notification = "Notification Type: " .. arg[3] ..'\n'    --$NOTIFICATIONTYPE$
    Host = "Host: " .. arg[4] ..'\n'                         --$HOSTNAME$
