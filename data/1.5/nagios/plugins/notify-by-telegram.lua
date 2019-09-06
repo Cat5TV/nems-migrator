@@ -4,7 +4,7 @@
 --   Kaganishu for helping with documentation and improvements for NEMS 1.5
 --   NickTheGreek for contributing his findings to help improve functionality for NEMS 1.5
 
--- VERSION 1.5.3
+-- VERSION 1.5.4
 
 https = require('ssl.https')
 local handle = io.popen("/usr/local/bin/nems-info alias")
@@ -35,10 +35,10 @@ end
    Alias = "Reporting NEMS Server: " .. nemsalias .. '\n'   --NEMS Server Alias
 
    if (#arg == 8) then --assumes this since 8 arguments have been passed
-     message = scolor .. '\n' .. '\n' .. Notification .. Host ..State .. Address .. Info .. Date_Time .. Alias
+     message = scolor .. '\n' .. '\n' .. Alias .. Date_Time .. Notification .. Host ..State .. Address .. Info
    else 
      Service = "Service: " .. arg[8] .. '\n'                  --$SERVICEDESC$
-     message = scolor .. '\n' .. '\n' .. '***** NEMS Linux ***** ' ..'\n' ..'\n' .. Notification .. Host  .. Service ..State .. Address .. Info .. Date_Time .. Alias
+     message = scolor .. '\n' .. '\n' .. Alias .. Date_Time .. Notification .. Host  .. Service ..State .. Address .. Info
    end
 
 local data_str = 'chat_id=' .. chat_id .. '&text=' .. message..''  
