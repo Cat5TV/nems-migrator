@@ -16627,33 +16627,3 @@ Time                 Id Command    Argument
 		   26 Query	SELECT * FROM ConfigClasses WHERE nav_privs = "admin" AND nav_visible = "yes" ORDER BY UPPER(grouping), ordering ASC, config_class
 		   26 Query	SELECT config_class FROM ConfigClasses WHERE nav_privs = "user"
 190205 10:07:22	   26 Quit	
-/usr/sbin/mysqld, Version: 10.1.37-MariaDB-0+deb9u1 (Debian 9.6). started with:
-Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
-Time                 Id Command    Argument
-190205 10:07:30	    2 Connect	nconf@localhost as anonymous on nconf
-		    2 Query	DELETE FROM ConfigItems WHERE id_item=5460 OR id_item=5447 OR id_item=5350 OR id_item=5340
-		    2 Quit	
-		    3 Connect	nconf@localhost as anonymous on nconf
-		    3 Query	DELETE FROM ConfigItems WHERE id_item=5443
-		    3 Quit	
-		    4 Connect	nconf@localhost as anonymous on nconf
-		    4 Query	DELETE FROM ConfigItems WHERE id_item=5305 OR id_item=5307 OR id_item=5306
-		    4 Quit	
-		    5 Connect	nconf@localhost as anonymous on nconf
-		    5 Query	DELETE FROM ConfigItems WHERE id_item=5449 OR id_item=5347 OR id_item=5445 OR id_item=5346 OR id_item=5422 OR id_item=5423 OR id_item=5345 OR id_item=5344
-		    5 Quit	
-		    6 Connect	nconf@localhost as anonymous on nconf
-		    6 Query	DELETE FROM ConfigItems WHERE id_item=5275
-		    6 Quit	
-		    7 Connect	nconf@localhost as anonymous on nconf
-		    7 Query	DELETE FROM ConfigItems WHERE id_item=5444
-		    7 Quit	
-		    8 Connect	nconf@localhost as anonymous on nconf
-		    8 Query	DELETE FROM ConfigItems WHERE id_item=5331 OR id_item=5327 OR id_item=5442 OR id_item=5436 OR id_item=5328 OR id_item=5441 OR id_item=5437 OR id_item=5329 OR id_item=5330 OR id_item=5448 OR id_item=5296
-		    8 Quit	
-		    9 Connect	nconf@localhost as anonymous on nconf
-		    9 Query	DELETE FROM ConfigItems WHERE id_item=5297 OR id_item=5298 OR id_item=5335 OR id_item=5338 OR id_item=5339 OR id_item=5336 OR id_item=5337
-		    9 Quit	
-		   10 Connect	nconf@localhost as anonymous on nconf
-		   10 Query	DELETE FROM ConfigItems WHERE id_item=5301 OR id_item=5302 OR id_item=5348 OR id_item=5349
-		   10 Quit	
