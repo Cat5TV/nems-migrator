@@ -21,10 +21,9 @@ hwid=$(/usr/local/bin/nems-info hwid|tr -d '\n'|tr -d '[:space:]')
  if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then
    nagios=nagios
    # Modern Configs
-   mainpriv="/usr/local/nagios/etc/resource.cfg \
+   mainpriv="/usr/local/nagios/etc/ \
    "
-   mainpub="    /usr/local/nagios/etc/cgi.cfg \
-     /etc/nems/conf/Default_collector/ \
+   mainpub="    /etc/nems/conf/Default_collector/ \
      /etc/nems/conf/global/ \
    "
  else
