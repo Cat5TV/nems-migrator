@@ -47,3 +47,8 @@ if [[ $fixes == 1 ]]; then
     cd /usr/local/share/nems/nems-scripts && git pull
   fi
 fi
+
+# Some cleanup and maintenance
+
+ # Clear old perfdata from the log (user-enabled in NEMS SST)
+  /usr/local/share/nems/nems-scripts/perfdata-purge
