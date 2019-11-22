@@ -34,7 +34,7 @@
           }
         $tmp[3] = explode('=',$tmp[2]);
         $import->variable = $tmp[1];
-        $import->value = $tmp[3][1];
+        $import->value = $tmp[3][1] . $append;
         foreach ($data->dest as $line=>$destdata) {
           if (substr($destdata,0,(2+strlen($import->variable))) == '$' . $import->variable . '$') {
             // Only replace if it's not USER1/USER2 (NEMS system paths) to prevent a user setting breaking NEMS if paths are different
