@@ -24,7 +24,14 @@
         $import = new stdClass();
         echo '  Importing: ' . $line . PHP_EOL;
         $tmp = explode('$',$line);
-        $tmp[3] = explode('=',$tmp[2]);
+        // Check if user actually has a dollar sign in their password and append if yes
+          $append='';
+          $check=3; // starting key is 3 for the check
+          while (isset($tmp[$check])) {
+            $append .= $tmp[$check];
+            $check++; // it's dynamic, in case they have many $$ in their Pa$$word.
+          }
+        $tmp[3] = explode('=',$tmp[2] . $append);
         $import->variable = $tmp[1];
         $import->value = $tmp[3][1];
         foreach ($data->dest as $line=>$destdata) {
