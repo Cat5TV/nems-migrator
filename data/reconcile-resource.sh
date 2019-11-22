@@ -31,7 +31,8 @@
             $append .= $tmp[$check];
             $check++; // it's dynamic, in case they have many $$ in their Pa$$word.
           }
-        $tmp[3] = explode('=',$tmp[2] . $append);
+        if (isset($tmp[3])) unset($tmp[3]);
+        $tmp[3] = explode('=',$tmp[2]);
         $import->variable = $tmp[1];
         $import->value = $tmp[3][1];
         foreach ($data->dest as $line=>$destdata) {
