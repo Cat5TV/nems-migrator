@@ -20,9 +20,6 @@ set nemsplatform [exec -- /usr/local/bin/nems-info platform-name]
 set nemsver [exec -- /usr/local/bin/nems-info nemsver]
 set nemsveravail [exec -- /usr/local/bin/nems-info nemsveravail]
 
-# * Weather from wttn.in
-set wttn [exec -- /usr/bin/curl -s wttr.in?format=4]
-
 # * Calculate last login
 set lastlog [exec -- lastlog -u $var(user)]
 set ll(1)  [lindex $lastlog 7]
@@ -123,7 +120,6 @@ puts "                     Used: $mem(u) MB / Free: $mem(f) MB\033\[0m"
 puts "  \033\[35mDisk Usage.......:\033\[0m \033\[36mYou're using ${usage}% of your root filesystem\033\[0m"
 #puts "  \033\[35mSSH Logins.......:\033\[0m \033\[36m$log(c) logged in\033\[0m"
 #puts "  \033\[35mProcesses........:\033\[0m \033\[36m$psa total running of which $psu $verb yours\033\[0m"
-puts "  \033\[35mLocal Weather....:\033\[0m \033\[36m$wttn\033\[0m"
 puts ""
 
 if {[file exists /etc/changelog]&&[file readable /etc/changelog]} {
