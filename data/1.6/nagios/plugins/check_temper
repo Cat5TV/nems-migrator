@@ -22,8 +22,8 @@
     $data['crit_high'] = intval(array_shift($argv));
     $data['type'] = (strtolower(array_shift($argv)) ?: 'temp');
 
-    if ($data['warn_high'] > 44) {
-      // Over 44 Degrees: we're working in Fahrenheit
+    if ($data['warn_high'] > 59) {
+      // Over 59 Degrees: we're working in Fahrenheit
       $type = 'F';
     } else {
       $type = 'C';
