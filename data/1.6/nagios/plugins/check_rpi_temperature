@@ -1,0 +1,62 @@
+#!/bin/bash
+# author: Andrea Cattaneo
+# check raspberry pi cpu temperature with perfdata and warn/crit thresholds
+#
+# check raspberry pi temperature with perfdata and warn/crit thresholds.
+# The data is read from sysfs ( file: /sys/class/thermal/thermal_zone0/temp ).
+#
+# Dependency: awk bc
+# licence: GPL
+#
+# Revised by Robbie Ferguson for NEMS Linux
+
+platform=$(/usr/local/share/nems/nems-scripts/info.sh platform)
+
+if [ -z "$1" ] ; then
+    echo "UNKNOWN - missing warning temperature"
+    exit 3
+fi
+WARN=$1
+
+if [ -z "$2" ] ; then
+    echo "UNKNOWN - missing critical temperature"
+    exit 3
+fi
+CRIT=$2
+
+if ! ( command -v awk >/dev/null ) ; then
+    echo "UNKNOWN - awk command not found"
+    exit 3
+fi
+
+if ! ( command -v bc >/dev/null ) ; then
+    echo "UNKNOWN - bc command not found"
+    exit 3
+fi
+
+if (( $platform == 20 )); then
+  echo "UNKNOWN - Virtual Appliance cannot provide thermal data"
+  exit 3
+fi
+
+if ! [[ -f /sys/class/thermal/thermal_zone0/temp ]] ; then
+    echo "UNKNOWN - Thermal sensor doesn't exist"
+    exit 3
+fi
+
+#TEMP=`awk '{printf "%3.1f", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
+# nems-info does a better job and detects if it is millidegree Celsius (eg., RPi) or just Celsius (eg., PINE64).
+TEMP=`/usr/local/bin/nems-info temperature`
+
+if (( $(echo "${TEMP} > ${CRIT}" | bc -l) )); then
+    echo "TEMPERATURE CRITICAL - CPU Temp: ${TEMP} °C | cpu_temp=${TEMP};${WARN};${CRIT};;"
+    exit 2
+fi
+
+if (( $(echo "${TEMP} > ${WARN}" | bc -l) )); then
+    echo "TEMPERATURE WARNING - CPU Temp: ${TEMP} °C | cpu_temp=${TEMP};${WARN};${CRIT};;"
+    exit 1
+fi
+
+echo "TEMPERATURE OK - CPU Temp: ${TEMP} °C | cpu_temp=${TEMP};${WARN};${CRIT};;"
+exit 0

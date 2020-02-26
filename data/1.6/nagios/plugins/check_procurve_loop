@@ -1,0 +1,176 @@
+#!/bin/bash
+#############################################################################
+# File         check_procurve_loop
+# Version      5
+# Description  Monitor HP ProCurve switches for activated loop protection
+# Copyright    Datarådgivarna AB, Nyköping, Sweden
+# License      Licensed under GPL
+# Written by   Daniel Ruus
+# Modified by  Daniel Ruus
+# Created      2012-07-08
+# Modified     2012-07-18
+#
+# Changelog
+# ===============================================
+#    5  2012-07-18 Daniel Ruus
+#     - Added the utils.sh file, cleaned up the code
+#    4  2012-07-10 Daniel Ruus
+#     - Added a note about the license used (GPL) in the header.
+#    3  2012-07-10 Daniel Ruus
+#     - Corrected misspelled variable from STATUS_UNKNOWN to STATE_UNKNOWN
+#       used when the command snmpwalk generates an error. This resulted
+#       in an incorrect exit code of 0 being handed over to Nagios, which
+#       in turn flagged the test as being OK, despite the status saying
+#       the status was in an unknown state.
+#    2  2012-07-08 Daniel Ruus
+#     - Misc modifications, such as removing redundant code and catching
+#       errors thrown by snmpwalk
+#    1  2012-07-08 Daniel Ruus
+#     - Initial release
+#############################################################################
+
+#############################################################################
+#############################################################################
+####                                                                     ####
+####                         VARIABLE DEFINITIONS                        ####
+####                                                                     ####
+#############################################################################
+#############################################################################
+
+# Variable: PATH
+# Purpose : Define a path variable for useful directories
+PATH=/usr/local/bin:/usr/bin:/bin 
+
+# Variable: PROGRNAME
+# Purpose : Extract the scriptname
+PROGNAME=`basename $0`
+
+# Variable: PROGPATH
+# Purpose : Extract the path
+PROGPATH=`echo $0 | sed -e 's,[\\/][^\\/][^\\/]*$,,'`
+
+# Variable: REVISION
+# Purpose : The version number of this script
+REVISION="5"
+
+# Variable: PORTCNT
+# Purpose : Counter for the number of ports available on the switch
+PORTCNT=0
+
+#### End of variable definitions ###
+
+# Include the utils.sh file
+. $PROGPATH/utils.sh
+
+
+#############################################################################
+#############################################################################
+####                                                                     ####
+####                         FUNCTION DEFINITIONS                        ####
+####                                                                     ####
+#############################################################################
+#############################################################################
+
+print_usage() {
+
+	echo "Usage: ${PROGNAME} -H <host> -C <snmp community>"
+
+} # EOF print_usage()
+
+print_help() {
+
+	print_revision $PROGNAME $REVISION
+	echo ""
+	print_usage
+	echo ""
+	echo "This plugin uses snmp to check if a HP ProCurve switch has detected a loop."
+	echo ""
+	support
+	exit 0
+
+} # EOF print_help()
+
+
+# We require the program snmpwalk, so check that we can find it
+check_cmd=$(which snmpwalk > /dev/null)
+if [[ "$?" -gt 0 ]]
+then
+	# Oh no, can't find snmpwalk!
+	echo "UNKNOWN - unable to locate snmpwalk, please verify that the program is installed and the variable PATH is correct"
+	exit $STATE_UNKNOWN
+fi
+
+# Handle the command line arguments
+if [ "$1" = "-h" ]
+then
+	print_help
+	exit 1
+fi
+
+if [ $# -lt 4 ]
+then
+	print_usage
+	exit 1
+fi
+
+while getopts "H:C:" ARGV;
+do
+       case ${ARGV} in
+       H)      host=${OPTARG};;
+       C)      community=${OPTARG};;
+       *)      echo "Incorrect option given. Please use options -H for host, -C for SNMP-Community."
+               exit 1
+               ;;
+       esac
+done
+
+
+# Run snmpwalk and check the status
+status=$(snmpwalk -v 2c -O vqe -c $community $host 1.3.6.1.4.1.11.2.14.11.5.1.12.1.5.2.1.1.2 2>&1)
+retval=$?
+
+if [[ "$retval" -gt 0 ]]
+then
+	echo "UNKNOWN - snmpwalk generated error code $retval, message is '$status'"
+	exit $STATE_UNKNOWN
+fi
+
+state_crit=0
+list_ports=""
+for s in $status
+do
+	PORTCNT=$(((PORTCNT + 1)))
+	if [ "$s" = "1" ];
+	then
+		state_crit=$(((state_crit + 1)))
+		list_ports="$list_ports $PORTCNT"
+	fi
+done
+
+
+
+# Report our findings
+if [ $state_crit -eq 0 ]
+then
+	# Everything seem to be OK, so report that to Nagios
+	echo "OK - No loops detected ($PORTCNT ports checked)"
+	exit $STATE_OK
+elif [ $state_crit -gt 0 ]
+then
+	# Hmm, we have found a loop so report this!
+	loopcnt=$(((state_crit - 1)))
+	if [ $loopcnt -eq 1 ]
+	then
+		echo "CRITICAL - found a loop on the following ports: $list_ports ($PORTCNT ports checked)"
+	else
+		echo "CRITICAL - found loops on the following ports: $list_ports ($PORTCNT ports checked)"
+	fi
+	exit $STATE_CRITICAL
+else
+	echo "UNKNOWN - unknown state"
+	exit $STATE_UNKNOWN
+fi
+
+# The script should never get this far, but let's flag this to Nagios anyway
+echo "UNKNOWN - should never reach this part!"
+exit $STATE_UNKNOWN
