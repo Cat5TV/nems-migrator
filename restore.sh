@@ -19,7 +19,7 @@ else
 fi
 
   echo ""
-  echo "NEMS Migrator Restore - By Robbie Ferguson"
+  echo -e "\e[1mNEMS Migrator Restore\e[0m By Robbie Ferguson"
   echo ""
 
 if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then

@@ -17,13 +17,18 @@ osbkey=$(cat /usr/local/share/nems/nems.conf | grep osbkey | printf '%s' $(cut -
 timestamp=$(/bin/date +%s)
 
 if [[ $osbpass == '' ]] || [[ $osbkey == '' ]]; then
-  echo NEMS Migrator Offsite Backup is not currently enabled.
+  echo -e "\e[41mNEMS Migrator Offsite Backup is not currently enabled.\e[0m"
   if [[ $osbpass == '' ]]; then
-    echo You must add your Personal Encryption/Decryption Password in NEMS System Settings Tool.
+    echo ""
+    echo You must add your Personal Encryption/Decryption Password
+    echo in NEMS System Settings Tool.
   fi
   if [[ $osbkey == '' ]]; then
-    echo You must add the NEMS Cloud Services key in NEMS System Settings Tool that matches $hwid.
+    echo ""
+    echo You must add the NEMS Cloud Services key in NEMS System
+    echo Settings Tool that matches $hwid.
   fi
+  echo ""
   exit 1
 fi;
 
