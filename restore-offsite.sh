@@ -18,6 +18,12 @@ timestamp=$(/bin/date +%s)
 
 if [[ $osbpass == '' ]] || [[ $osbkey == '' ]]; then
   echo NEMS Migrator Offsite Backup is not currently enabled.
+  if [[ $osbpass == '' ]]; then
+    echo You must add your Personal Encryption/Decryption Password in NEMS System Settings Tool.
+  fi
+  if [[ $osbkey == '' ]]; then
+    echo You must add the NEMS Cloud Services key in NEMS System Settings Tool that matches $hwid.
+  fi
   exit 1
 fi;
 
