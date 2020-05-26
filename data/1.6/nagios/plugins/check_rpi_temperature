@@ -10,7 +10,11 @@
 #
 # Revised by Robbie Ferguson for NEMS Linux
 
-platform=$(/usr/local/share/nems/nems-scripts/info.sh platform)
+if [[ -e /var/log/nems ]]; then
+  platform=$(/usr/local/share/nems/nems-scripts/info.sh platform)
+else
+  platform=98000
+fi
 
 if [ -z "$1" ] ; then
     echo "UNKNOWN - missing warning temperature"
@@ -39,14 +43,20 @@ if (( $platform == 20 )); then
   exit 3
 fi
 
-if ! [[ -f /sys/class/thermal/thermal_zone0/temp ]] ; then
+if [[ -e /var/log/nems ]]; then
+  if ! [[ -f /sys/class/thermal/thermal_zone0/temp ]] ; then
     echo "UNKNOWN - Thermal sensor doesn't exist"
     exit 3
+  fi
 fi
 
 #TEMP=`awk '{printf "%3.1f", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
 # nems-info does a better job and detects if it is millidegree Celsius (eg., RPi) or just Celsius (eg., PINE64).
-TEMP=`/usr/local/bin/nems-info temperature`
+if [[ -e /var/log/nems ]]; then
+  TEMP=`/usr/local/bin/nems-info temperature`
+else
+  TEMP=`sensors | grep Core | tr '+°C' ' ' | awk '{print $3}' | head -n 1`
+fi
 
 if (( $(echo "${TEMP} > ${CRIT}" | bc -l) )); then
     echo "TEMPERATURE CRITICAL - CPU Temp: ${TEMP} °C | cpu_temp=${TEMP};${WARN};${CRIT};;"
