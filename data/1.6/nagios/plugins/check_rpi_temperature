@@ -55,7 +55,18 @@ fi
 if [[ -e /var/log/nems ]]; then
   TEMP=`/usr/local/bin/nems-info temperature`
 else
-  TEMP=`sensors | grep Core | tr '+°C' ' ' | awk '{print $3}' | head -n 1`
+  sensors=`which sensors`
+  if [[ ! $sensors == '' ]]; then
+    TEMP=`sensors | grep Core | tr '+°C' ' ' | awk '{print $3}' | head -n 1`
+  fi
+  if [[ $TEMP == '' ]] && [[ -e /sys/class/thermal/thermal_zone0/temp ]]; then
+    # this is a dirty way to try to figure it out since it doesn't tell which temp unit we're using... but it may help on some systems... can improve it later
+    TEMP=`awk '{printf "%3.1f", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
+  fi
+  if [[ $TEMP == '' ]]; then
+    echo "UNKNOWN - Thermal sensor doesn't exist or lm-sensors not installed"
+    exit 3
+  fi
 fi
 
 if (( $(echo "${TEMP} > ${CRIT}" | bc -l) )); then
