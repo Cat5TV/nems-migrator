@@ -3,9 +3,12 @@
 
 /*
 
-  check_temper - Version 1.4
+  check_temper - Version 1.7
   Written by Robbie Ferguson for NEMS Linux
   -----
+  1.7 - June 2, 2020 - Correct the output from Humidity Sensor if no TEMPer is detected
+  1.6 - June 2, 2020 - Enforce array processing of JSON data
+  1.5 - June 1, 2020 - Connect with NEMS SST Calibration for NEMS Linux 1.6
   1.4 - January 31, 2020 - Add humidity sensor
   1.3 - August 4, 2019 - Automatically determine whether ARG is C or F and act accordingly
   1.2 - August 1, 2019 - Add UNKNOWN state if TEMPer is not connected
@@ -36,18 +39,25 @@
     echo PHP_EOL . 'For backward compatibility, if type is not specified, temp is assumed.' . PHP_EOL;
     exit(3);
   }
-  $tmp = json_decode(shell_exec('/usr/local/bin/nems-info temper'));
-  if (is_array($tmp) && isset($tmp[0])) {
-    $temper = $tmp[0]; unset($tmp);
+  $tmp = json_decode(shell_exec('/usr/local/bin/nems-info temper'), true);
 
-    $data['temperature']['C'] = round($temper->{"internal temperature"},1);
+// sample data
+// $tmp = json_decode('{"0":{"vendorid":16701,"productid":8455,"manufacturer":"","product":"","busnum":1,"devnum":5,"devices":["hidraw0","hidraw1"],"firmware":"TEMPerGold_V3.1","hex_firmware":"54454d506572476f6c645f56332e3120","hex_data":"808009274e200000","internal temperature":23.43},"sensors":{"thermal":1},"output":{"temperature":23.43,"humidity":0}}',true);
+
+  if (is_array($tmp) && isset($tmp[0])) {
+    $temper = $tmp[0];
+    $data['temperature']['C'] = round($tmp['output']['temperature'],1);
     $data['temperature']['F'] = round(($data['temperature']['C'] * 1.8 + 32),1);
 
-    if ($data['type'] == 'hum' && !isset($temper->{"internal humidity"})) {
-      echo 'UNKNOWN - Your TEMPer device does not have a humidity sensor.';
+    if ($data['type'] == 'hum' && !isset($temper['internal humidity'])) {
+      if ($tmp['sensors']['thermal'] == 1) {
+        echo 'UNKNOWN - Your TEMPer device does not have a humidity sensor.';
+      } else {
+        echo 'UNKNOWN - TEMPer device disconnected or not present.';
+      }
       exit(3);
     } else {
-      $data['humidity'] = round($temper->{"internal humidity"},1);
+      $data['humidity'] = round($tmp['output']['humidity'],1);
     }
 
     if ($data['type'] == 'temp') {
