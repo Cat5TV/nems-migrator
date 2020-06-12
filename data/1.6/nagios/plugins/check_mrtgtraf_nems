@@ -1,0 +1,61 @@
+#!/usr/bin/env php
+<?php
+  if (is_array($argv)) {
+    foreach ($argv as $arg) {
+      if (strstr($arg,'-')) {
+        $current = trim(str_replace('-','',$arg));
+      } else {
+        if (isset($current)) {
+          $args[$current] = trim($arg);
+          unset($current);
+        }
+      }
+    }
+  }
+  $usage = PHP_EOL . $argv[0] . ' -H <host_ip> -p <mrtg_port> -m <multiplier> -wu <warn_up> -wd <warn_down> -cu <crit_up> -cd <crit_down>' .
+           PHP_EOL . '  -H  - IP address of host. Must first be added to MRTG with nems-mrtg command.' .
+           PHP_EOL . '  -p  - Optional multiplier. Values: gb mb kb' .
+           PHP_EOL . '  -wu - Numerical Value for Warn Upload Usage' .
+           PHP_EOL . '  -wd - Numerical Value for Warn Download Usage' .
+           PHP_EOL . '  -cu - Numerical Value for Critical Upload Usage' .
+           PHP_EOL . '  -cd - Numerical Value for Critical Download Usage' .
+           PHP_EOL . PHP_EOL . 'Example: ' . $argv[0] . ' -H 10.0.0.1 -p 1 -m mb -wu 30 -wd 200 -cu 40 -cd 400' .
+                     PHP_EOL . '         Will check /var/www/mrtg/10.0.0.1_1.log and warn at 30 mb/s up, 200 mb/s down. Crit at 40 mb/s up, 400 mb/s down.' . PHP_EOL .
+ 
+           PHP_EOL . 'See https://docs.nemslinux.com/usage/mrtg' . PHP_EOL . PHP_EOL;
+  if (isset($args) && is_array($args)) {
+    if (
+      isset($args['H']) &&
+      isset($args['p']) &&
+      isset($args['wu']) &&
+      isset($args['wd']) &&
+      isset($args['cu']) &&
+      isset($args['cd'])
+    ) {
+      if (isset($args['m'])) {
+        if ($args['m'] == 'gb') {
+          $multiplier = 1000000000;
+        } elseif ($args['m'] == 'mb') {
+          $multiplier = 1000000;
+        } elseif ($args['m'] == 'kb') {
+          $multiplier = 1000;
+        } else {
+          echo 'Unknown multiplier. Available options for -m are: gb mb kb';
+          exit();
+        }
+      } else {
+          $multiplier = 1;
+      }
+      $command = '/usr/lib/nagios/plugins/check_mrtgtraf.pl -F AVG -L /var/www/mrtg/' . $args['H'] . '_' . $args['p'] . '.log -w ' . (floatval($args['wu'])*$multiplier) . ',' . (floatval($args['wd'])*$multiplier) . ' -c ' . (floatval($args['cu'])*$multiplier) . ',' . (floatval($args['cd'])*$multiplier);
+      exec($command, $mrtgtraf, $response);
+      echo $mrtgtraf[0];
+      exit($response);
+    } else {
+      echo $usage;
+      exit();
+    }
+  } else {
+    echo $usage;
+    exit();
+  }
+?>
