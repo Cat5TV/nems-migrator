@@ -10,9 +10,12 @@ confdest=$2 # Importing from DESTINATION because we already imported the backup 
   systemctl stop mysql
   # Clear the MySQL Database (replace with our Clean DB from NEMS-Migrator)
   rm -rf /var/lib/mysql/
-  if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.5'")}') )); then
+  if (( $(awk 'BEGIN {print ("'$ver'" >= "'1.6'")}') )); then
     printf "Using v1.6 defaults... "
     cp -R /root/nems/nems-migrator/data/1.6/mysql/NEMS-Clean /var/lib
+  elif (( $(awk 'BEGIN {print ("'$ver'" >= "'1.5'")}') )); then
+    printf "Using v1.5 defaults... "
+    cp -R /root/nems/nems-migrator/data/1.5/mysql/NEMS-Clean /var/lib
   elif (( $(awk 'BEGIN {print ("'$ver'" >= "'1.4'")}') )); then
     printf "Using v1.4 defaults... "
     cp -R /root/nems/nems-migrator/data/1.4/mysql/NEMS-Clean /var/lib

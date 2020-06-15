@@ -39,9 +39,10 @@ $confdest = $argv[3];
 
   foreach ($files as $file) {
     $backup = '/tmp/nems_migrator_restore' . $confsrc . '/' . $file['file'];
-    if ($ver >= 1.5) {
-//      $default = '/root/nems/nems-migrator/data/1.6/nconf/confdump/' . $file['file'];
-      $default = '/root/nems/nems-migrator/data/1.6/nagios/conf/' . $file['file'];
+    if ($ver >= 1.6) {
+      $default = '/root/nems/nems-migrator/data/1.6/nconf/confdump/' . $file['file'];
+    } else if ($ver >= 1.5) {
+      $default = '/root/nems/nems-migrator/data/1.5/nconf/confdump/' . $file['file'];
     } else if ($ver >= 1.4) {
       $default = '/root/nems/nems-migrator/data/1.4/nagios/conf/' . $file['file'];
     } else {
