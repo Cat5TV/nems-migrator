@@ -4,6 +4,7 @@ import RPi.GPIO as GPIO
 import os
 import time
 from threading import Thread
+from datetime import datetime
 rev = GPIO.RPI_REVISION
 if rev == 2 or rev == 3:
 	bus = smbus.SMBus(1)
@@ -15,6 +16,7 @@ shutdown_pin=4
 GPIO.setup(shutdown_pin, GPIO.IN,  pull_up_down=GPIO.PUD_DOWN)
 def shutdown_check():
 	while True:
+		dateTimeObj = datetime.now()
 		pulsetime = 1
 		GPIO.wait_for_edge(shutdown_pin, GPIO.RISING)
 		time.sleep(0.01)
@@ -22,8 +24,14 @@ def shutdown_check():
 			time.sleep(0.01)
 			pulsetime += 1
 		if pulsetime >=2 and pulsetime <=3:
+			dateTimeObj = datetime.now()
+			with open("/var/log/nems/argonone.log","a") as text_file:
+				text_file.write("{0} NEMS Safely Rebooted by Button.\r\n".format(dateTimeObj))
 			os.system("reboot")
 		elif pulsetime >=4 and pulsetime <=5:
+			dateTimeObj = datetime.now()
+			with open("/var/log/nems/argonone.log","a") as text_file:
+				text_file.write("{0} NEMS Safely Shutdown by Button.\r\n".format(dateTimeObj))
 			os.system("shutdown now -h")
 def get_fanspeed(tempval, configlist):
 	for curconfig in configlist:
