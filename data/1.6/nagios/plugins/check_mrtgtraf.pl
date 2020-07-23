@@ -9,9 +9,13 @@
 # then it will present detailed information about the result.
 # %ERRORS=('OK'=>0,'WARNING'=>1,'CRITICAL'=>2,'UNKNOWN'=>3,'DEPENDENT'=>4);
 
+# 1.0.2 Fixes and improvements by Robbie Ferguson for NEMS Linux
+
 use POSIX;
 use strict;
 use Getopt::Long;
+use Math::Round;
+
 ## use lib below needs path to directory that holds nagios included utils.pm ##
 #use lib qw( /usr/local/nagios/libexec );
 use lib "/usr/local/nagios/libexec";
@@ -24,7 +28,7 @@ our($SCRIPT, $VERSION, %OPTS, $function_flag, $f_flag, $w_flag, $c_flag, $u_flag
 our($v_flag, $help_flag, $d_flag);
 
 $SCRIPT = "check_mrtgtraf.pl";
-$VERSION = "1.0.1";
+$VERSION = "1.0.2";
 
 GetOptions ("f|FUN|FUNCTION:s" => \$function_flag,
                 "l|LOG|LOGfile:s" => \$f_flag,
@@ -246,7 +250,7 @@ if ($THRESHOLD_UNIT)
 ### If column2 bytes value is larger than 1 Mb ###
 if ( ( ($mrtgLogFileColumn2_AVG_IncomingBytesCounter / 1024) / 1024) > 1)
 {
-	$mrtgLogFileColumn2_AVG_IncomingBytesToMbyte = ( ($mrtgLogFileColumn2_AVG_IncomingBytesCounter / 1024) / 1024);
+	$mrtgLogFileColumn2_AVG_IncomingBytesToMbyte = nearest(.01, ( ($mrtgLogFileColumn2_AVG_IncomingBytesCounter / 1024) / 1024) );
 	$mrtgLogFileColumn2_AVG_IncomingBytesIsLargerThan1Mbyte = 1;
 	if ($DEBUG)
         {
@@ -255,7 +259,7 @@ if ( ( ($mrtgLogFileColumn2_AVG_IncomingBytesCounter / 1024) / 1024) > 1)
 }
 else 
 {
-	$mrtgLogFileColumn2_AVG_IncomingBytesToKbytes = ($mrtgLogFileColumn2_AVG_IncomingBytesCounter / 1024);
+	$mrtgLogFileColumn2_AVG_IncomingBytesToKbytes = nearest(.01, ($mrtgLogFileColumn2_AVG_IncomingBytesCounter / 1024) );
 	if ($DEBUG)
         {
 		printf("\nmrtgLogFileColumn2_AVG_IncomingBytesToKbytes = $mrtgLogFileColumn2_AVG_IncomingBytesToKbytes");
@@ -264,7 +268,7 @@ else
 ### If column3 bytes value is larger than 1 Mb ###
 if ( ( ($mrtgLogFileColumn3_AVG_OutgoingBytesCounter / 1024) / 1024) > 1)
 {
-	$mrtgLogFileColumn3_AVG_OutgoingBytesToMbyte = ( ($mrtgLogFileColumn3_AVG_OutgoingBytesCounter / 1024) / 1024);
+	$mrtgLogFileColumn3_AVG_OutgoingBytesToMbyte = nearest(.01, ( ($mrtgLogFileColumn3_AVG_OutgoingBytesCounter / 1024) / 1024) );
 	$mrtgLogFileColumn3_AVG_OutgoingBytesIsLargerThan1Mbyte = 1;
 	if ($DEBUG)
         {
@@ -273,7 +277,7 @@ if ( ( ($mrtgLogFileColumn3_AVG_OutgoingBytesCounter / 1024) / 1024) > 1)
 }
 else
 {
-	$mrtgLogFileColumn3_AVG_OutgoingBytesToKbytes = ($mrtgLogFileColumn3_AVG_OutgoingBytesCounter / 1024);
+	$mrtgLogFileColumn3_AVG_OutgoingBytesToKbytes = nearest(.01, ($mrtgLogFileColumn3_AVG_OutgoingBytesCounter / 1024) );
 	if ($DEBUG)
         {
 		printf("\nmrtgLogFileColumn3_AVG_OutgoingBytesToKbytes = $mrtgLogFileColumn3_AVG_OutgoingBytesToKbytes");
@@ -282,7 +286,7 @@ else
 ### If column4 bytes value is larger than 1 Mb ###
 if ( ( ($mrtgLogFileColumn4_MAX_IncomingBytesCounter / 1024) / 1024) > 1)
 {
-	$mrtgLogFileColumn4_MAX_IncomingBytesToMbyte = ( ($mrtgLogFileColumn4_MAX_IncomingBytesCounter / 1024) / 1024);
+	$mrtgLogFileColumn4_MAX_IncomingBytesToMbyte = nearest(.01, ( ($mrtgLogFileColumn4_MAX_IncomingBytesCounter / 1024) / 1024) );
 	$mrtgLogFileColumn4_MAX_IncomingBytesIsLargerThan1Mbyte = 1;
 	if ($DEBUG)
         {
@@ -291,7 +295,7 @@ if ( ( ($mrtgLogFileColumn4_MAX_IncomingBytesCounter / 1024) / 1024) > 1)
 }
 else
 {
-	$mrtgLogFileColumn4_MAX_IncomingBytesToKbytes = ($mrtgLogFileColumn4_MAX_IncomingBytesCounter / 1024);
+	$mrtgLogFileColumn4_MAX_IncomingBytesToKbytes = nearest(.01, ($mrtgLogFileColumn4_MAX_IncomingBytesCounter / 1024) );
 	if ($DEBUG)
         {
 		printf("\nmrtgLogFileColumn4_MAX_IncomingBytesToKbytes = $mrtgLogFileColumn4_MAX_IncomingBytesToKbytes");
@@ -300,7 +304,7 @@ else
 ### If column5 bytes value is larger than 1 Mb ###
 if ( ( ($mrtgLogFileColumn5_MAX_OutgoingBytesCounter / 1024) / 1024) > 1)
 {
-	$mrtgLogFileColumn5_MAX_OutgoingBytesToMbyte = ( ($mrtgLogFileColumn5_MAX_OutgoingBytesCounter / 1024) / 1024);
+	$mrtgLogFileColumn5_MAX_OutgoingBytesToMbyte = nearest(.01, ( ($mrtgLogFileColumn5_MAX_OutgoingBytesCounter / 1024) / 1024) );
 	$mrtgLogFileColumn5_MAX_OutgoingBytesIsLargerThan1Mbyte = 1;
 	if ($DEBUG)
         {
@@ -309,7 +313,7 @@ if ( ( ($mrtgLogFileColumn5_MAX_OutgoingBytesCounter / 1024) / 1024) > 1)
 }
 else
 {
-	$mrtgLogFileColumn5_MAX_OutgoingBytesToKbytes = ($mrtgLogFileColumn5_MAX_OutgoingBytesCounter / 1024);
+	$mrtgLogFileColumn5_MAX_OutgoingBytesToKbytes = nearest(.01, ($mrtgLogFileColumn5_MAX_OutgoingBytesCounter / 1024) );
 	if ($DEBUG)
         {
 		printf("\nmrtgLogFileColumn5_MAX_OutgoingBytesToKbytes = $mrtgLogFileColumn5_MAX_OutgoingBytesToKbytes");
@@ -1395,7 +1399,7 @@ Usage: $SCRIPT -|--f|F|FUN|function|FUNCTION <AVG|MAX> -|--l|L|log|LOG|logfile|L
 
 			./$SCRIPT -F MAX -L /scripts/test.log -w 9,9 -c 9999999999,999999999
 			./$SCRIPT -FUNC MAX -LOG /scripts/test.log -WARN 1048576,2097152 -CRIT 2097152,3145728
-			./$SCRIPT -function MAX -logfile /scripts/test.log -warning 1048576 -critcal 2097152 --debug
+			./$SCRIPT -function MAX -logfile /scripts/test.log -warning 1048576 -critical 2097152 --debug
 			./$SCRIPT -F AVG -L /scripts/test.log -w 9,9 -c 9999999999,999999999
                         ./$SCRIPT -FUNCT AVG -LOG /scripts/test.log -WARN 1048576,2097152 -CRIT 2097152,3145728
 			./$SCRIPT -function AVG -logfile /scripts/test.log -warning 1048576 -critical 2097152 --debug 
@@ -1416,8 +1420,8 @@ Usage: $SCRIPT -|--f|F|FUN|function|FUNCTION <AVG|MAX> -|--l|L|log|LOG|logfile|L
 					If there is only one value passed in it will use that value in both pairs.
                                         (NO DEFAULT)
 
--|--c|C|crit|CRIT|critical|CRITICAL     This will tell Nagios when to send a CRITCAL message.
-					CRITCAL Threshold expects bytes input as default(unless you use the -u flag) and needs to be supplied as 
+-|--c|C|crit|CRIT|critical|CRITICAL     This will tell Nagios when to send a CRITICAL message.
+					CRITICAL Threshold expects bytes input as default(unless you use the -u flag) and needs to be supplied as 
 					a "critical threshold pair" <incoming>,<outgoing>.
 					If there is only one value passed in it will use that value in both pairs.
                                         (NO DEFAULT)
