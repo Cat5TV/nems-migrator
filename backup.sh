@@ -1,5 +1,6 @@
 #!/bin/bash
 ver=$(/usr/local/bin/nems-info nemsver)
+
  # NagVis maps are stored differently in NEMS 1.0
  if [[ $ver = "" ]]; then
    echo Could not detect the version of your NEMS server. Is this NEMS Linux?
@@ -11,6 +12,19 @@ ver=$(/usr/local/bin/nems-info nemsver)
    else
 		nagvis="etc/maps/"
  fi
+
+ # Store some board data in the Windows-readable portion of the SD card
+ # As requested by Marshman: https://forum.nemslinux.com/viewtopic.php?f=10&t=566
+   alias=$(/usr/local/bin/nems-info alias)
+   hwid=$(/usr/local/bin/nems-info hwid)
+   platformname=$(/usr/local/bin/nems-info platform-name)
+   echo "NEMS Server System Information" > /boot/NEMS_SERVER.txt
+   echo "------------------------------" >> /boot/NEMS_SERVER.txt
+   echo "Platform:           $platformname" >> /boot/NEMS_SERVER.txt
+   echo "NEMS Linux Version: $ver" >> /boot/NEMS_SERVER.txt
+   echo "NEMS HWID:          $hwid" >> /boot/NEMS_SERVER.txt
+   echo "NEMS Server Alias:  $alias" >> /boot/NEMS_SERVER.txt
+
 
  # Only create a backup file every 30 minutes.
  if [[ -f /var/www/html/backup/snapshot/backup.nems ]]; then
