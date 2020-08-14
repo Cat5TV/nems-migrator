@@ -11,7 +11,7 @@ Based Upon:
 
 Reworked for NEMS Linux by Robbie Ferguson
  https://nemslinux.com
- Build: 1
+ Build: 2
 
 Used, modified and distributed in NEMS Linux
 with special permission from Heini Holm Andersen.
@@ -59,6 +59,9 @@ $f_notification_escalation_state= array_shift($argv);     /*23*/
 $f_service_attempt_state= array_shift($argv);     /*24*/
 $f_max_service_attempt_state= array_shift($argv);     /*25*/
 $f_all_recipients= array_shift($argv);  /*26*/
+
+$json_switch=array_shift($argv);  /*27*/
+if (strtoupper($json_switch) == 'JSON') $json_output = 1; else $json_output = 0;
 
 $f_downwarn = $f_duration;
 $f_date_year = date("Y");
@@ -568,15 +571,29 @@ $mail->AltBody = $message;
 $mail->Body = $HTMLmessage;
 
 if(!$mail->send()) {
-	echo 'Message could not be sent.' . PHP_EOL;
+  if ($json_output == 0) {
+        echo 'Message could not be sent.' . PHP_EOL;
 	echo 'Mailer Error: ' . $mail->ErrorInfo . PHP_EOL;
+  }
         $error = '[' . strtotime('now') . '] NEMS EMAILER: ' . $mail->ErrorInfo . PHP_EOL;
         if (!@file_put_contents('/var/log/nagios/nagios.log',$error,FILE_APPEND)) {
-          echo 'Could not save log as you are not running as a privileged user.' . PHP_EOL . 'Next time use sudo if this matters to you.';
-          echo PHP_EOL . $error . PHP_EOL;
+          if ($json_output == 0) {
+            echo 'Could not save log as you are not running as a privileged user.' . PHP_EOL . 'Next time use sudo if this matters to you.';
+            echo PHP_EOL . $error . PHP_EOL;
+          }
         }
+  if ($json_output == 1) {
+    $array = array('result'=>0,'error'=>$mail->ErrorInfo);
+  }
 } else {
+  if ($json_output == 0) {
 	echo 'Message has been sent' . PHP_EOL;
+  } else {
+    $array = array('result'=>1);
+  }
 }
+
+if ($json_output == 1) echo json_encode($array);
+
 
 ?>
