@@ -1,6 +1,5 @@
 #!/usr/bin/env php
 <?php
-
 /*******************************************************************************
 
 Based Upon:
@@ -11,7 +10,7 @@ Based Upon:
 
 Reworked for NEMS Linux by Robbie Ferguson
  https://nemslinux.com
- Build: 2
+ Build: 3
 
 Used, modified and distributed in NEMS Linux
 with special permission from Heini Holm Andersen.
@@ -60,8 +59,15 @@ $f_service_attempt_state= array_shift($argv);     /*24*/
 $f_max_service_attempt_state= array_shift($argv);     /*25*/
 $f_all_recipients= array_shift($argv);  /*26*/
 
+/* Data posted from NEMS SST */
 $json_switch=array_shift($argv);  /*27*/
-if (strtoupper($json_switch) == 'JSON') $json_output = 1; else $json_output = 0;
+  if (strtoupper($json_switch) == 'JSON') $json_output = 1; else $json_output = 0;
+$smtp = array_shift($argv);  /*28*/
+$port = array_shift($argv);  /*29*/
+$smtp_tls = array_shift($argv);  /*30*/
+$email = array_shift($argv);  /*31*/
+$smtpuser = array_shift($argv);  /*32*/
+$smtppassword = array_shift($argv);  /*33*/
 
 $f_downwarn = $f_duration;
 $f_date_year = date("Y");
@@ -535,23 +541,69 @@ $mail = new PHPMailer;
 //$mail->SMTPDebug = 3; // Enable verbose debug output
 $mail->CharSet = 'UTF-8';
 $mail->isSMTP();
-$mailserver = explode(':',$nems['resource']['USER7']);
-$mail->Host = $mailserver[0];
-$mail->Port = $mailserver[1];
-// NEMS00002 if user has an empty username, treat as no SMTP auth
-if (strlen($nems['resource']['USER9']) > 0 && strtoupper($nems['resource']['USER9']) != 'NULL') {
-  $mail->SMTPAuth = true;
-  $mail->Username = $nems['resource']['USER9'];
-  $mail->Password = $nems['resource']['USER10'];
+$mailserver = explode(':',$nems['resource']['USER7']); // needs to happen outside the if loop below for later comparison
+
+if (isset($smtp) && strlen($smtp) > 0) {
+  // this is NEMS SST
+  $mail->Host = $smtp;
+  $mail->Port = $port;
+
+  // NEMS00002 if user has an empty username, treat as no SMTP auth
+  if (strlen($smtpuser) > 0 && strtoupper($smtpuser) != 'NULL') {
+    $mail->SMTPAuth = true;
+    $mail->Username = $smtpuser;
+    $mail->Password = $smtppassword;
+  } else {
+    $mail->SMTPAuth = false;
+  }
+  if ($smtp_tls == 1 || !isset($smtp_tls)) {
+    $mail->SMTPSecure = 'tls';
+  } else {
+    $mail->SMTPSecure = false;
+    $mail->SMTPAutoTLS = false;
+  }
+
+  $mail->From = $email;
+
+  $checkchanged = 1;
 } else {
-  $mail->SMTPAuth = false;
+  // this is not NEMS SST
+  $mail->Host = $mailserver[0];
+  $mail->Port = $mailserver[1];
+
+  // NEMS00002 if user has an empty username, treat as no SMTP auth
+  if (strlen($nems['resource']['USER9']) > 0 && strtoupper($nems['resource']['USER9']) != 'NULL') {
+    $mail->SMTPAuth = true;
+    $mail->Username = $nems['resource']['USER9'];
+    $mail->Password = $nems['resource']['USER10'];
+  } else {
+    $mail->SMTPAuth = false;
+  }
+  if ($nems['resource']['USER15'] == 1 || !isset($nems['resource']['USER15'])) {
+    $mail->SMTPSecure = 'tls';
+  } else {
+    $mail->SMTPSecure = false;
+    $mail->SMTPAutoTLS = false;
+  }
+
+  $mail->From = $nems['resource']['USER5'];
+
+  $checkchanged = 0;
 }
-if ($nems['resource']['USER15'] == 1 || !isset($nems['resource']['USER15'])) {
-  $mail->SMTPSecure = 'tls';
-} else {
-  $mail->SMTPSecure = false;
-  $mail->SMTPAutoTLS = false;
-}
+
+// Determine if provided credentials differ from stored credentials
+  if ($checkchanged == 1 && (
+      $smtp != $mailserver[0] ||
+      $port != $mailserver[1] ||
+      $smtpuser != $nems['resource']['USER9'] ||
+      $smtppassword != $nems['resource']['USER10'] ||
+      $smtp_tls != $nems['resource']['USER15'] ||
+      $email != $nems['resource']['USER5']
+    )
+  ) {
+    $SSTchanged = 1;
+  }
+
 $mail->SMTPOptions = array(
     'ssl' => array(
         'verify_peer' => false,
@@ -560,7 +612,6 @@ $mail->SMTPOptions = array(
     )
 );
 
-$mail->From = $nems['resource']['USER5'];
 $mail->FromName = $nems['alias'];
 $mail->addAddress($f_to); // Add a recipient + Name is optional "$mail->addAddress('joe@example.net', 'Joe User');"
 $mail->isHTML(true); // Set email format to HTML
@@ -587,7 +638,10 @@ if(!$mail->send()) {
   }
 } else {
   if ($json_output == 0) {
-	echo 'Message has been sent' . PHP_EOL;
+	echo 'Message has been sent.' . PHP_EOL;
+        if (isset($SSTchanged)) {
+          echo '<br /><br /><b>Note:</b> Configuration changed. Don\'t forget to save in NEMS SST.';
+        }
   } else {
     $array = array('result'=>1);
   }
