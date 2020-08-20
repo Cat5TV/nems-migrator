@@ -10,26 +10,15 @@
 
 */
 
-  $dht = json_decode(shell_exec('/usr/local/bin/nems-info dht11 > /dev/null 2>&1'));
+  $dht = json_decode(shell_exec('/usr/local/bin/nems-info dht11'));
   if (!isset($dht->c)) {
     echo 'UNKNOWN - DHT Sensor disconnected or not present.';
     exit(3);
   }
   if ($dht->c == 1 && $dht->h == 1) {
-    $dht = json_decode(shell_exec('/usr/local/bin/nems-info dht22 > /dev/null 2>&1'));
+    $dht = json_decode(shell_exec('/usr/local/bin/nems-info dht22'));
   }
 
-  $json = json_encode(array(
-      'output' => array(
-        'temperature' => $dht->c,
-        'humidity' => $dht->h
-      ),
-      'sensors' => array(
-        'temperature' => $dht->c,
-        'humidity' => $dht->h
-      )
-    )
-  );  
 #  $values = $dht->c . '°C / ' . $dht->f . '°F, ' . $dht->h . '% Humidity';
 
   if (count($argv) >=5) {
@@ -55,18 +44,10 @@
     exit(3);
   }
 
-  $tmp = (array) json_decode($json);
-  if (is_array($tmp) && isset($tmp['sensors'])) {
-    $temper = $tmp;unset ($tmp);
-    $data['temperature']['C'] = round($temper->{"internal temperature"},1);
+  if (is_object($dht) && isset($dht->c)) {
+    $data['temperature']['C'] = round($dht->c,1);
     $data['temperature']['F'] = round(($data['temperature']['C'] * 1.8 + 32),1);
-
-    if ($data['type'] == 'hum' && !isset($temper->{"internal humidity"})) {
-      echo 'UNKNOWN - Your TEMPer device does not have a humidity sensor.';
-      exit(3);
-    } else {
-      $data['humidity'] = round($temper->{"internal humidity"},1);
-    }
+    $data['humidity'] = round($dht->h,1);
 
     if ($data['type'] == 'temp') {
       if ($data['temperature'][$type] < $data['crit_low']) {
@@ -107,7 +88,7 @@
       exit(3);
     }
   } else {
-    echo 'UNKNOWN - TEMPer device disconnected or not present.';
+    echo 'UNKNOWN - DHT Sensor disconnected or not present.';
     exit(3);
   }
 
