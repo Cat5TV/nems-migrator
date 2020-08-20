@@ -6,13 +6,17 @@
   check_dhtxx - Version 1.0
   Written by Robbie Ferguson for NEMS Linux
   -----
-  1.0 - August 19, 2020 - Initial release
+  1.0 - August 20, 2020 - Initial release
 
 */
 
-  $dht = json_decode(shell_exec('/usr/local/share/nems/nems-scripts/dhtxx 11'));
+  $dht = json_decode(shell_exec('/usr/local/bin/nems-info dht11 > /dev/null 2>&1'));
+  if (!isset($dht->c)) {
+    echo 'UNKNOWN - DHT Sensor disconnected or not present.';
+    exit(3);
+  }
   if ($dht->c == 1 && $dht->h == 1) {
-    $dht = json_decode(shell_exec('/usr/local/share/nems/nems-scripts/dhtxx 22'));
+    $dht = json_decode(shell_exec('/usr/local/bin/nems-info dht22 > /dev/null 2>&1'));
   }
 
   $json = json_encode(array(
