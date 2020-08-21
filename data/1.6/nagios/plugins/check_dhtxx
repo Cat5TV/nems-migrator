@@ -10,13 +10,13 @@
 
 */
 
-  $dht = json_decode(shell_exec('/usr/local/bin/nems-info dht11'));
-  if (!isset($dht->c)) {
+  $dht = json_decode(shell_exec('/usr/local/bin/nems-info dht22'));
+  if ($dht->dht == 0) {
+    $dht = json_decode(shell_exec('/usr/local/bin/nems-info dht11'));
+  }
+  if ($dht->dht == 0) {
     echo 'UNKNOWN - DHT Sensor disconnected or not present.';
     exit(3);
-  }
-  if ($dht->c == 1 && $dht->h == 1) {
-    $dht = json_decode(shell_exec('/usr/local/bin/nems-info dht22'));
   }
 
 #  $values = $dht->c . '°C / ' . $dht->f . '°F, ' . $dht->h . '% Humidity';
