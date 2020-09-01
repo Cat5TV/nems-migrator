@@ -68,19 +68,19 @@
       }
     } elseif ($data['type'] == 'hum') {
       if ($data['humidity'] < $data['crit_low']) {
-        echo 'CRITICAL - Humidity at ' . $data['humidity'] . '% (LOW)';
+        echo 'CRITICAL - ' . $data['humidity'] . '% Humidity (LOW)';
         exit(2);
       } elseif ($data['humidity'] < $data['warn_low']) {
-        echo 'WARNING - Humidity at ' . $data['humidity'] . '% (LOW)';
+        echo 'WARNING - ' . $data['humidity'] . '% Humidity (LOW)';
         exit(1);
       } elseif ($data['humidity'] > $data['crit_high']) {
-        echo 'CRITICAL - Humidity at ' . $data['humidity'] . '% (HIGH)';
+        echo 'CRITICAL - ' . $data['humidity'] . '% Humidity (HIGH)';
         exit(2);
       } elseif ($data['humidity'] > $data['warn_high']) {
-        echo 'WARNING - Humidity at ' . $data['humidity'] . '% (HIGH)'; 
+        echo 'WARNING - ' . $data['humidity'] . '% Humidity (HIGH)'; 
         exit(1);
       } else {
-        echo 'OK - Humidity at ' . $data['humidity'] . '%'; 
+        echo 'OK - ' . $data['humidity'] . '% Humidity'; 
         exit(0);
       }
     } else {
