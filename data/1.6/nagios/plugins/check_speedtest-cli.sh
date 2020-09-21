@@ -22,7 +22,7 @@
 ########################################################################################################################################################
 
 plugin_name="NEMS speedtest-cli plugin"
-version="1.6"
+version="1.6.1"
 # Based on "1.2 2017122011:01"
 
 #####################################################################
@@ -50,6 +50,9 @@ version="1.6"
 #
 #       Version 1.6 - NEMS00002 Add Cache Functionality
 #                     Used by NEMS TV Dashboard to display speedtest data even if not in notification state
+#
+#       Version 1.6.1 - NEMS00003 Debug output includes output from speedest even if failed
+#                       Previously, exit would occur too soon
 #
 #####################################################################
 # function to output script usage
