@@ -144,7 +144,33 @@
         if ($data['response']->data->network->rx > $data['crit'] || $data['response']->data->network->tx > $data['crit']) {
           echo 'CRITICAL - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
           exit(2);
-        } else if ($data['response']->data->storage->{'/var'}->percent > $data['warn']) {
+        } else if ($data['response']->data->network->rx > $data['warn'] || $data['response']->data->network->tx > $data['warn']) {
+          echo 'WARN - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+          exit(1);
+        } else {
+          echo 'OK - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+          exit(0);
+        }
+        break;
+
+      case 'netrx':
+        if ($data['response']->data->network->rx > $data['crit']) {
+          echo 'CRITICAL - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+          exit(2);
+        } else if ($data['response']->data->network->rx > $data['warn']) {
+          echo 'WARN - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+          exit(1);
+        } else {
+          echo 'OK - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+          exit(0);
+        }
+        break;
+
+      case 'nettx':
+        if ($data['response']->data->network->tx > $data['crit']) {
+          echo 'CRITICAL - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+          exit(2);
+        } else if ($data['response']->data->network->tx > $data['warn']) {
           echo 'WARN - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
           exit(1);
         } else {
@@ -163,7 +189,7 @@
 function exit_usage() {
   global $argv;
     echo 'NEMS PHP Server Agent Check' . PHP_EOL;
-    echo PHP_EOL . 'Usage: ' . $argv[0] . ' warn crit url [mem|disk|var|net|load]' . PHP_EOL;
+    echo PHP_EOL . 'Usage: ' . $argv[0] . ' warn crit url [mem|disk|var|net|netrx|nettx|load]' . PHP_EOL;
     echo 'Example: ' . $argv[0] . ' 3 9 https://example.com/nems-agent.php load' . PHP_EOL . PHP_EOL;
     exit(3);
 }
