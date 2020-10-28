@@ -1,0 +1,171 @@
+#!/usr/bin/env php
+<?php
+
+/*
+
+  check_nems_php_agent - Version 1.0
+  Written by Robbie Ferguson for NEMS Linux
+  -----
+  1.0 - July 29, 2019 - Initial release 
+
+*/
+
+  $nemsagentver = '1.0';
+
+  if (count($argv) >=5) {
+    array_shift($argv);
+    $data['warn'] = intval(array_shift($argv));
+    $data['crit'] = intval(array_shift($argv));
+    $data['url'] = trim(array_shift($argv));
+    $data['check'] = trim(array_shift($argv));
+  } else {
+    exit_usage();
+  }
+
+  $php_agent_key = '';
+  $nemsconffile = '/usr/local/share/nems/nems.conf'; // www-admin must have access to read/write
+  $conf = file($nemsconffile);
+  if (is_array($conf)) { // Load the existing conf data
+        foreach ($conf as $line) {
+                $tmp = explode('=',$line);
+                if (trim($tmp[0]) == 'php_agent_key') $php_agent_key = trim($tmp[1]);
+        }
+  }
+  if ($php_agent_key == '') {
+    echo 'UNKNOWN - Missing passphrase. Did you set one in NEMS SST?';
+    exit(3);
+  }
+
+  // Set connection timeout
+    $timeout = 5;
+
+  // Get the remote header
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_HEADER, true);
+    curl_setopt($ch, CURLOPT_URL, $data['url']);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    $response = curl_exec($ch);
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+  // Stop if header is anything other than 'found'
+    if ($httpcode != 200) {
+      echo 'UNKNOWN - NEMS PHP Server Agent not found at provided URL.';
+      exit(3);
+    }
+
+  // Get the remote response
+    curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+  $data['response'] = json_decode($response);
+  if (!is_object($data['response'])) {
+    echo 'UNKNOWN - Invalid response from nems-agent.php at that URL.';
+    exit(3);
+  }
+
+  $nemsver = shell_exec('/usr/local/bin/nems-info nemsver');
+
+  $authLocal = hash('sha256', $php_agent_key);
+
+  if ($authLocal != $data['response']->auth) {
+    echo 'UNKNOWN - Local PHP Agent encryption passphrase differs from remote.';
+    exit(3);
+  }
+
+  // Decrypt the data
+    $data['response']->data = json_decode(openssl_decrypt($data['response']->data,"AES-128-ECB",$php_agent_key));
+
+  // Make sure it decrypted okay
+    if (!is_object($data['response']->data)) {
+      echo 'UNKNOWN - Invalid decrypted response from nems-agent.php at that URL.';
+      exit(3);
+    }
+
+  // Run the checks against the received data
+    switch ($data['check']) {
+
+      case 'load':
+        if ($data['response']->data->cpu->loadaverage->{15} > $data['crit']) {
+          echo 'CRITICAL - 15 Minute Load Average: ' . $data['response']->data->cpu->loadaverage->{15};
+          exit(2);
+        } else if ($data['response']->data->cpu->loadaverage->{15} > $data['warn']) {
+          echo 'WARN - 15 Minute Load Average: ' . $data['response']->data->cpu->loadaverage->{15};
+          exit(1);
+        } else {
+          echo 'OK - 15 Minute Load Average: ' . $data['response']->data->cpu->loadaverage->{15};
+          exit(0);
+        }
+        break;
+
+      case 'mem':
+        if ($data['response']->data->mem->percent > $data['crit']) {
+          echo 'CRITICAL - Memory Usage: ' . $data['response']->data->mem->percent . '%';
+          exit(2);
+        } else if ($data['response']->data->mem->percent > $data['warn']) {
+          echo 'WARN - Memory Usage: ' . $data['response']->data->mem->percent . '%';
+          exit(1);
+        } else {
+          echo 'OK - Memory Usage: ' . $data['response']->data->mem->percent . '%';
+          exit(0);
+        }
+        break;
+
+      case 'disk':
+        if ($data['response']->data->storage->{'/'}->percent > $data['crit']) {
+          echo 'CRITICAL - Disk Usage (/): ' . $data['response']->data->storage->{'/'}->percent . '%';
+          exit(2);
+        } else if ($data['response']->data->storage->{'/'}->percent > $data['warn']) {
+          echo 'WARN - Disk Usage (/): ' . $data['response']->data->storage->{'/'}->percent . '%';
+          exit(1);
+        } else {
+          echo 'OK - Disk Usage (/): ' . $data['response']->data->storage->{'/'}->percent . '%';
+          exit(0);
+        }
+        break;
+
+      case 'var':
+        if ($data['response']->data->storage->{'/var'}->percent > $data['crit']) {
+          echo 'CRITICAL - Disk Usage (/var): ' . $data['response']->data->storage->{'/var'}->percent . '%';
+          exit(2);
+        } else if ($data['response']->data->storage->{'/var'}->percent > $data['warn']) {
+          echo 'WARN - Disk Usage (/var): ' . $data['response']->data->storage->{'/var'}->percent . '%';
+          exit(1);
+        } else {
+          echo 'OK - Disk Usage (/var): ' . $data['response']->data->storage->{'/var'}->percent . '%';
+          exit(0);
+        }
+        break;
+
+      case 'net':
+        if ($data['response']->data->network->rx > $data['crit'] || $data['response']->data->network->tx > $data['crit']) {
+          echo 'CRITICAL - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+          exit(2);
+        } else if ($data['response']->data->storage->{'/var'}->percent > $data['warn']) {
+          echo 'WARN - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+          exit(1);
+        } else {
+          echo 'OK - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+          exit(0);
+        }
+        break;
+
+      default:
+        exit_usage();
+        break;
+
+    }
+
+
+function exit_usage() {
+  global $argv;
+    echo 'NEMS PHP Server Agent Check' . PHP_EOL;
+    echo PHP_EOL . 'Usage: ' . $argv[0] . ' warn crit url [mem|disk|var|net|load]' . PHP_EOL;
+    echo 'Example: ' . $argv[0] . ' 3 9 https://example.com/nems-agent.php load' . PHP_EOL . PHP_EOL;
+    exit(3);
+}
+
+print_r($data);
