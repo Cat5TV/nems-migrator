@@ -3,14 +3,18 @@
 
 /*
 
-  check_nems_php_agent - Version 1.0
+  check_nems_php_agent - Version 1.1
   Written by Robbie Ferguson for NEMS Linux
   -----
+  1.1 - November 19, 2020 - Key is now encrypted (not just base64 encoded)
+                            Added "." disk feature to load stats on the web dir
+                            Several bug fixes for disk and var feature
+                            Added output for open_basedir permissions problem
   1.0 - July 29, 2019 - Initial release 
 
 */
 
-  $nemsagentver = '1.0';
+  $nemsagentver = '1.1';
 
   if (count($argv) >=5) {
     array_shift($argv);
@@ -35,6 +39,8 @@
     echo 'UNKNOWN - Missing passphrase. Did you set one in NEMS SST?';
     exit(3);
   }
+
+  $decryptionkey = openssl_encrypt($php_agent_key,"AES-128-ECB",base64_encode(':' . $php_agent_key . ':'));
 
   // Set connection timeout
     $timeout = 5;
@@ -69,7 +75,7 @@
 
   $nemsver = shell_exec('/usr/local/bin/nems-info nemsver');
 
-  $authLocal = hash('sha256', $php_agent_key);
+  $authLocal = hash('sha256', $decryptionkey);
 
   if ($authLocal != $data['response']->auth) {
     echo 'UNKNOWN - Local PHP Agent encryption passphrase differs from remote.';
@@ -77,7 +83,7 @@
   }
 
   // Decrypt the data
-    $data['response']->data = json_decode(openssl_decrypt($data['response']->data,"AES-128-ECB",$php_agent_key));
+    $data['response']->data = json_decode(openssl_decrypt($data['response']->data,"AES-128-ECB",$decryptionkey));
 
   // Make sure it decrypted okay
     if (!is_object($data['response']->data)) {
@@ -114,29 +120,60 @@
         }
         break;
 
-      case 'disk':
-        if ($data['response']->data->storage->{'/'}->percent > $data['crit']) {
-          echo 'CRITICAL - Disk Usage (/): ' . $data['response']->data->storage->{'/'}->percent . '%';
-          exit(2);
-        } else if ($data['response']->data->storage->{'/'}->percent > $data['warn']) {
-          echo 'WARN - Disk Usage (/): ' . $data['response']->data->storage->{'/'}->percent . '%';
-          exit(1);
+      case '.':
+        $mountpoint = '.';
+        if (!isset($data['response']->data->storage->$mountpoint->locked)) {
+          if ($data['response']->data->storage->$mountpoint->percent > $data['crit']) {
+            echo 'CRITICAL - Disk Usage (' . $data['response']->data->storage->$mountpoint->path . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            exit(2);
+          } else if ($data['response']->data->storage->$mountpoint->percent > $data['warn']) {
+            echo 'WARN - Disk Usage (' . $data['response']->data->storage->$mountpoint->path . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            exit(1);
+          } else {
+            echo 'OK - Disk Usage (' . $data['response']->data->storage->$mountpoint->path . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            exit(0);
+          }
         } else {
-          echo 'OK - Disk Usage (/): ' . $data['response']->data->storage->{'/'}->percent . '%';
-          exit(0);
+          echo "UNKNOWN - open_basedir in effect: Cannot access $mountpoint";
+          exit(3);
+        }
+        break;
+
+      case 'disk':
+        $mountpoint = '/';
+        if (!isset($data['response']->data->storage->$mountpoint->locked)) {
+          if ($data['response']->data->storage->$mountpoint->percent > $data['crit']) {
+            echo 'CRITICAL - Disk Usage (' . $mountpoint . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            exit(2);
+          } else if ($data['response']->data->storage->$mountpoint->percent > $data['warn']) {
+            echo 'WARN - Disk Usage (' . $mountpoint . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            exit(1);
+          } else {
+            echo 'OK - Disk Usage (' . $mountpoint . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            exit(0);
+          }
+        } else {
+          echo "UNKNOWN - open_basedir in effect: Cannot access $mountpoint";
+          exit(3);
         }
         break;
 
       case 'var':
-        if ($data['response']->data->storage->{'/var'}->percent > $data['crit']) {
-          echo 'CRITICAL - Disk Usage (/var): ' . $data['response']->data->storage->{'/var'}->percent . '%';
-          exit(2);
-        } else if ($data['response']->data->storage->{'/var'}->percent > $data['warn']) {
-          echo 'WARN - Disk Usage (/var): ' . $data['response']->data->storage->{'/var'}->percent . '%';
-          exit(1);
+        $mountpoint = '/var';
+        if (!isset($data['response']->data->storage->$mountpoint->locked)) {
+          if ($data['response']->data->storage->$mountpoint->percent > $data['crit']) {
+            echo 'CRITICAL - Disk Usage (' . $mountpoint . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            exit(2);
+          } else if ($data['response']->data->storage->$mountpoint->percent > $data['warn']) {
+            echo 'WARN - Disk Usage (' . $mountpoint . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            exit(1);
+          } else {
+            echo 'OK - Disk Usage (' . $mountpoint . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            exit(0);
+          }
         } else {
-          echo 'OK - Disk Usage (/var): ' . $data['response']->data->storage->{'/var'}->percent . '%';
-          exit(0);
+          echo "UNKNOWN - open_basedir in effect: Cannot access $mountpoint";
+          exit(3);
         }
         break;
 
@@ -189,7 +226,7 @@
 function exit_usage() {
   global $argv;
     echo 'NEMS PHP Server Agent Check' . PHP_EOL;
-    echo PHP_EOL . 'Usage: ' . $argv[0] . ' warn crit url [mem|disk|var|net|netrx|nettx|load]' . PHP_EOL;
+    echo PHP_EOL . 'Usage: ' . $argv[0] . ' warn crit url [mem|disk|var|.|net|netrx|nettx|load]' . PHP_EOL;
     echo 'Example: ' . $argv[0] . ' 3 9 https://example.com/nems-agent.php load' . PHP_EOL . PHP_EOL;
     exit(3);
 }
