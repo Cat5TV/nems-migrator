@@ -35,6 +35,9 @@ if pidof -o %PPID -x "backup.sh">/dev/null; then
 fi
 
 
+  # Sleep for a random time up to 2 hours to stagger user backups to relieve stress on the API server
+  sleep $[ ( $RANDOM % 7200 ) ]s
+
   # Encrypt the file
   # Combine the user's passphrase with the OSB Key to further strenghten the entropy of the passphrase
   gpg --yes --batch --passphrase="::$osbpass::$osbkey::" -c /var/www/html/backup/snapshot/backup.nems
