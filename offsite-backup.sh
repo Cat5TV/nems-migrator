@@ -67,6 +67,9 @@ fi
 
   if [[ $response == 1 ]]; then
     echo "`date`::$response::Success::File was accepted::$date::$size::$usage::$retained" >> /var/log/nems/nems-osb.log
+    if [[ $1 != 'now' ]]; then
+      /usr/local/share/nems/nems-scripts/osb-stats.sh now
+    fi
   elif [[ $response == 0 ]]; then
     echo "`date`::$response::Failed::Upload failed" >> /var/log/nems/nems-osb.log
   elif [[ $response == 2 ]]; then
