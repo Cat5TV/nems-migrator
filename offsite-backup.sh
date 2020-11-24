@@ -36,7 +36,14 @@ fi
 
 
   # Sleep for a random time up to 2 hours to stagger user backups to relieve stress on the API server
-  sleep $[ ( $RANDOM % 7200 ) ]s
+  if [[ $1 != 'now' ]]; then
+    delay=$[ ( $RANDOM % 7200 ) ]
+    echo "Waiting $delay seconds" >&2
+    sleep ${delay}s
+    echo "Running OSB" >&2
+  else
+    echo "Running OSB now" >&2
+  fi
 
   # Encrypt the file
   # Combine the user's passphrase with the OSB Key to further strenghten the entropy of the passphrase
@@ -56,6 +63,8 @@ fi
   usage="${datarr[3]}"
   retained="${datarr[4]}"
 
+  online=`/usr/local/bin/nems-info online`
+
   if [[ $response == 1 ]]; then
     echo "`date`::$response::Success::File was accepted::$date::$size::$usage::$retained" >> /var/log/nems/nems-osb.log
   elif [[ $response == 0 ]]; then
@@ -68,10 +77,12 @@ fi
     echo "`date`::$response::Failed::Invalid credentials" >> /var/log/nems/nems-osb.log
   elif [[ $response == 5 ]]; then
     echo "`date`::$response::Failed::Bad query" >> /var/log/nems/nems-osb.log
+  elif [[ $online == 0 ]]; then
+    echo "`date`::$response::Failed::No Internet Connection" >> /var/log/nems/nems-osb.log
   else
     echo "`date`::-::Failed::Unknown error" >> /var/log/nems/nems-osb.log # Replace code with unknown error (as it could be anything)
   fi;
 
-else 
+else
     echo "`date`::-::Failed::Authentication Failed" >> /var/log/nems/nems-osb.log
 fi
