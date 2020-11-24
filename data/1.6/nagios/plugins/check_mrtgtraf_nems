@@ -22,7 +22,7 @@
            PHP_EOL . PHP_EOL . 'Example: ' . $argv[0] . ' -H 10.0.0.1 -p 1 -m mb -wu 30 -wd 200 -cu 40 -cd 400' .
                      PHP_EOL . '         Will check /var/www/mrtg/10.0.0.1_1.log and warn at 30 mb/s up, 200 mb/s down. Crit at 40 mb/s up, 400 mb/s down.' . PHP_EOL .
  
-           PHP_EOL . 'See https://docs.nemslinux.com/usage/mrtg' . PHP_EOL . PHP_EOL;
+           PHP_EOL . 'See https://docs.nemslinux.com/en/latest/advanced/mrtg.html' . PHP_EOL . PHP_EOL;
   if (isset($args) && is_array($args)) {
     if (
       isset($args['H']) &&
