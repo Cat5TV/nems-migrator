@@ -34,10 +34,10 @@ if pidof -o %PPID -x "backup.sh">/dev/null; then
     done
 fi
 
-
-  # Sleep for a random time up to 2 hours to stagger user backups to relieve stress on the API server
+  # Cron triggers this at midnight
+  # Sleep for a random time up to 4 hours to stagger user backups to relieve stress on the API server
   if [[ $1 != 'now' ]]; then
-    delay=$[ ( $RANDOM % 7200 ) ]
+    delay=$[ ( $RANDOM % 14400 ) ]
     echo "Waiting $delay seconds" >&2
     sleep ${delay}s
     echo "Running OSB" >&2
