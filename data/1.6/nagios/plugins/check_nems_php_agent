@@ -124,13 +124,13 @@
         $mountpoint = '.';
         if (!isset($data['response']->data->storage->$mountpoint->locked)) {
           if ($data['response']->data->storage->$mountpoint->percent > $data['crit']) {
-            echo 'CRITICAL - Disk Usage (' . $data['response']->data->storage->$mountpoint->path . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            echo 'CRITICAL - Disk Usage ' . $data['response']->data->storage->$mountpoint->percent . '% (' . $data['response']->data->storage->$mountpoint->path . ')';
             exit(2);
           } else if ($data['response']->data->storage->$mountpoint->percent > $data['warn']) {
-            echo 'WARN - Disk Usage (' . $data['response']->data->storage->$mountpoint->path . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            echo 'WARN - Disk Usage ' . $data['response']->data->storage->$mountpoint->percent . '% (' . $data['response']->data->storage->$mountpoint->path . ')';
             exit(1);
           } else {
-            echo 'OK - Disk Usage (' . $data['response']->data->storage->$mountpoint->path . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            echo 'OK - Disk Usage ' . $data['response']->data->storage->$mountpoint->percent . '% (' . $data['response']->data->storage->$mountpoint->path . ')';
             exit(0);
           }
         } else {
@@ -143,13 +143,13 @@
         $mountpoint = '/';
         if (!isset($data['response']->data->storage->$mountpoint->locked)) {
           if ($data['response']->data->storage->$mountpoint->percent > $data['crit']) {
-            echo 'CRITICAL - Disk Usage (' . $mountpoint . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            echo 'CRITICAL - Disk Usage ' . $data['response']->data->storage->$mountpoint->percent . '% (' . $mountpoint . ')';
             exit(2);
           } else if ($data['response']->data->storage->$mountpoint->percent > $data['warn']) {
-            echo 'WARN - Disk Usage (' . $mountpoint . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            echo 'WARN - Disk Usage ' . $data['response']->data->storage->$mountpoint->percent . '% (' . $mountpoint . ')';
             exit(1);
           } else {
-            echo 'OK - Disk Usage (' . $mountpoint . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            echo 'OK - Disk Usage ' . $data['response']->data->storage->$mountpoint->percent . '% (' . $mountpoint . ')';
             exit(0);
           }
         } else {
@@ -162,13 +162,13 @@
         $mountpoint = '/var';
         if (!isset($data['response']->data->storage->$mountpoint->locked)) {
           if ($data['response']->data->storage->$mountpoint->percent > $data['crit']) {
-            echo 'CRITICAL - Disk Usage (' . $mountpoint . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            echo 'CRITICAL - Disk Usage ' . $data['response']->data->storage->$mountpoint->percent . '% (' . $mountpoint . ')';
             exit(2);
           } else if ($data['response']->data->storage->$mountpoint->percent > $data['warn']) {
-            echo 'WARN - Disk Usage (' . $mountpoint . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            echo 'WARN - Disk Usage ' . $data['response']->data->storage->$mountpoint->percent . '% (' . $mountpoint . ')';
             exit(1);
           } else {
-            echo 'OK - Disk Usage (' . $mountpoint . '): ' . $data['response']->data->storage->$mountpoint->percent . '%';
+            echo 'OK - Disk Usage ' . $data['response']->data->storage->$mountpoint->percent . '% (' . $mountpoint . ')';
             exit(0);
           }
         } else {
