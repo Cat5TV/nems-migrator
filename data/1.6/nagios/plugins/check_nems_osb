@@ -8,7 +8,11 @@
   1.0 - December 8, 2020 - Initial release
 
 */
-
+  $auth=shell_exec('/usr/local/bin/nems-info cloudauth');
+  if ($auth == 0) {
+    echo 'UNKNOWN - NEMS Cloud Services not authorized.';
+    exit(3);
+  }
   $osb_log = '/var/log/nems/nems-osb.log';
   if (file_exists($osb_log)) {
     $log = explode('::',shell_exec('tail -n 1 ' . $osb_log));
