@@ -1,0 +1,29 @@
+#!/usr/bin/env php
+<?php
+/*
+
+  check_nems_osb - Version 1.0
+  Written by Robbie Ferguson for NEMS Linux
+  -----
+  1.0 - December 8, 2020 - Initial release
+
+*/
+
+  $osb_log = '/var/log/nems/nems-osb.log';
+  if (file_exists($osb_log)) {
+    $log = explode('::',shell_exec('tail -n 1 ' . $osb_log));
+    if ($log[1] == 2) {
+      echo 'CRITICAL - OSB ' . $log[2] . ': ' . $log[3];
+      exit(2);
+    } else if ($log[1] == 1 && strtotime($log[0]) < strtotime('-2 days')) {
+      echo 'WARN - Last OSB was ' . date('D M j, Y',strtotime($log[0]));
+      exit(1);
+    } else if ($log[1] == 1) {
+      echo 'OK - OSB ' . $log[2] . ' (' . date('D M j, Y',strtotime($log[0])) . ')';
+      exit(0);
+    }
+  } else {
+    echo 'UNKNOWN - NEMS OSB has not run.';
+    exit(3);  
+  }
+?>
