@@ -3,9 +3,17 @@
 
 /*
 
-  check_nems_php_agent - Version 1.1
+  check_nems_php_agent
   Written by Robbie Ferguson for NEMS Linux
   -----
+  1.2 - December 10, 2020 - Network usage now uses ifstat and generates a more
+                            accurate average usage number based on all network
+                            interfaces on the server with a 5 second average.
+                            New agent will only run the equations and tests
+                            for the requested check. For example, don't run
+                            a 5 second network bandwidth test when the requested
+                            check is for the load average. Fixed bug where nettx
+                            was in fact reporting netrx.
   1.1 - November 19, 2020 - Key is now encrypted (not just base64 encoded)
                             Added "." disk feature to load stats on the web dir
                             Several bug fixes for disk and var feature
@@ -14,7 +22,7 @@
 
 */
 
-  $nemsagentver = '1.1';
+  $nemsagentver = '1.2';
 
   if (count($argv) >=5) {
     array_shift($argv);
@@ -49,6 +57,9 @@
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_HEADER, true);
     curl_setopt($ch, CURLOPT_URL, $data['url']);
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    $postfields = array('check'=>$data['check']);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,$postfields);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -57,7 +68,7 @@
 
   // Stop if header is anything other than 'found'
     if ($httpcode != 200) {
-      echo 'UNKNOWN - NEMS PHP Server Agent not found at provided URL.';
+      echo 'UNKNOWN - NEMS PHP Server Agent not found at provided URL (' . $httpcode . ').';
       exit(3);
     }
 
@@ -139,7 +150,7 @@
         }
         break;
 
-      case 'disk':
+      case '/':
         $mountpoint = '/';
         if (!isset($data['response']->data->storage->$mountpoint->locked)) {
           if ($data['response']->data->storage->$mountpoint->percent > $data['crit']) {
@@ -178,40 +189,44 @@
         break;
 
       case 'net':
-        if ($data['response']->data->network->rx > $data['crit'] || $data['response']->data->network->tx > $data['crit']) {
-          echo 'CRITICAL - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+        if (isset($data['response']->data->network->none)) {
+          echo "UNKNOWN - You need to install ifstat on remote server";
+          exit(3);
+        }
+        if ($data['response']->data->network->total->rx > $data['crit'] || $data['response']->data->network->total->tx > $data['crit']) {
+          echo 'CRITICAL - Network: ' . $data['response']->data->network->total->rx . ' Mb/s Down / ' . $data['response']->data->network->total->tx . ' Mb/s Up';
           exit(2);
-        } else if ($data['response']->data->network->rx > $data['warn'] || $data['response']->data->network->tx > $data['warn']) {
-          echo 'WARN - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+        } else if ($data['response']->data->network->total->rx > $data['warn'] || $data['response']->data->network->total->tx > $data['warn']) {
+          echo 'WARN - Network: ' . $data['response']->data->network->total->rx . ' Mb/s Down / ' . $data['response']->data->network->total->tx . ' Mb/s Up';
           exit(1);
         } else {
-          echo 'OK - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+          echo 'OK - Network: ' . $data['response']->data->network->total->rx . ' Mb/s Down / ' . $data['response']->data->network->total->tx . ' Mb/s Up';
           exit(0);
         }
         break;
 
       case 'netrx':
-        if ($data['response']->data->network->rx > $data['crit']) {
-          echo 'CRITICAL - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+        if ($data['response']->data->network->total->rx > $data['crit']) {
+          echo 'CRITICAL - Network: ' . $data['response']->data->network->total->rx . ' Mb/s Down';
           exit(2);
-        } else if ($data['response']->data->network->rx > $data['warn']) {
-          echo 'WARN - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+        } else if ($data['response']->data->network->total->rx > $data['warn']) {
+          echo 'WARN - Network: ' . $data['response']->data->network->total->rx . ' Mb/s Down';
           exit(1);
         } else {
-          echo 'OK - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+          echo 'OK - Network: ' . $data['response']->data->network->total->rx . ' Mb/s Down';
           exit(0);
         }
         break;
 
       case 'nettx':
-        if ($data['response']->data->network->tx > $data['crit']) {
-          echo 'CRITICAL - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+        if ($data['response']->data->network->total->tx > $data['crit']) {
+          echo 'CRITICAL - Network: ' . $data['response']->data->network->total->tx . ' Mb/s Up';
           exit(2);
-        } else if ($data['response']->data->network->tx > $data['warn']) {
-          echo 'WARN - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+        } else if ($data['response']->data->network->total->tx > $data['warn']) {
+          echo 'WARN - Network: ' . $data['response']->data->network->total->tx . ' Mb/s Up';
           exit(1);
         } else {
-          echo 'OK - Network: ' . $data['response']->data->network->rx . ' Mb/s Down / ' . $data['response']->data->network->rx . ' Mb/s Up';
+          echo 'OK - Network: ' . $data['response']->data->network->total->tx . ' Mb/s Up';
           exit(0);
         }
         break;
