@@ -22,7 +22,7 @@
 ########################################################################################################################################################
 
 plugin_name="NEMS speedtest-cli plugin"
-version="1.6.1"
+version="2.0"
 # Based on "1.2 2017122011:01"
 
 #####################################################################
@@ -54,6 +54,8 @@ version="1.6.1"
 #       Version 1.6.1 - NEMS00003 Debug output includes output from speedest even if failed
 #                       Previously, exit would occur too soon
 #
+#       Version 2.0 - Ookla has changed their licensing. Moved to fast.com.
+#
 #####################################################################
 # function to output script usage
 usage()
@@ -83,18 +85,10 @@ usage()
 	-v	Output plugin version
 	-V	Output debug info for testing
 
-	This script will output the Internet Connection Speed using speedtest-cli to Nagios.
-
-	You need to have installed speedtest-cli on your system first and ensured that it is
-	working by calling "speedtest --simple".
-
-	See here: https://github.com/sivel/speedtest-cli for info about speedtest-cli
-
-	First you MUST define the location of your speedtest install in the script or this will
-	not work.
+	This script will output the Internet Connection Speed using fast.com to Nagios.
 
 	The speedtest-cli can take some time to return its result. I recommend that you set the
-	service_check_timeout value in your main nagios.cfg  to 120 to allow time for
+	service_check_timeout value for your check command to 120 to allow time for
 	this script to run; but test yourself and adjust accordingly.
 
 	You also need to have access to bc on your system for this script to work and that it
@@ -105,7 +99,9 @@ usage()
 	Performance Data will output upload and download speed against matching warning and
 	critical levels.
 
-	Jon Witts
+	Based on the work of Jon Witts
+
+        Modified for NEMS Linux by Robbie Ferguson
 
 	******************************************************************************************
 EOF
@@ -345,7 +341,7 @@ array=($command)
 
 # Check if array empty or not having at least 9 indicies
 element_count=${#array[@]}
-expected_count="9"
+expected_count="6"
 
 # Output array indicies count for debug
 if [ "$debug" == "TRUE" ]; then
@@ -353,11 +349,7 @@ if [ "$debug" == "TRUE" ]; then
 fi
 
 if [ "$element_count" -ne "$expected_count" ]; then
-	echo "You do not have the expected number of indices in your output from SpeedTest. Is it correctly installed? Try running the check with the -V argument to see what is going wrong."
-        #echo "UNKNOWN: No response from server $SEs. Will redetect."
-        # redetect
-        /usr/local/share/nems/nems-scripts/speedtest-detect > /dev/null 2>&1
-	usage
+        echo "Speedtest server not responding."
 	exit 3
 fi
 
@@ -367,12 +359,12 @@ if [ "$debug" == "TRUE" ]; then
 fi
 
 # split array into our variables for processing
-ping=${array[1]}
-pingUOM=${array[2]}
-download=${array[4]}
-downloadUOM=${array[5]}
-upload=${array[7]}
-uploadUOM=${array[8]}
+ping=${array[0]}
+pingUOM=${array[1]}
+download=${array[2]}
+downloadUOM=${array[3]}
+upload=${array[4]}
+uploadUOM=${array[5]}
 
 # echo each array for debug
 if [ "$debug" == "TRUE" ]; then
