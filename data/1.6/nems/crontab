@@ -28,7 +28,7 @@
 */15 * * * * /usr/local/share/nems/nems-scripts/loadlogger.sh cron
 
 # Detect Hardware Model NEMS0004
-@reboot /usr/local/share/nems/nems-scripts/hw_model.sh
+@reboot /usr/local/bin/hw-detect
 
 # Log Package Version Info NEMS0005
 0 5 * * 0 /usr/local/share/nems/nems-scripts/versions.sh > /var/log/nems/package-versions.log

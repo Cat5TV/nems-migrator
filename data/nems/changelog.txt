@@ -1,15 +1,19 @@
-NEMS by Robbie Ferguson // https://nemslinux.com
+NEMS Linux - https://nemslinux.com/
 Nagios Enterprise Monitoring Server
 
-This is meant to be a full-featured, up to date drop in Nagios Enterprise Monitoring Server.
-It has all the bells and whistles while being optimized for solid stability and fast performance.
+NEMS Linux is a full-featured, up to date drop-in Nagios Enterprise Monitoring Server appliance.
+It has all the bells and whistles while being optimized for solid stability and exceptional performance.
 
-Please visit https://nemslinux.com for usage instructions and changelog.
+Please visit https://docs.nemslinux.com/ for usage instructions and changelog.
 
 Support What We Do:
 
-This project is a part of something much bigger than itself, and we're all volunteers. Please see our Patreon page for information about our network.
-- Please support us by simply purchasing your Raspberry Pi at https://cat5.tv/pi
-- We have some support links on the NEMS menu, such as buying from Amazon using our partner link. Please use these every time you use those stores. A small percentage of your purchase will go toward our projects.
-- Your donations are VERY MUCH appreciated - https://donate.category5.tv - Please consider how many hours (and hours) of work this project has saved you, and how much you'll save on hardware and even electrical costs as you consider contributing
-- Our network also has a Patreon page - Please consider becoming a patron - https://patreon.com/Category5
+- Get additional features and perks by supporting us via Patreon: https://patreon.com/NEMSLinux
+
+- Support us by simply purchasing your Raspberry Pi at https://cat5.tv/pi
+
+- We have some affiliate links on the NEMS menu, such as being able to buy from Amazon using our affiliate link. Please use these every time you use those stores. A small percentage of your purchase will go toward our projects.
+
+- Your donations are VERY MUCH appreciated - https://donate.category5.tv - Please consider how many hours (and hours) of work this project has saved you, and how much you'll save on hardware and even electrical costs as you consider contributing. Again though, please consider becoming a Patron to receive additional perks. But this is a great way to give us a bit of a quick thanks for work well done or time we've saved you, or just to say thanks and let us know you appreciate the project.
+
+- The Category5 TV Network (creators and funders of NEMS Linux) also have a Patreon page - Please consider becoming a patron at https://patreon.com/Category5
