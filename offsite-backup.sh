@@ -16,7 +16,7 @@ if [[ $osbpass == '' ]] || [[ $osbkey == '' ]]; then
 fi;
 
 # Check account status
-data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "query=status" https://nemslinux.com/api-backend/offsite-backup-checkin.php)
+data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "query=status" https://cloud.nemslinux.com/api/offsite-backup-checkin.php)
 if [[ $data == '1' ]]; then # this account passes authentication
 
 if pidof -o %PPID -x "backup.sh">/dev/null; then
@@ -50,7 +50,7 @@ fi
   gpg --yes --batch --passphrase="::$osbpass::$osbkey::" -c /var/www/html/backup/snapshot/backup.nems
 
   # Upload the file
-  data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "timestamp=$timestamp" -F "backup=@/var/www/html/backup/snapshot/backup.nems.gpg" https://nemslinux.com/api/offsite-backup/)
+  data=$(curl -s -F "hwid=$hwid" -F "osbkey=$osbkey" -F "timestamp=$timestamp" -F "backup=@/var/www/html/backup/snapshot/backup.nems.gpg" https://cloud.nemslinux.com/api/offsite-backup.php)
 
   # Delete the local file
   rm /var/www/html/backup/snapshot/backup.nems.gpg
